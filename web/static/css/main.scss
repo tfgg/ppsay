@@ -1,0 +1,58 @@
+$black: #000000;
+$white: #ffffff;
+$highlight: #3333CC;
+$grey: #cccccc;
+
+p.person-candidacy {
+  font-size: 1.0em;
+  color: #666;
+
+  .year {
+    display: block;
+    font-size: 1.1em;
+  }
+
+  .party {
+    display: block;
+    font-size: 1.2em;
+  }
+
+  .constituency {
+    display: block;
+    color: #333;
+  }  
+}
+
+ul.article-list {
+  list-style:none;
+  margin:0;
+  padding:0;
+
+  li.article-item {
+    margin:0;
+    padding:0;
+
+    a.article-link {
+      font-size:1.4em;
+      color: $highlight;
+    }
+
+    ul.article-mentions {
+      list-style:none;
+      margin:0;
+      padding:0;
+
+      li {
+        display: inline-block;
+        margin:5px;
+        padding:5px;
+        border: 1px solid $grey;
+        border-radius:2px;
+
+        a {
+          color: darken($highlight, 50%);
+        }
+      }
+    }
+  }
+}

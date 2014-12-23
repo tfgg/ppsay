@@ -3,11 +3,12 @@ import feedparser
 import re
 import lxml.html
 import requests
-
 from webcache import cache_get
 from goose import Goose
 
 g = Goose()
+
+
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 

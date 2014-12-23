@@ -1,0 +1,36 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h1>News articles about candidates</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-6'>
+      <ul class='article-list'>
+      {% for article in articles %}
+        {% if article.page %}
+        <li class='article-item'>
+          <a class='article-link'href='{{ article.page.url }}'>
+          {% if article.page.title %}
+            {{ article.page.title }}
+          {% else %}
+            {{ article.page.url }}
+          {% endif %}
+          </a>
+          
+          <ul class='article-mentions'>
+          {% for candidate in article.possible_candidate_matches %}
+            <li><a href='/person/{{ candidate.id }}'>{{ candidate.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        {% endif %}
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h1>{{ person.name }}</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-2'>
+      <img width='100%' src='{{ person.image }}'/>
+      {% for year in person.standing_in %}
+      {% if person.standing_in[year] %}
+      <p class='person-candidacy'>
+          <span class='year'>{{ year }}</span>
+          <span class='party'>{{ person.party_memberships[year].name }}</span>
+          <span class='constituency'>{{ person.standing_in[year].name }}</span>
+      </p>
+      {% endif %}
+      {% endfor %}
+    </div>
+    <div class='col-md-6'>
+      <ul class='article-list'>
+      {% for article in articles %}
+        {% if article.page %}
+        <li class='article-item'>
+          <a class='article-link'href='{{ article.page.url }}'>
+          {% if article.page.title %}
+            {{ article.page.title }}
+          {% else %}
+            {{ article.page.url }}
+          {% endif %}
+          </a>
+          
+          <ul class='article-mentions'>
+          {% for candidate in article.possible_candidate_matches %}
+            <li><a href='/person/{{ candidate.id }}'>{{ candidate.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        {% endif %}
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}
