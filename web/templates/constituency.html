@@ -4,7 +4,7 @@
 <div class='container'>
   <div class='row'>
     <div class='col-md-12'>
-      <h1>News articles about candidates</h1>
+      <h1>{{ area.name }}</h1>
     </div>
   </div>
   <div class='row'>
@@ -13,7 +13,7 @@
       {% for article in articles %}
         {% if article.page %}
         <li class='article-item'>
-          <h2><a class='article-link'href='{{ article.page.url }}'>
+  	  <h2><a class='article-link'href='{{ article.page.url }}'>
           {% if article.page.title %}
             {{ article.page.title }}
           {% else %}

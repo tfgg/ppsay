@@ -1,1 +1,3252 @@
-["Morecambe and Lunesdale", "North East Hertfordshire", "Kensington", "South Antrim", "Belfast North", "Fermanagh and South Tyrone", "Ipswich", "Milton Keynes South", "Rochdale", "Neath", "Leeds West", "South Leicestershire", "Ashton-under-Lyne", "Epsom and Ewell", "Walsall North", "Penistone and Stocksbridge", "New Forest East", "Chipping Barnet", "Kilmarnock and Loudoun", "Kettering", "Orkney and Shetland", "Aberavon", "Rossendale and Darwen", "Angus", "Westmorland and Lonsdale", "Solihull", "Totnes", "Garston and Halewood", "Warwick and Leamington", "Chesterfield", "Dundee West", "East Devon", "Ceredigion", "Harwich and North Essex", "Bristol North West", "Aberdeen South", "Hartlepool", "Hereford and South Herefordshire", "North East Bedfordshire", "Sheffield Central", "Witham", "Eastbourne", "Heywood and Middleton", "Great Grimsby", "Cardiff South and Penarth", "Southport", "Windsor", "Vale of Glamorgan", "Bristol West", "Derby North", "Winchester", "Staffordshire Moorlands", "Richmond Park", "Worcester", "Milton Keynes North", "Ogmore", "Kingston upon Hull East", "Wolverhampton South West", "Pendle", "Midlothian", "City of Durham", "Castle Point", "Banff and Buchan", "Richmond (Yorks)", "Edinburgh South", "Chippenham", "Buckingham", "Dumfriesshire, Clydesdale and Tweeddale", "Bradford East", "North Dorset", "Halesowen and Rowley Regis", "Stourbridge", "Broxbourne", "Bury St Edmunds", "Mid Bedfordshire", "Clwyd South", "High Peak", "Tooting", "Dudley North", "Oxford East", "South Basildon and East Thurrock", "Cardiff North", "Luton South", "Camborne and Redruth", "Alyn and Deeside", "Sittingbourne and Sheppey", "Warrington South", "Ealing, Southall", "Normanton, Pontefract and Castleford", "Newton Abbot", "Hove", "North West Hampshire", "Grantham and Stamford", "Chichester", "Mole Valley", "Bexleyheath and Crayford", "Tamworth", "South East Cornwall", "Hitchin and Harpenden", "Thornbury and Yate", "North Norfolk", "The Cotswolds", "Brentwood and Ongar", "Hammersmith", "Mid Sussex", "Leeds North West", "Gloucester", "Twickenham", "Sheffield, Hallam", "Clacton", "Ashfield", "Kingston upon Hull North", "Bassetlaw", "Stretford and Urmston", "South Swindon", "Cheltenham", "Mid Derbyshire", "North Down", "Bath", "Stoke-on-Trent North", "Stratford-on-Avon", "Hertsmere", "Leeds North East", "St Albans", "Halifax", "Chelmsford", "North Shropshire", "Waveney", "Bradford West", "Chatham and Aylesford", "Weston-Super-Mare", "Scunthorpe", "Forest of Dean", "Sheffield South East", "Sefton Central", "Wansbeck", "Islington South and Finsbury", "South Holland and The Deepings", "East Londonderry", "Gower", "Stafford", "Glenrothes", "Inverclyde", "Harrow West", "Liverpool, West Derby", "Ealing North", "Stirling", "Blaydon", "Newcastle upon Tyne North", "Lagan Valley", "Crewe and Nantwich", "Walthamstow", "West Lancashire", "Rushcliffe", "St Helens North", "Great Yarmouth", "Reading East", "Barnsley Central", "Birmingham, Yardley", "South Cambridgeshire", "Welwyn Hatfield", "Southend West", "Beckenham", "Wyre and Preston North", "Dundee East", "Salisbury", "Colne Valley", "Brighton, Pavilion", "Birmingham, Perry Barr", "Ilford North", "Kirkcaldy and Cowdenbeath", "East Antrim", "Wyre Forest", "Peterborough", "Epping Forest", "South West Bedfordshire", "Wrexham", "Newark", "South Staffordshire", "Bournemouth East", "Bristol East", "Lewisham, Deptford", "Glasgow South West", "Edinburgh South West", "Witney", "Wigan", "Ochil and South Perthshire", "Llanelli", "Leicester East", "Liverpool, Walton", "Exeter", "Glasgow North", "South West Norfolk", "Lewisham East", "West Bromwich East", "Altrincham and Sale West", "Hendon", "Stockton South", "Middlesbrough South and East Cleveland", "Gordon", "Brigg and Goole", "Louth and Horncastle", "Wallasey", "Gateshead", "Falkirk", "Vale of Clwyd", "Birmingham, Hall Green", "Somerton and Frome", "Oxford West and Abingdon", "West Bromwich West", "Camberwell and Peckham", "Edmonton", "Dudley South", "Kenilworth and Southam", "Sevenoaks", "Truro and Falmouth", "Halton", "Bradford South", "Lanark and Hamilton East", "Newcastle-under-Lyme", "Broadland", "Dewsbury", "South West Surrey", "Wycombe", "Huddersfield", "Finchley and Golders Green", "Rotherham", "Coventry South", "Feltham and Heston", "Stone", "Calder Valley", "Northampton South", "Clwyd West", "Stalybridge and Hyde", "Croydon South", "Tynemouth", "Berwick-upon-Tweed", "Ross, Skye and Lochaber", "Leicester South", "Beverley and Holderness", "Cambridge", "Holborn and St Pancras", "Woking", "Washington and Sunderland West", "Motherwell and Wishaw", "Romsey and Southampton North", "Coventry North East", "Hornsey and Wood Green", "East Renfrewshire", "Sheffield, Heeley", "Sutton Coldfield", "North Durham", "North West Durham", "Wirral West", "Mid Worcestershire", "Dagenham and Rainham", "Suffolk Coastal", "Newbury", "Loughborough", "Barrow and Furness", "Haltemprice and Howden", "Gedling", "Carmarthen West and South Pembrokeshire", "South Shields", "North Somerset", "Ayr, Carrick and Cumnock", "Ynys M\u00f4n", "Lincoln", "Swansea West", "Moray", "Belfast West", "Croydon North", "Amber Valley", "Chingford and Woodford Green", "Bridgwater and West Somerset", "Hampstead and Kilburn", "Caerphilly", "Cannock Chase", "Bermondsey and Old Southwark", "Derby South", "Maidenhead", "Knowsley", "Broxtowe", "Burton", "Hemsworth", "Cynon Valley", "North Herefordshire", "West Suffolk", "South Northamptonshire", "Runnymede and Weybridge", "Portsmouth North", "Erewash", "Aylesbury", "Blackpool North and Cleveleys", "Putney", "Boston and Skegness", "Aberconwy", "Worthing West", "Upper Bann", "North East Derbyshire", "Meon Valley", "Stroud", "Bromley and Chislehurst", "Newry and Armagh", "Morley and Outwood", "Lancaster and Fleetwood", "Guildford", "Rugby", "Newcastle upon Tyne East", "Fylde", "Rutland and Melton", "Ludlow", "North East Fife", "North Swindon", "Poole", "Kingston and Surbiton", "South Thanet", "Sleaford and North Hykeham", "Rhondda", "Wirral South", "Barking", "Tewkesbury", "Rayleigh and Wickford", "Huntingdon", "Fareham", "West Tyrone", "Bolsover", "Crawley", "York Outer", "The Wrekin", "Tunbridge Wells", "Filton and Bradley Stoke", "Plymouth, Sutton and Devonport", "Blaenau Gwent", "Mid Norfolk", "Hackney South and Shoreditch", "Nottingham East", "Ribble Valley", "Manchester Central", "Newcastle upon Tyne Central", "Central Devon", "Stockport", "York Central", "Arundel and South Downs", "North East Cambridgeshire", "Preseli Pembrokeshire", "Chesham and Amersham", "Wolverhampton South East", "Sheffield, Brightside and Hillsborough", "Maidstone and The Weald", "Bedford", "Torfaen", "Ruislip, Northwood and Pinner", "North East Somerset", "Spelthorne", "Wakefield", "Stockton North", "Havant", "North Warwickshire", "Lewisham West and Penge", "Manchester, Gorton", "Delyn", "Aldershot", "Bolton South East", "Oldham East and Saddleworth", "Telford", "Mid Dorset and North Poole", "Sedgefield", "Darlington", "Enfield, Southgate", "Stevenage", "Eddisbury", "Carshalton and Wallington", "Redditch", "Slough", "North Thanet", "East Hampshire", "Easington", "Leeds Central", "Gravesham", "North Ayrshire and Arran", "Blackburn", "Weaver Vale", "Colchester", "Arfon", "Thirsk and Malton", "Harlow", "Doncaster North", "Congleton", "Basingstoke", "Plymouth, Moor View", "Luton North", "Yeovil", "Wokingham", "Blackpool South", "Southampton, Test", "Newport West", "Streatham", "Lewes", "Wantage", "Scarborough and Whitby", "Middlesbrough", "Watford", "Maldon", "Bishop Auckland", "Cardiff Central", "Bromsgrove", "Carlisle", "Berwickshire, Roxburgh and Selkirk", "Keighley", "Hayes and Harlington", "Torbay", "Kingston upon Hull West and Hessle", "Horsham", "Birmingham, Selly Oak", "Sherwood", "Blackley and Broughton", "Inverness, Nairn, Badenoch and Strathspey", "East Yorkshire", "Norwich South", "Orpington", "Dartford", "Bury South", "Linlithgow and East Falkirk", "Bracknell", "Monmouth", "Batley and Spen", "Ealing Central and Acton", "Foyle", "Birmingham, Erdington", "Mansfield", "Leyton and Wanstead", "Daventry", "Hornchurch and Upminster", "Strangford", "Glasgow Central", "Bootle", "Cleethorpes", "North Antrim", "Devizes", "Nuneaton", "Mid Ulster", "Hastings and Rye", "Livingston", "Walsall South", "Edinburgh East", "Braintree", "Harrogate and Knaresborough", "Denton and Reddish", "St Austell and Newquay", "Warley", "Cardiff West", "Esher and Walton", "Southampton, Itchen", "New Forest West", "Doncaster Central", "South Derbyshire", "Brent Central", "Belfast South", "Cumbernauld, Kilsyth and Kirkintilloch East", "North Wiltshire", "East Ham", "Bolton West", "Oldham West and Royton", "Aberdeen North", "Ashford", "Beaconsfield", "North Devon", "Islington North", "Corby", "East Dunbartonshire", "Greenwich and Woolwich", "St Helens South and Whiston", "West Ham", "Ellesmere Port and Neston", "Paisley and Renfrewshire South", "Northampton North", "Rochester and Strood", "Wimbledon", "Leeds East", "North Cornwall", "West Dunbartonshire", "Pontypridd", "Shipley", "Basildon and Billericay", "Brentford and Isleworth", "Wentworth and Dearne", "Bristol South", "Folkestone and Hythe", "Henley", "Swansea East", "Hazel Grove", "Hexham", "Pudsey", "East Kilbride, Strathaven and Lesmahagow", "Makerfield", "Stoke-on-Trent Central", "Harborough", "Workington", "Elmet and Rothwell", "Edinburgh North and Leith", "Copeland", "Stoke-on-Trent South", "Shrewsbury and Atcham", "Wythenshawe and Sale East", "Glasgow South", "North West Cambridgeshire", "Reigate", "Edinburgh West", "Old Bexley and Sidcup", "Croydon Central", "Thurrock", "Bosworth", "Chelsea and Fulham", "Liverpool, Wavertree", "Tiverton and Honiton", "Rutherglen and Hamilton West", "Brighton, Kemptown", "Hackney North and Stoke Newington", "Charnwood", "East Worthing and Shoreham", "Christchurch", "Tonbridge and Malling", "South East Cambridgeshire", "Faversham and Mid Kent", "Don Valley", "Glasgow North West", "Cities of London and Westminster", "Glasgow East", "Wealden", "Selby and Ainsty", "Kingswood", "Manchester, Withington", "Brecon and Radnorshire", "Redcar", "Airdrie and Shotts", "Blyth Valley", "Mitcham and Morden", "Central Suffolk and North Ipswich", "Banbury", "Bexhill and Battle", "Hemel Hempstead", "Birmingham, Ladywood", "Uxbridge and South Ruislip", "Hertford and Stortford", "Merthyr Tydfil and Rhymney", "St Ives", "South Down", "Perth and North Perthshire", "Dwyfor Meirionnydd", "Dunfermline and West Fife", "Bolton North East", "Portsmouth South", "Surrey Heath", "Leigh", "Houghton and Sunderland South", "Sunderland Central", "Hyndburn", "Bridgend", "Birmingham, Hodge Hill", "West Worcestershire", "Bognor Regis and Littlehampton", "Rother Valley", "Tatton", "East Lothian", "Warrington North", "South West Wiltshire", "Meriden", "South Dorset", "Glasgow North East", "Skipton and Ripon", "Worsley and Eccles South", "Jarrow", "Taunton Deane", "Coventry North West", "Paisley and Renfrewshire North", "Gainsborough", "Caithness, Sutherland and Easter Ross", "Chorley", "Na h-Eileanan an Iar", "Macclesfield", "Liverpool, Riverside", "South Suffolk", "Erith and Thamesmead", "South Ribble", "Reading West", "Torridge and West Devon", "Nottingham South", "West Dorset", "Newport East", "Bournemouth West", "Canterbury", "Westminster North", "North West Leicestershire", "South West Devon", "North West Norfolk", "Bury North", "Aldridge-Brownhills", "Montgomeryshire", "Preston", "Brent North", "North Tyneside", "North East Hampshire", "Nottingham North", "East Surrey", "Birmingham, Northfield", "Penrith and The Border", "Romford", "Salford and Eccles", "Bethnal Green and Bow", "Vauxhall", "Central Ayrshire", "Rochford and Southend East", "Argyll and Bute", "Isle of Wight", "Wolverhampton North East", "Barnsley East", "Belfast East", "Gillingham and Rainham", "Islwyn", "Dulwich and West Norwood", "Lichfield", "Burnley", "Wells", "West Aberdeenshire and Kincardine", "Cheadle", "South West Hertfordshire", "Tottenham", "Leicester West", "Wellingborough", "Gosport", "Birmingham, Edgbaston", "Birkenhead", "Poplar and Limehouse", "Carmarthen East and Dinefwr", "Enfield North", "South Norfolk", "Dover", "Derbyshire Dales", "Battersea", "Harrow East", "Saffron Walden", "Norwich North", "Dumfries and Galloway", "Coatbridge, Chryston and Bellshill", "Eastleigh", "Ilford South", "Sutton and Cheam", "City of Chester", "Eltham"]
+[
+    {
+        "id": "mapit:65633", 
+        "identifier": "http://mapit.mysociety.org/area/65633", 
+        "name": "Morecambe and Lunesdale"
+    }, 
+    {
+        "id": "mapit:65840", 
+        "identifier": "http://mapit.mysociety.org/area/65840", 
+        "name": "North East Hertfordshire"
+    }, 
+    {
+        "id": "mapit:65939", 
+        "identifier": "http://mapit.mysociety.org/area/65939", 
+        "name": "Kensington"
+    }, 
+    {
+        "id": "mapit:66137", 
+        "identifier": "http://mapit.mysociety.org/area/66137", 
+        "name": "South Antrim"
+    }, 
+    {
+        "id": "mapit:66125", 
+        "identifier": "http://mapit.mysociety.org/area/66125", 
+        "name": "Belfast North"
+    }, 
+    {
+        "id": "mapit:66130", 
+        "identifier": "http://mapit.mysociety.org/area/66130", 
+        "name": "Fermanagh and South Tyrone"
+    }, 
+    {
+        "id": "mapit:65925", 
+        "identifier": "http://mapit.mysociety.org/area/65925", 
+        "name": "Ipswich"
+    }, 
+    {
+        "id": "mapit:66076", 
+        "identifier": "http://mapit.mysociety.org/area/66076", 
+        "name": "Milton Keynes South"
+    }, 
+    {
+        "id": "mapit:65843", 
+        "identifier": "http://mapit.mysociety.org/area/65843", 
+        "name": "Rochdale"
+    }, 
+    {
+        "id": "mapit:66082", 
+        "identifier": "http://mapit.mysociety.org/area/66082", 
+        "name": "Neath"
+    }, 
+    {
+        "id": "mapit:65988", 
+        "identifier": "http://mapit.mysociety.org/area/65988", 
+        "name": "Leeds West"
+    }, 
+    {
+        "id": "mapit:66034", 
+        "identifier": "http://mapit.mysociety.org/area/66034", 
+        "name": "South Leicestershire"
+    }, 
+    {
+        "id": "mapit:66056", 
+        "identifier": "http://mapit.mysociety.org/area/66056", 
+        "name": "Ashton-under-Lyne"
+    }, 
+    {
+        "id": "mapit:65803", 
+        "identifier": "http://mapit.mysociety.org/area/65803", 
+        "name": "Epsom and Ewell"
+    }, 
+    {
+        "id": "mapit:65890", 
+        "identifier": "http://mapit.mysociety.org/area/65890", 
+        "name": "Walsall North"
+    }, 
+    {
+        "id": "mapit:66002", 
+        "identifier": "http://mapit.mysociety.org/area/66002", 
+        "name": "Penistone and Stocksbridge"
+    }, 
+    {
+        "id": "mapit:65556", 
+        "identifier": "http://mapit.mysociety.org/area/65556", 
+        "name": "New Forest East"
+    }, 
+    {
+        "id": "mapit:65886", 
+        "identifier": "http://mapit.mysociety.org/area/65886", 
+        "name": "Chipping Barnet"
+    }, 
+    {
+        "id": "mapit:14436", 
+        "identifier": "http://mapit.mysociety.org/area/14436", 
+        "name": "Kilmarnock and Loudoun"
+    }, 
+    {
+        "id": "mapit:66001", 
+        "identifier": "http://mapit.mysociety.org/area/66001", 
+        "name": "Kettering"
+    }, 
+    {
+        "id": "mapit:14448", 
+        "identifier": "http://mapit.mysociety.org/area/14448", 
+        "name": "Orkney and Shetland"
+    }, 
+    {
+        "id": "mapit:66101", 
+        "identifier": "http://mapit.mysociety.org/area/66101", 
+        "name": "Aberavon"
+    }, 
+    {
+        "id": "mapit:66019", 
+        "identifier": "http://mapit.mysociety.org/area/66019", 
+        "name": "Rossendale and Darwen"
+    }, 
+    {
+        "id": "mapit:14401", 
+        "identifier": "http://mapit.mysociety.org/area/14401", 
+        "name": "Angus"
+    }, 
+    {
+        "id": "mapit:65963", 
+        "identifier": "http://mapit.mysociety.org/area/65963", 
+        "name": "Westmorland and Lonsdale"
+    }, 
+    {
+        "id": "mapit:65879", 
+        "identifier": "http://mapit.mysociety.org/area/65879", 
+        "name": "Solihull"
+    }, 
+    {
+        "id": "mapit:65810", 
+        "identifier": "http://mapit.mysociety.org/area/65810", 
+        "name": "Totnes"
+    }, 
+    {
+        "id": "mapit:65900", 
+        "identifier": "http://mapit.mysociety.org/area/65900", 
+        "name": "Garston and Halewood"
+    }, 
+    {
+        "id": "mapit:65608", 
+        "identifier": "http://mapit.mysociety.org/area/65608", 
+        "name": "Warwick and Leamington"
+    }, 
+    {
+        "id": "mapit:65980", 
+        "identifier": "http://mapit.mysociety.org/area/65980", 
+        "name": "Chesterfield"
+    }, 
+    {
+        "id": "mapit:14413", 
+        "identifier": "http://mapit.mysociety.org/area/14413", 
+        "name": "Dundee West"
+    }, 
+    {
+        "id": "mapit:65813", 
+        "identifier": "http://mapit.mysociety.org/area/65813", 
+        "name": "East Devon"
+    }, 
+    {
+        "id": "mapit:66110", 
+        "identifier": "http://mapit.mysociety.org/area/66110", 
+        "name": "Ceredigion"
+    }, 
+    {
+        "id": "mapit:65674", 
+        "identifier": "http://mapit.mysociety.org/area/65674", 
+        "name": "Harwich and North Essex"
+    }, 
+    {
+        "id": "mapit:66009", 
+        "identifier": "http://mapit.mysociety.org/area/66009", 
+        "name": "Bristol North West"
+    }, 
+    {
+        "id": "mapit:14399", 
+        "identifier": "http://mapit.mysociety.org/area/14399", 
+        "name": "Aberdeen South"
+    }, 
+    {
+        "id": "mapit:65990", 
+        "identifier": "http://mapit.mysociety.org/area/65990", 
+        "name": "Hartlepool"
+    }, 
+    {
+        "id": "mapit:65582", 
+        "identifier": "http://mapit.mysociety.org/area/65582", 
+        "name": "Hereford and South Herefordshire"
+    }, 
+    {
+        "id": "mapit:65855", 
+        "identifier": "http://mapit.mysociety.org/area/65855", 
+        "name": "North East Bedfordshire"
+    }, 
+    {
+        "id": "mapit:65957", 
+        "identifier": "http://mapit.mysociety.org/area/65957", 
+        "name": "Sheffield Central"
+    }, 
+    {
+        "id": "mapit:65831", 
+        "identifier": "http://mapit.mysociety.org/area/65831", 
+        "name": "Witham"
+    }, 
+    {
+        "id": "mapit:65714", 
+        "identifier": "http://mapit.mysociety.org/area/65714", 
+        "name": "Eastbourne"
+    }, 
+    {
+        "id": "mapit:65814", 
+        "identifier": "http://mapit.mysociety.org/area/65814", 
+        "name": "Heywood and Middleton"
+    }, 
+    {
+        "id": "mapit:65600", 
+        "identifier": "http://mapit.mysociety.org/area/65600", 
+        "name": "Great Grimsby"
+    }, 
+    {
+        "id": "mapit:66119", 
+        "identifier": "http://mapit.mysociety.org/area/66119", 
+        "name": "Cardiff South and Penarth"
+    }, 
+    {
+        "id": "mapit:65728", 
+        "identifier": "http://mapit.mysociety.org/area/65728", 
+        "name": "Southport"
+    }, 
+    {
+        "id": "mapit:65552", 
+        "identifier": "http://mapit.mysociety.org/area/65552", 
+        "name": "Windsor"
+    }, 
+    {
+        "id": "mapit:66098", 
+        "identifier": "http://mapit.mysociety.org/area/66098", 
+        "name": "Vale of Glamorgan"
+    }, 
+    {
+        "id": "mapit:65574", 
+        "identifier": "http://mapit.mysociety.org/area/65574", 
+        "name": "Bristol West"
+    }, 
+    {
+        "id": "mapit:66070", 
+        "identifier": "http://mapit.mysociety.org/area/66070", 
+        "name": "Derby North"
+    }, 
+    {
+        "id": "mapit:65921", 
+        "identifier": "http://mapit.mysociety.org/area/65921", 
+        "name": "Winchester"
+    }, 
+    {
+        "id": "mapit:65907", 
+        "identifier": "http://mapit.mysociety.org/area/65907", 
+        "name": "Staffordshire Moorlands"
+    }, 
+    {
+        "id": "mapit:65598", 
+        "identifier": "http://mapit.mysociety.org/area/65598", 
+        "name": "Richmond Park"
+    }, 
+    {
+        "id": "mapit:65577", 
+        "identifier": "http://mapit.mysociety.org/area/65577", 
+        "name": "Worcester"
+    }, 
+    {
+        "id": "mapit:65953", 
+        "identifier": "http://mapit.mysociety.org/area/65953", 
+        "name": "Milton Keynes North"
+    }, 
+    {
+        "id": "mapit:66107", 
+        "identifier": "http://mapit.mysociety.org/area/66107", 
+        "name": "Ogmore"
+    }, 
+    {
+        "id": "mapit:65709", 
+        "identifier": "http://mapit.mysociety.org/area/65709", 
+        "name": "Kingston upon Hull East"
+    }, 
+    {
+        "id": "mapit:65948", 
+        "identifier": "http://mapit.mysociety.org/area/65948", 
+        "name": "Wolverhampton South West"
+    }, 
+    {
+        "id": "mapit:65668", 
+        "identifier": "http://mapit.mysociety.org/area/65668", 
+        "name": "Pendle"
+    }, 
+    {
+        "id": "mapit:14441", 
+        "identifier": "http://mapit.mysociety.org/area/14441", 
+        "name": "Midlothian"
+    }, 
+    {
+        "id": "mapit:66021", 
+        "identifier": "http://mapit.mysociety.org/area/66021", 
+        "name": "City of Durham"
+    }, 
+    {
+        "id": "mapit:65914", 
+        "identifier": "http://mapit.mysociety.org/area/65914", 
+        "name": "Castle Point"
+    }, 
+    {
+        "id": "mapit:14404", 
+        "identifier": "http://mapit.mysociety.org/area/14404", 
+        "name": "Banff and Buchan"
+    }, 
+    {
+        "id": "mapit:65722", 
+        "identifier": "http://mapit.mysociety.org/area/65722", 
+        "name": "Richmond (Yorks)"
+    }, 
+    {
+        "id": "mapit:14421", 
+        "identifier": "http://mapit.mysociety.org/area/14421", 
+        "name": "Edinburgh South"
+    }, 
+    {
+        "id": "mapit:65940", 
+        "identifier": "http://mapit.mysociety.org/area/65940", 
+        "name": "Chippenham"
+    }, 
+    {
+        "id": "mapit:65909", 
+        "identifier": "http://mapit.mysociety.org/area/65909", 
+        "name": "Buckingham"
+    }, 
+    {
+        "id": "mapit:14411", 
+        "identifier": "http://mapit.mysociety.org/area/14411", 
+        "name": "Dumfriesshire, Clydesdale and Tweeddale"
+    }, 
+    {
+        "id": "mapit:65694", 
+        "identifier": "http://mapit.mysociety.org/area/65694", 
+        "name": "Bradford East"
+    }, 
+    {
+        "id": "mapit:65702", 
+        "identifier": "http://mapit.mysociety.org/area/65702", 
+        "name": "North Dorset"
+    }, 
+    {
+        "id": "mapit:65971", 
+        "identifier": "http://mapit.mysociety.org/area/65971", 
+        "name": "Halesowen and Rowley Regis"
+    }, 
+    {
+        "id": "mapit:65609", 
+        "identifier": "http://mapit.mysociety.org/area/65609", 
+        "name": "Stourbridge"
+    }, 
+    {
+        "id": "mapit:65639", 
+        "identifier": "http://mapit.mysociety.org/area/65639", 
+        "name": "Broxbourne"
+    }, 
+    {
+        "id": "mapit:66035", 
+        "identifier": "http://mapit.mysociety.org/area/66035", 
+        "name": "Bury St Edmunds"
+    }, 
+    {
+        "id": "mapit:65718", 
+        "identifier": "http://mapit.mysociety.org/area/65718", 
+        "name": "Mid Bedfordshire"
+    }, 
+    {
+        "id": "mapit:66121", 
+        "identifier": "http://mapit.mysociety.org/area/66121", 
+        "name": "Clwyd South"
+    }, 
+    {
+        "id": "mapit:66052", 
+        "identifier": "http://mapit.mysociety.org/area/66052", 
+        "name": "High Peak"
+    }, 
+    {
+        "id": "mapit:65554", 
+        "identifier": "http://mapit.mysociety.org/area/65554", 
+        "name": "Tooting"
+    }, 
+    {
+        "id": "mapit:65806", 
+        "identifier": "http://mapit.mysociety.org/area/65806", 
+        "name": "Dudley North"
+    }, 
+    {
+        "id": "mapit:66060", 
+        "identifier": "http://mapit.mysociety.org/area/66060", 
+        "name": "Oxford East"
+    }, 
+    {
+        "id": "mapit:65962", 
+        "identifier": "http://mapit.mysociety.org/area/65962", 
+        "name": "South Basildon and East Thurrock"
+    }, 
+    {
+        "id": "mapit:66120", 
+        "identifier": "http://mapit.mysociety.org/area/66120", 
+        "name": "Cardiff North"
+    }, 
+    {
+        "id": "mapit:66080", 
+        "identifier": "http://mapit.mysociety.org/area/66080", 
+        "name": "Luton South"
+    }, 
+    {
+        "id": "mapit:65826", 
+        "identifier": "http://mapit.mysociety.org/area/65826", 
+        "name": "Camborne and Redruth"
+    }, 
+    {
+        "id": "mapit:66103", 
+        "identifier": "http://mapit.mysociety.org/area/66103", 
+        "name": "Alyn and Deeside"
+    }, 
+    {
+        "id": "mapit:65610", 
+        "identifier": "http://mapit.mysociety.org/area/65610", 
+        "name": "Sittingbourne and Sheppey"
+    }, 
+    {
+        "id": "mapit:65916", 
+        "identifier": "http://mapit.mysociety.org/area/65916", 
+        "name": "Warrington South"
+    }, 
+    {
+        "id": "mapit:65794", 
+        "identifier": "http://mapit.mysociety.org/area/65794", 
+        "name": "Ealing, Southall"
+    }, 
+    {
+        "id": "mapit:65918", 
+        "identifier": "http://mapit.mysociety.org/area/65918", 
+        "name": "Normanton, Pontefract and Castleford"
+    }, 
+    {
+        "id": "mapit:65828", 
+        "identifier": "http://mapit.mysociety.org/area/65828", 
+        "name": "Newton Abbot"
+    }, 
+    {
+        "id": "mapit:65691", 
+        "identifier": "http://mapit.mysociety.org/area/65691", 
+        "name": "Hove"
+    }, 
+    {
+        "id": "mapit:65894", 
+        "identifier": "http://mapit.mysociety.org/area/65894", 
+        "name": "North West Hampshire"
+    }, 
+    {
+        "id": "mapit:65683", 
+        "identifier": "http://mapit.mysociety.org/area/65683", 
+        "name": "Grantham and Stamford"
+    }, 
+    {
+        "id": "mapit:65558", 
+        "identifier": "http://mapit.mysociety.org/area/65558", 
+        "name": "Chichester"
+    }, 
+    {
+        "id": "mapit:65693", 
+        "identifier": "http://mapit.mysociety.org/area/65693", 
+        "name": "Mole Valley"
+    }, 
+    {
+        "id": "mapit:65611", 
+        "identifier": "http://mapit.mysociety.org/area/65611", 
+        "name": "Bexleyheath and Crayford"
+    }, 
+    {
+        "id": "mapit:65880", 
+        "identifier": "http://mapit.mysociety.org/area/65880", 
+        "name": "Tamworth"
+    }, 
+    {
+        "id": "mapit:65684", 
+        "identifier": "http://mapit.mysociety.org/area/65684", 
+        "name": "South East Cornwall"
+    }, 
+    {
+        "id": "mapit:65724", 
+        "identifier": "http://mapit.mysociety.org/area/65724", 
+        "name": "Hitchin and Harpenden"
+    }, 
+    {
+        "id": "mapit:65905", 
+        "identifier": "http://mapit.mysociety.org/area/65905", 
+        "name": "Thornbury and Yate"
+    }, 
+    {
+        "id": "mapit:65872", 
+        "identifier": "http://mapit.mysociety.org/area/65872", 
+        "name": "North Norfolk"
+    }, 
+    {
+        "id": "mapit:65789", 
+        "identifier": "http://mapit.mysociety.org/area/65789", 
+        "name": "The Cotswolds"
+    }, 
+    {
+        "id": "mapit:65685", 
+        "identifier": "http://mapit.mysociety.org/area/65685", 
+        "name": "Brentwood and Ongar"
+    }, 
+    {
+        "id": "mapit:65836", 
+        "identifier": "http://mapit.mysociety.org/area/65836", 
+        "name": "Hammersmith"
+    }, 
+    {
+        "id": "mapit:65999", 
+        "identifier": "http://mapit.mysociety.org/area/65999", 
+        "name": "Mid Sussex"
+    }, 
+    {
+        "id": "mapit:66068", 
+        "identifier": "http://mapit.mysociety.org/area/66068", 
+        "name": "Leeds North West"
+    }, 
+    {
+        "id": "mapit:65996", 
+        "identifier": "http://mapit.mysociety.org/area/65996", 
+        "name": "Gloucester"
+    }, 
+    {
+        "id": "mapit:65782", 
+        "identifier": "http://mapit.mysociety.org/area/65782", 
+        "name": "Twickenham"
+    }, 
+    {
+        "id": "mapit:65741", 
+        "identifier": "http://mapit.mysociety.org/area/65741", 
+        "name": "Sheffield, Hallam"
+    }, 
+    {
+        "id": "mapit:66030", 
+        "identifier": "http://mapit.mysociety.org/area/66030", 
+        "name": "Clacton"
+    }, 
+    {
+        "id": "mapit:65895", 
+        "identifier": "http://mapit.mysociety.org/area/65895", 
+        "name": "Ashfield"
+    }, 
+    {
+        "id": "mapit:65618", 
+        "identifier": "http://mapit.mysociety.org/area/65618", 
+        "name": "Kingston upon Hull North"
+    }, 
+    {
+        "id": "mapit:65711", 
+        "identifier": "http://mapit.mysociety.org/area/65711", 
+        "name": "Bassetlaw"
+    }, 
+    {
+        "id": "mapit:65911", 
+        "identifier": "http://mapit.mysociety.org/area/65911", 
+        "name": "Stretford and Urmston"
+    }, 
+    {
+        "id": "mapit:65800", 
+        "identifier": "http://mapit.mysociety.org/area/65800", 
+        "name": "South Swindon"
+    }, 
+    {
+        "id": "mapit:65946", 
+        "identifier": "http://mapit.mysociety.org/area/65946", 
+        "name": "Cheltenham"
+    }, 
+    {
+        "id": "mapit:66007", 
+        "identifier": "http://mapit.mysociety.org/area/66007", 
+        "name": "Mid Derbyshire"
+    }, 
+    {
+        "id": "mapit:66136", 
+        "identifier": "http://mapit.mysociety.org/area/66136", 
+        "name": "North Down"
+    }, 
+    {
+        "id": "mapit:65798", 
+        "identifier": "http://mapit.mysociety.org/area/65798", 
+        "name": "Bath"
+    }, 
+    {
+        "id": "mapit:65783", 
+        "identifier": "http://mapit.mysociety.org/area/65783", 
+        "name": "Stoke-on-Trent North"
+    }, 
+    {
+        "id": "mapit:65648", 
+        "identifier": "http://mapit.mysociety.org/area/65648", 
+        "name": "Stratford-on-Avon"
+    }, 
+    {
+        "id": "mapit:65994", 
+        "identifier": "http://mapit.mysociety.org/area/65994", 
+        "name": "Hertsmere"
+    }, 
+    {
+        "id": "mapit:65866", 
+        "identifier": "http://mapit.mysociety.org/area/65866", 
+        "name": "Leeds North East"
+    }, 
+    {
+        "id": "mapit:65715", 
+        "identifier": "http://mapit.mysociety.org/area/65715", 
+        "name": "St Albans"
+    }, 
+    {
+        "id": "mapit:65599", 
+        "identifier": "http://mapit.mysociety.org/area/65599", 
+        "name": "Halifax"
+    }, 
+    {
+        "id": "mapit:65797", 
+        "identifier": "http://mapit.mysociety.org/area/65797", 
+        "name": "Chelmsford"
+    }, 
+    {
+        "id": "mapit:66017", 
+        "identifier": "http://mapit.mysociety.org/area/66017", 
+        "name": "North Shropshire"
+    }, 
+    {
+        "id": "mapit:66004", 
+        "identifier": "http://mapit.mysociety.org/area/66004", 
+        "name": "Waveney"
+    }, 
+    {
+        "id": "mapit:66036", 
+        "identifier": "http://mapit.mysociety.org/area/66036", 
+        "name": "Bradford West"
+    }, 
+    {
+        "id": "mapit:66075", 
+        "identifier": "http://mapit.mysociety.org/area/66075", 
+        "name": "Chatham and Aylesford"
+    }, 
+    {
+        "id": "mapit:65742", 
+        "identifier": "http://mapit.mysociety.org/area/65742", 
+        "name": "Weston-Super-Mare"
+    }, 
+    {
+        "id": "mapit:66027", 
+        "identifier": "http://mapit.mysociety.org/area/66027", 
+        "name": "Scunthorpe"
+    }, 
+    {
+        "id": "mapit:66064", 
+        "identifier": "http://mapit.mysociety.org/area/66064", 
+        "name": "Forest of Dean"
+    }, 
+    {
+        "id": "mapit:65793", 
+        "identifier": "http://mapit.mysociety.org/area/65793", 
+        "name": "Sheffield South East"
+    }, 
+    {
+        "id": "mapit:65706", 
+        "identifier": "http://mapit.mysociety.org/area/65706", 
+        "name": "Sefton Central"
+    }, 
+    {
+        "id": "mapit:65631", 
+        "identifier": "http://mapit.mysociety.org/area/65631", 
+        "name": "Wansbeck"
+    }, 
+    {
+        "id": "mapit:65882", 
+        "identifier": "http://mapit.mysociety.org/area/65882", 
+        "name": "Islington South and Finsbury"
+    }, 
+    {
+        "id": "mapit:66051", 
+        "identifier": "http://mapit.mysociety.org/area/66051", 
+        "name": "South Holland and The Deepings"
+    }, 
+    {
+        "id": "mapit:66129", 
+        "identifier": "http://mapit.mysociety.org/area/66129", 
+        "name": "East Londonderry"
+    }, 
+    {
+        "id": "mapit:66083", 
+        "identifier": "http://mapit.mysociety.org/area/66083", 
+        "name": "Gower"
+    }, 
+    {
+        "id": "mapit:66067", 
+        "identifier": "http://mapit.mysociety.org/area/66067", 
+        "name": "Stafford"
+    }, 
+    {
+        "id": "mapit:14432", 
+        "identifier": "http://mapit.mysociety.org/area/14432", 
+        "name": "Glenrothes"
+    }, 
+    {
+        "id": "mapit:14434", 
+        "identifier": "http://mapit.mysociety.org/area/14434", 
+        "name": "Inverclyde"
+    }, 
+    {
+        "id": "mapit:65796", 
+        "identifier": "http://mapit.mysociety.org/area/65796", 
+        "name": "Harrow West"
+    }, 
+    {
+        "id": "mapit:65766", 
+        "identifier": "http://mapit.mysociety.org/area/65766", 
+        "name": "Liverpool, West Derby"
+    }, 
+    {
+        "id": "mapit:65701", 
+        "identifier": "http://mapit.mysociety.org/area/65701", 
+        "name": "Ealing North"
+    }, 
+    {
+        "id": "mapit:14454", 
+        "identifier": "http://mapit.mysociety.org/area/14454", 
+        "name": "Stirling"
+    }, 
+    {
+        "id": "mapit:65805", 
+        "identifier": "http://mapit.mysociety.org/area/65805", 
+        "name": "Blaydon"
+    }, 
+    {
+        "id": "mapit:65664", 
+        "identifier": "http://mapit.mysociety.org/area/65664", 
+        "name": "Newcastle upon Tyne North"
+    }, 
+    {
+        "id": "mapit:66132", 
+        "identifier": "http://mapit.mysociety.org/area/66132", 
+        "name": "Lagan Valley"
+    }, 
+    {
+        "id": "mapit:65572", 
+        "identifier": "http://mapit.mysociety.org/area/65572", 
+        "name": "Crewe and Nantwich"
+    }, 
+    {
+        "id": "mapit:65651", 
+        "identifier": "http://mapit.mysociety.org/area/65651", 
+        "name": "Walthamstow"
+    }, 
+    {
+        "id": "mapit:65873", 
+        "identifier": "http://mapit.mysociety.org/area/65873", 
+        "name": "West Lancashire"
+    }, 
+    {
+        "id": "mapit:65736", 
+        "identifier": "http://mapit.mysociety.org/area/65736", 
+        "name": "Rushcliffe"
+    }, 
+    {
+        "id": "mapit:66073", 
+        "identifier": "http://mapit.mysociety.org/area/66073", 
+        "name": "St Helens North"
+    }, 
+    {
+        "id": "mapit:65627", 
+        "identifier": "http://mapit.mysociety.org/area/65627", 
+        "name": "Great Yarmouth"
+    }, 
+    {
+        "id": "mapit:65973", 
+        "identifier": "http://mapit.mysociety.org/area/65973", 
+        "name": "Reading East"
+    }, 
+    {
+        "id": "mapit:65665", 
+        "identifier": "http://mapit.mysociety.org/area/65665", 
+        "name": "Barnsley Central"
+    }, 
+    {
+        "id": "mapit:65707", 
+        "identifier": "http://mapit.mysociety.org/area/65707", 
+        "name": "Birmingham, Yardley"
+    }, 
+    {
+        "id": "mapit:65922", 
+        "identifier": "http://mapit.mysociety.org/area/65922", 
+        "name": "South Cambridgeshire"
+    }, 
+    {
+        "id": "mapit:65740", 
+        "identifier": "http://mapit.mysociety.org/area/65740", 
+        "name": "Welwyn Hatfield"
+    }, 
+    {
+        "id": "mapit:65876", 
+        "identifier": "http://mapit.mysociety.org/area/65876", 
+        "name": "Southend West"
+    }, 
+    {
+        "id": "mapit:65725", 
+        "identifier": "http://mapit.mysociety.org/area/65725", 
+        "name": "Beckenham"
+    }, 
+    {
+        "id": "mapit:65695", 
+        "identifier": "http://mapit.mysociety.org/area/65695", 
+        "name": "Wyre and Preston North"
+    }, 
+    {
+        "id": "mapit:14412", 
+        "identifier": "http://mapit.mysociety.org/area/14412", 
+        "name": "Dundee East"
+    }, 
+    {
+        "id": "mapit:65889", 
+        "identifier": "http://mapit.mysociety.org/area/65889", 
+        "name": "Salisbury"
+    }, 
+    {
+        "id": "mapit:65835", 
+        "identifier": "http://mapit.mysociety.org/area/65835", 
+        "name": "Colne Valley"
+    }, 
+    {
+        "id": "mapit:65787", 
+        "identifier": "http://mapit.mysociety.org/area/65787", 
+        "name": "Brighton, Pavilion"
+    }, 
+    {
+        "id": "mapit:66028", 
+        "identifier": "http://mapit.mysociety.org/area/66028", 
+        "name": "Birmingham, Perry Barr"
+    }, 
+    {
+        "id": "mapit:65630", 
+        "identifier": "http://mapit.mysociety.org/area/65630", 
+        "name": "Ilford North"
+    }, 
+    {
+        "id": "mapit:14437", 
+        "identifier": "http://mapit.mysociety.org/area/14437", 
+        "name": "Kirkcaldy and Cowdenbeath"
+    }, 
+    {
+        "id": "mapit:66128", 
+        "identifier": "http://mapit.mysociety.org/area/66128", 
+        "name": "East Antrim"
+    }, 
+    {
+        "id": "mapit:66078", 
+        "identifier": "http://mapit.mysociety.org/area/66078", 
+        "name": "Wyre Forest"
+    }, 
+    {
+        "id": "mapit:65649", 
+        "identifier": "http://mapit.mysociety.org/area/65649", 
+        "name": "Peterborough"
+    }, 
+    {
+        "id": "mapit:66044", 
+        "identifier": "http://mapit.mysociety.org/area/66044", 
+        "name": "Epping Forest"
+    }, 
+    {
+        "id": "mapit:65848", 
+        "identifier": "http://mapit.mysociety.org/area/65848", 
+        "name": "South West Bedfordshire"
+    }, 
+    {
+        "id": "mapit:66113", 
+        "identifier": "http://mapit.mysociety.org/area/66113", 
+        "name": "Wrexham"
+    }, 
+    {
+        "id": "mapit:65696", 
+        "identifier": "http://mapit.mysociety.org/area/65696", 
+        "name": "Newark"
+    }, 
+    {
+        "id": "mapit:65943", 
+        "identifier": "http://mapit.mysociety.org/area/65943", 
+        "name": "South Staffordshire"
+    }, 
+    {
+        "id": "mapit:65993", 
+        "identifier": "http://mapit.mysociety.org/area/65993", 
+        "name": "Bournemouth East"
+    }, 
+    {
+        "id": "mapit:65839", 
+        "identifier": "http://mapit.mysociety.org/area/65839", 
+        "name": "Bristol East"
+    }, 
+    {
+        "id": "mapit:66041", 
+        "identifier": "http://mapit.mysociety.org/area/66041", 
+        "name": "Lewisham, Deptford"
+    }, 
+    {
+        "id": "mapit:14431", 
+        "identifier": "http://mapit.mysociety.org/area/14431", 
+        "name": "Glasgow South West"
+    }, 
+    {
+        "id": "mapit:14422", 
+        "identifier": "http://mapit.mysociety.org/area/14422", 
+        "name": "Edinburgh South West"
+    }, 
+    {
+        "id": "mapit:65622", 
+        "identifier": "http://mapit.mysociety.org/area/65622", 
+        "name": "Witney"
+    }, 
+    {
+        "id": "mapit:65612", 
+        "identifier": "http://mapit.mysociety.org/area/65612", 
+        "name": "Wigan"
+    }, 
+    {
+        "id": "mapit:14447", 
+        "identifier": "http://mapit.mysociety.org/area/14447", 
+        "name": "Ochil and South Perthshire"
+    }, 
+    {
+        "id": "mapit:66117", 
+        "identifier": "http://mapit.mysociety.org/area/66117", 
+        "name": "Llanelli"
+    }, 
+    {
+        "id": "mapit:65807", 
+        "identifier": "http://mapit.mysociety.org/area/65807", 
+        "name": "Leicester East"
+    }, 
+    {
+        "id": "mapit:65970", 
+        "identifier": "http://mapit.mysociety.org/area/65970", 
+        "name": "Liverpool, Walton"
+    }, 
+    {
+        "id": "mapit:66033", 
+        "identifier": "http://mapit.mysociety.org/area/66033", 
+        "name": "Exeter"
+    }, 
+    {
+        "id": "mapit:14427", 
+        "identifier": "http://mapit.mysociety.org/area/14427", 
+        "name": "Glasgow North"
+    }, 
+    {
+        "id": "mapit:65652", 
+        "identifier": "http://mapit.mysociety.org/area/65652", 
+        "name": "South West Norfolk"
+    }, 
+    {
+        "id": "mapit:65705", 
+        "identifier": "http://mapit.mysociety.org/area/65705", 
+        "name": "Lewisham East"
+    }, 
+    {
+        "id": "mapit:65983", 
+        "identifier": "http://mapit.mysociety.org/area/65983", 
+        "name": "West Bromwich East"
+    }, 
+    {
+        "id": "mapit:65892", 
+        "identifier": "http://mapit.mysociety.org/area/65892", 
+        "name": "Altrincham and Sale West"
+    }, 
+    {
+        "id": "mapit:65754", 
+        "identifier": "http://mapit.mysociety.org/area/65754", 
+        "name": "Hendon"
+    }, 
+    {
+        "id": "mapit:65908", 
+        "identifier": "http://mapit.mysociety.org/area/65908", 
+        "name": "Stockton South"
+    }, 
+    {
+        "id": "mapit:65657", 
+        "identifier": "http://mapit.mysociety.org/area/65657", 
+        "name": "Middlesbrough South and East Cleveland"
+    }, 
+    {
+        "id": "mapit:14433", 
+        "identifier": "http://mapit.mysociety.org/area/14433", 
+        "name": "Gordon"
+    }, 
+    {
+        "id": "mapit:66000", 
+        "identifier": "http://mapit.mysociety.org/area/66000", 
+        "name": "Brigg and Goole"
+    }, 
+    {
+        "id": "mapit:65987", 
+        "identifier": "http://mapit.mysociety.org/area/65987", 
+        "name": "Louth and Horncastle"
+    }, 
+    {
+        "id": "mapit:65635", 
+        "identifier": "http://mapit.mysociety.org/area/65635", 
+        "name": "Wallasey"
+    }, 
+    {
+        "id": "mapit:65870", 
+        "identifier": "http://mapit.mysociety.org/area/65870", 
+        "name": "Gateshead"
+    }, 
+    {
+        "id": "mapit:14424", 
+        "identifier": "http://mapit.mysociety.org/area/14424", 
+        "name": "Falkirk"
+    }, 
+    {
+        "id": "mapit:66116", 
+        "identifier": "http://mapit.mysociety.org/area/66116", 
+        "name": "Vale of Clwyd"
+    }, 
+    {
+        "id": "mapit:65597", 
+        "identifier": "http://mapit.mysociety.org/area/65597", 
+        "name": "Birmingham, Hall Green"
+    }, 
+    {
+        "id": "mapit:65812", 
+        "identifier": "http://mapit.mysociety.org/area/65812", 
+        "name": "Somerton and Frome"
+    }, 
+    {
+        "id": "mapit:65564", 
+        "identifier": "http://mapit.mysociety.org/area/65564", 
+        "name": "Oxford West and Abingdon"
+    }, 
+    {
+        "id": "mapit:66047", 
+        "identifier": "http://mapit.mysociety.org/area/66047", 
+        "name": "West Bromwich West"
+    }, 
+    {
+        "id": "mapit:65913", 
+        "identifier": "http://mapit.mysociety.org/area/65913", 
+        "name": "Camberwell and Peckham"
+    }, 
+    {
+        "id": "mapit:65570", 
+        "identifier": "http://mapit.mysociety.org/area/65570", 
+        "name": "Edmonton"
+    }, 
+    {
+        "id": "mapit:66054", 
+        "identifier": "http://mapit.mysociety.org/area/66054", 
+        "name": "Dudley South"
+    }, 
+    {
+        "id": "mapit:65968", 
+        "identifier": "http://mapit.mysociety.org/area/65968", 
+        "name": "Kenilworth and Southam"
+    }, 
+    {
+        "id": "mapit:65698", 
+        "identifier": "http://mapit.mysociety.org/area/65698", 
+        "name": "Sevenoaks"
+    }, 
+    {
+        "id": "mapit:65659", 
+        "identifier": "http://mapit.mysociety.org/area/65659", 
+        "name": "Truro and Falmouth"
+    }, 
+    {
+        "id": "mapit:65915", 
+        "identifier": "http://mapit.mysociety.org/area/65915", 
+        "name": "Halton"
+    }, 
+    {
+        "id": "mapit:65995", 
+        "identifier": "http://mapit.mysociety.org/area/65995", 
+        "name": "Bradford South"
+    }, 
+    {
+        "id": "mapit:14438", 
+        "identifier": "http://mapit.mysociety.org/area/14438", 
+        "name": "Lanark and Hamilton East"
+    }, 
+    {
+        "id": "mapit:65861", 
+        "identifier": "http://mapit.mysociety.org/area/65861", 
+        "name": "Newcastle-under-Lyme"
+    }, 
+    {
+        "id": "mapit:65852", 
+        "identifier": "http://mapit.mysociety.org/area/65852", 
+        "name": "Broadland"
+    }, 
+    {
+        "id": "mapit:65746", 
+        "identifier": "http://mapit.mysociety.org/area/65746", 
+        "name": "Dewsbury"
+    }, 
+    {
+        "id": "mapit:65678", 
+        "identifier": "http://mapit.mysociety.org/area/65678", 
+        "name": "South West Surrey"
+    }, 
+    {
+        "id": "mapit:66010", 
+        "identifier": "http://mapit.mysociety.org/area/66010", 
+        "name": "Wycombe"
+    }, 
+    {
+        "id": "mapit:65624", 
+        "identifier": "http://mapit.mysociety.org/area/65624", 
+        "name": "Huddersfield"
+    }, 
+    {
+        "id": "mapit:65938", 
+        "identifier": "http://mapit.mysociety.org/area/65938", 
+        "name": "Finchley and Golders Green"
+    }, 
+    {
+        "id": "mapit:66029", 
+        "identifier": "http://mapit.mysociety.org/area/66029", 
+        "name": "Rotherham"
+    }, 
+    {
+        "id": "mapit:65877", 
+        "identifier": "http://mapit.mysociety.org/area/65877", 
+        "name": "Coventry South"
+    }, 
+    {
+        "id": "mapit:65655", 
+        "identifier": "http://mapit.mysociety.org/area/65655", 
+        "name": "Feltham and Heston"
+    }, 
+    {
+        "id": "mapit:65950", 
+        "identifier": "http://mapit.mysociety.org/area/65950", 
+        "name": "Stone"
+    }, 
+    {
+        "id": "mapit:65906", 
+        "identifier": "http://mapit.mysociety.org/area/65906", 
+        "name": "Calder Valley"
+    }, 
+    {
+        "id": "mapit:65910", 
+        "identifier": "http://mapit.mysociety.org/area/65910", 
+        "name": "Northampton South"
+    }, 
+    {
+        "id": "mapit:66100", 
+        "identifier": "http://mapit.mysociety.org/area/66100", 
+        "name": "Clwyd West"
+    }, 
+    {
+        "id": "mapit:65960", 
+        "identifier": "http://mapit.mysociety.org/area/65960", 
+        "name": "Stalybridge and Hyde"
+    }, 
+    {
+        "id": "mapit:65923", 
+        "identifier": "http://mapit.mysociety.org/area/65923", 
+        "name": "Croydon South"
+    }, 
+    {
+        "id": "mapit:65868", 
+        "identifier": "http://mapit.mysociety.org/area/65868", 
+        "name": "Tynemouth"
+    }, 
+    {
+        "id": "mapit:65726", 
+        "identifier": "http://mapit.mysociety.org/area/65726", 
+        "name": "Berwick-upon-Tweed"
+    }, 
+    {
+        "id": "mapit:14452", 
+        "identifier": "http://mapit.mysociety.org/area/14452", 
+        "name": "Ross, Skye and Lochaber"
+    }, 
+    {
+        "id": "mapit:65604", 
+        "identifier": "http://mapit.mysociety.org/area/65604", 
+        "name": "Leicester South"
+    }, 
+    {
+        "id": "mapit:65934", 
+        "identifier": "http://mapit.mysociety.org/area/65934", 
+        "name": "Beverley and Holderness"
+    }, 
+    {
+        "id": "mapit:65927", 
+        "identifier": "http://mapit.mysociety.org/area/65927", 
+        "name": "Cambridge"
+    }, 
+    {
+        "id": "mapit:65824", 
+        "identifier": "http://mapit.mysociety.org/area/65824", 
+        "name": "Holborn and St Pancras"
+    }, 
+    {
+        "id": "mapit:66039", 
+        "identifier": "http://mapit.mysociety.org/area/66039", 
+        "name": "Woking"
+    }, 
+    {
+        "id": "mapit:66049", 
+        "identifier": "http://mapit.mysociety.org/area/66049", 
+        "name": "Washington and Sunderland West"
+    }, 
+    {
+        "id": "mapit:14443", 
+        "identifier": "http://mapit.mysociety.org/area/14443", 
+        "name": "Motherwell and Wishaw"
+    }, 
+    {
+        "id": "mapit:65884", 
+        "identifier": "http://mapit.mysociety.org/area/65884", 
+        "name": "Romsey and Southampton North"
+    }, 
+    {
+        "id": "mapit:65636", 
+        "identifier": "http://mapit.mysociety.org/area/65636", 
+        "name": "Coventry North East"
+    }, 
+    {
+        "id": "mapit:65883", 
+        "identifier": "http://mapit.mysociety.org/area/65883", 
+        "name": "Hornsey and Wood Green"
+    }, 
+    {
+        "id": "mapit:14418", 
+        "identifier": "http://mapit.mysociety.org/area/14418", 
+        "name": "East Renfrewshire"
+    }, 
+    {
+        "id": "mapit:65549", 
+        "identifier": "http://mapit.mysociety.org/area/65549", 
+        "name": "Sheffield, Heeley"
+    }, 
+    {
+        "id": "mapit:65703", 
+        "identifier": "http://mapit.mysociety.org/area/65703", 
+        "name": "Sutton Coldfield"
+    }, 
+    {
+        "id": "mapit:65745", 
+        "identifier": "http://mapit.mysociety.org/area/65745", 
+        "name": "North Durham"
+    }, 
+    {
+        "id": "mapit:65859", 
+        "identifier": "http://mapit.mysociety.org/area/65859", 
+        "name": "North West Durham"
+    }, 
+    {
+        "id": "mapit:65897", 
+        "identifier": "http://mapit.mysociety.org/area/65897", 
+        "name": "Wirral West"
+    }, 
+    {
+        "id": "mapit:65888", 
+        "identifier": "http://mapit.mysociety.org/area/65888", 
+        "name": "Mid Worcestershire"
+    }, 
+    {
+        "id": "mapit:65985", 
+        "identifier": "http://mapit.mysociety.org/area/65985", 
+        "name": "Dagenham and Rainham"
+    }, 
+    {
+        "id": "mapit:65607", 
+        "identifier": "http://mapit.mysociety.org/area/65607", 
+        "name": "Suffolk Coastal"
+    }, 
+    {
+        "id": "mapit:65862", 
+        "identifier": "http://mapit.mysociety.org/area/65862", 
+        "name": "Newbury"
+    }, 
+    {
+        "id": "mapit:65785", 
+        "identifier": "http://mapit.mysociety.org/area/65785", 
+        "name": "Loughborough"
+    }, 
+    {
+        "id": "mapit:66006", 
+        "identifier": "http://mapit.mysociety.org/area/66006", 
+        "name": "Barrow and Furness"
+    }, 
+    {
+        "id": "mapit:65671", 
+        "identifier": "http://mapit.mysociety.org/area/65671", 
+        "name": "Haltemprice and Howden"
+    }, 
+    {
+        "id": "mapit:65551", 
+        "identifier": "http://mapit.mysociety.org/area/65551", 
+        "name": "Gedling"
+    }, 
+    {
+        "id": "mapit:66109", 
+        "identifier": "http://mapit.mysociety.org/area/66109", 
+        "name": "Carmarthen West and South Pembrokeshire"
+    }, 
+    {
+        "id": "mapit:65719", 
+        "identifier": "http://mapit.mysociety.org/area/65719", 
+        "name": "South Shields"
+    }, 
+    {
+        "id": "mapit:65817", 
+        "identifier": "http://mapit.mysociety.org/area/65817", 
+        "name": "North Somerset"
+    }, 
+    {
+        "id": "mapit:14403", 
+        "identifier": "http://mapit.mysociety.org/area/14403", 
+        "name": "Ayr, Carrick and Cumnock"
+    }, 
+    {
+        "id": "mapit:66115", 
+        "identifier": "http://mapit.mysociety.org/area/66115", 
+        "name": "Ynys M\u00f4n"
+    }, 
+    {
+        "id": "mapit:65704", 
+        "identifier": "http://mapit.mysociety.org/area/65704", 
+        "name": "Lincoln"
+    }, 
+    {
+        "id": "mapit:66118", 
+        "identifier": "http://mapit.mysociety.org/area/66118", 
+        "name": "Swansea West"
+    }, 
+    {
+        "id": "mapit:14442", 
+        "identifier": "http://mapit.mysociety.org/area/14442", 
+        "name": "Moray"
+    }, 
+    {
+        "id": "mapit:66127", 
+        "identifier": "http://mapit.mysociety.org/area/66127", 
+        "name": "Belfast West"
+    }, 
+    {
+        "id": "mapit:65867", 
+        "identifier": "http://mapit.mysociety.org/area/65867", 
+        "name": "Croydon North"
+    }, 
+    {
+        "id": "mapit:65809", 
+        "identifier": "http://mapit.mysociety.org/area/65809", 
+        "name": "Amber Valley"
+    }, 
+    {
+        "id": "mapit:65721", 
+        "identifier": "http://mapit.mysociety.org/area/65721", 
+        "name": "Chingford and Woodford Green"
+    }, 
+    {
+        "id": "mapit:65620", 
+        "identifier": "http://mapit.mysociety.org/area/65620", 
+        "name": "Bridgwater and West Somerset"
+    }, 
+    {
+        "id": "mapit:65576", 
+        "identifier": "http://mapit.mysociety.org/area/65576", 
+        "name": "Hampstead and Kilburn"
+    }, 
+    {
+        "id": "mapit:66106", 
+        "identifier": "http://mapit.mysociety.org/area/66106", 
+        "name": "Caerphilly"
+    }, 
+    {
+        "id": "mapit:65790", 
+        "identifier": "http://mapit.mysociety.org/area/65790", 
+        "name": "Cannock Chase"
+    }, 
+    {
+        "id": "mapit:65689", 
+        "identifier": "http://mapit.mysociety.org/area/65689", 
+        "name": "Bermondsey and Old Southwark"
+    }, 
+    {
+        "id": "mapit:65863", 
+        "identifier": "http://mapit.mysociety.org/area/65863", 
+        "name": "Derby South"
+    }, 
+    {
+        "id": "mapit:65901", 
+        "identifier": "http://mapit.mysociety.org/area/65901", 
+        "name": "Maidenhead"
+    }, 
+    {
+        "id": "mapit:65869", 
+        "identifier": "http://mapit.mysociety.org/area/65869", 
+        "name": "Knowsley"
+    }, 
+    {
+        "id": "mapit:65849", 
+        "identifier": "http://mapit.mysociety.org/area/65849", 
+        "name": "Broxtowe"
+    }, 
+    {
+        "id": "mapit:65708", 
+        "identifier": "http://mapit.mysociety.org/area/65708", 
+        "name": "Burton"
+    }, 
+    {
+        "id": "mapit:66018", 
+        "identifier": "http://mapit.mysociety.org/area/66018", 
+        "name": "Hemsworth"
+    }, 
+    {
+        "id": "mapit:66105", 
+        "identifier": "http://mapit.mysociety.org/area/66105", 
+        "name": "Cynon Valley"
+    }, 
+    {
+        "id": "mapit:65642", 
+        "identifier": "http://mapit.mysociety.org/area/65642", 
+        "name": "North Herefordshire"
+    }, 
+    {
+        "id": "mapit:65629", 
+        "identifier": "http://mapit.mysociety.org/area/65629", 
+        "name": "West Suffolk"
+    }, 
+    {
+        "id": "mapit:65902", 
+        "identifier": "http://mapit.mysociety.org/area/65902", 
+        "name": "South Northamptonshire"
+    }, 
+    {
+        "id": "mapit:65589", 
+        "identifier": "http://mapit.mysociety.org/area/65589", 
+        "name": "Runnymede and Weybridge"
+    }, 
+    {
+        "id": "mapit:65566", 
+        "identifier": "http://mapit.mysociety.org/area/65566", 
+        "name": "Portsmouth North"
+    }, 
+    {
+        "id": "mapit:65743", 
+        "identifier": "http://mapit.mysociety.org/area/65743", 
+        "name": "Erewash"
+    }, 
+    {
+        "id": "mapit:65739", 
+        "identifier": "http://mapit.mysociety.org/area/65739", 
+        "name": "Aylesbury"
+    }, 
+    {
+        "id": "mapit:65750", 
+        "identifier": "http://mapit.mysociety.org/area/65750", 
+        "name": "Blackpool North and Cleveleys"
+    }, 
+    {
+        "id": "mapit:66045", 
+        "identifier": "http://mapit.mysociety.org/area/66045", 
+        "name": "Putney"
+    }, 
+    {
+        "id": "mapit:65969", 
+        "identifier": "http://mapit.mysociety.org/area/65969", 
+        "name": "Boston and Skegness"
+    }, 
+    {
+        "id": "mapit:66085", 
+        "identifier": "http://mapit.mysociety.org/area/66085", 
+        "name": "Aberconwy"
+    }, 
+    {
+        "id": "mapit:65562", 
+        "identifier": "http://mapit.mysociety.org/area/65562", 
+        "name": "Worthing West"
+    }, 
+    {
+        "id": "mapit:66140", 
+        "identifier": "http://mapit.mysociety.org/area/66140", 
+        "name": "Upper Bann"
+    }, 
+    {
+        "id": "mapit:65676", 
+        "identifier": "http://mapit.mysociety.org/area/65676", 
+        "name": "North East Derbyshire"
+    }, 
+    {
+        "id": "mapit:65772", 
+        "identifier": "http://mapit.mysociety.org/area/65772", 
+        "name": "Meon Valley"
+    }, 
+    {
+        "id": "mapit:65858", 
+        "identifier": "http://mapit.mysociety.org/area/65858", 
+        "name": "Stroud"
+    }, 
+    {
+        "id": "mapit:65954", 
+        "identifier": "http://mapit.mysociety.org/area/65954", 
+        "name": "Bromley and Chislehurst"
+    }, 
+    {
+        "id": "mapit:66134", 
+        "identifier": "http://mapit.mysociety.org/area/66134", 
+        "name": "Newry and Armagh"
+    }, 
+    {
+        "id": "mapit:65735", 
+        "identifier": "http://mapit.mysociety.org/area/65735", 
+        "name": "Morley and Outwood"
+    }, 
+    {
+        "id": "mapit:65568", 
+        "identifier": "http://mapit.mysociety.org/area/65568", 
+        "name": "Lancaster and Fleetwood"
+    }, 
+    {
+        "id": "mapit:65838", 
+        "identifier": "http://mapit.mysociety.org/area/65838", 
+        "name": "Guildford"
+    }, 
+    {
+        "id": "mapit:65656", 
+        "identifier": "http://mapit.mysociety.org/area/65656", 
+        "name": "Rugby"
+    }, 
+    {
+        "id": "mapit:65594", 
+        "identifier": "http://mapit.mysociety.org/area/65594", 
+        "name": "Newcastle upon Tyne East"
+    }, 
+    {
+        "id": "mapit:65955", 
+        "identifier": "http://mapit.mysociety.org/area/65955", 
+        "name": "Fylde"
+    }, 
+    {
+        "id": "mapit:65833", 
+        "identifier": "http://mapit.mysociety.org/area/65833", 
+        "name": "Rutland and Melton"
+    }, 
+    {
+        "id": "mapit:65690", 
+        "identifier": "http://mapit.mysociety.org/area/65690", 
+        "name": "Ludlow"
+    }, 
+    {
+        "id": "mapit:14446", 
+        "identifier": "http://mapit.mysociety.org/area/14446", 
+        "name": "North East Fife"
+    }, 
+    {
+        "id": "mapit:65760", 
+        "identifier": "http://mapit.mysociety.org/area/65760", 
+        "name": "North Swindon"
+    }, 
+    {
+        "id": "mapit:65860", 
+        "identifier": "http://mapit.mysociety.org/area/65860", 
+        "name": "Poole"
+    }, 
+    {
+        "id": "mapit:65778", 
+        "identifier": "http://mapit.mysociety.org/area/65778", 
+        "name": "Kingston and Surbiton"
+    }, 
+    {
+        "id": "mapit:65829", 
+        "identifier": "http://mapit.mysociety.org/area/65829", 
+        "name": "South Thanet"
+    }, 
+    {
+        "id": "mapit:65920", 
+        "identifier": "http://mapit.mysociety.org/area/65920", 
+        "name": "Sleaford and North Hykeham"
+    }, 
+    {
+        "id": "mapit:66092", 
+        "identifier": "http://mapit.mysociety.org/area/66092", 
+        "name": "Rhondda"
+    }, 
+    {
+        "id": "mapit:65847", 
+        "identifier": "http://mapit.mysociety.org/area/65847", 
+        "name": "Wirral South"
+    }, 
+    {
+        "id": "mapit:65662", 
+        "identifier": "http://mapit.mysociety.org/area/65662", 
+        "name": "Barking"
+    }, 
+    {
+        "id": "mapit:65976", 
+        "identifier": "http://mapit.mysociety.org/area/65976", 
+        "name": "Tewkesbury"
+    }, 
+    {
+        "id": "mapit:65795", 
+        "identifier": "http://mapit.mysociety.org/area/65795", 
+        "name": "Rayleigh and Wickford"
+    }, 
+    {
+        "id": "mapit:65592", 
+        "identifier": "http://mapit.mysociety.org/area/65592", 
+        "name": "Huntingdon"
+    }, 
+    {
+        "id": "mapit:65857", 
+        "identifier": "http://mapit.mysociety.org/area/65857", 
+        "name": "Fareham"
+    }, 
+    {
+        "id": "mapit:66141", 
+        "identifier": "http://mapit.mysociety.org/area/66141", 
+        "name": "West Tyrone"
+    }, 
+    {
+        "id": "mapit:65628", 
+        "identifier": "http://mapit.mysociety.org/area/65628", 
+        "name": "Bolsover"
+    }, 
+    {
+        "id": "mapit:65781", 
+        "identifier": "http://mapit.mysociety.org/area/65781", 
+        "name": "Crawley"
+    }, 
+    {
+        "id": "mapit:66037", 
+        "identifier": "http://mapit.mysociety.org/area/66037", 
+        "name": "York Outer"
+    }, 
+    {
+        "id": "mapit:65977", 
+        "identifier": "http://mapit.mysociety.org/area/65977", 
+        "name": "The Wrekin"
+    }, 
+    {
+        "id": "mapit:65660", 
+        "identifier": "http://mapit.mysociety.org/area/65660", 
+        "name": "Tunbridge Wells"
+    }, 
+    {
+        "id": "mapit:65865", 
+        "identifier": "http://mapit.mysociety.org/area/65865", 
+        "name": "Filton and Bradley Stoke"
+    }, 
+    {
+        "id": "mapit:65737", 
+        "identifier": "http://mapit.mysociety.org/area/65737", 
+        "name": "Plymouth, Sutton and Devonport"
+    }, 
+    {
+        "id": "mapit:66093", 
+        "identifier": "http://mapit.mysociety.org/area/66093", 
+        "name": "Blaenau Gwent"
+    }, 
+    {
+        "id": "mapit:65949", 
+        "identifier": "http://mapit.mysociety.org/area/65949", 
+        "name": "Mid Norfolk"
+    }, 
+    {
+        "id": "mapit:65752", 
+        "identifier": "http://mapit.mysociety.org/area/65752", 
+        "name": "Hackney South and Shoreditch"
+    }, 
+    {
+        "id": "mapit:65559", 
+        "identifier": "http://mapit.mysociety.org/area/65559", 
+        "name": "Nottingham East"
+    }, 
+    {
+        "id": "mapit:65579", 
+        "identifier": "http://mapit.mysociety.org/area/65579", 
+        "name": "Ribble Valley"
+    }, 
+    {
+        "id": "mapit:66048", 
+        "identifier": "http://mapit.mysociety.org/area/66048", 
+        "name": "Manchester Central"
+    }, 
+    {
+        "id": "mapit:66055", 
+        "identifier": "http://mapit.mysociety.org/area/66055", 
+        "name": "Newcastle upon Tyne Central"
+    }, 
+    {
+        "id": "mapit:65749", 
+        "identifier": "http://mapit.mysociety.org/area/65749", 
+        "name": "Central Devon"
+    }, 
+    {
+        "id": "mapit:65606", 
+        "identifier": "http://mapit.mysociety.org/area/65606", 
+        "name": "Stockport"
+    }, 
+    {
+        "id": "mapit:65965", 
+        "identifier": "http://mapit.mysociety.org/area/65965", 
+        "name": "York Central"
+    }, 
+    {
+        "id": "mapit:65784", 
+        "identifier": "http://mapit.mysociety.org/area/65784", 
+        "name": "Arundel and South Downs"
+    }, 
+    {
+        "id": "mapit:66063", 
+        "identifier": "http://mapit.mysociety.org/area/66063", 
+        "name": "North East Cambridgeshire"
+    }, 
+    {
+        "id": "mapit:66102", 
+        "identifier": "http://mapit.mysociety.org/area/66102", 
+        "name": "Preseli Pembrokeshire"
+    }, 
+    {
+        "id": "mapit:65801", 
+        "identifier": "http://mapit.mysociety.org/area/65801", 
+        "name": "Chesham and Amersham"
+    }, 
+    {
+        "id": "mapit:65593", 
+        "identifier": "http://mapit.mysociety.org/area/65593", 
+        "name": "Wolverhampton South East"
+    }, 
+    {
+        "id": "mapit:65601", 
+        "identifier": "http://mapit.mysociety.org/area/65601", 
+        "name": "Sheffield, Brightside and Hillsborough"
+    }, 
+    {
+        "id": "mapit:65936", 
+        "identifier": "http://mapit.mysociety.org/area/65936", 
+        "name": "Maidstone and The Weald"
+    }, 
+    {
+        "id": "mapit:65561", 
+        "identifier": "http://mapit.mysociety.org/area/65561", 
+        "name": "Bedford"
+    }, 
+    {
+        "id": "mapit:66104", 
+        "identifier": "http://mapit.mysociety.org/area/66104", 
+        "name": "Torfaen"
+    }, 
+    {
+        "id": "mapit:65681", 
+        "identifier": "http://mapit.mysociety.org/area/65681", 
+        "name": "Ruislip, Northwood and Pinner"
+    }, 
+    {
+        "id": "mapit:65619", 
+        "identifier": "http://mapit.mysociety.org/area/65619", 
+        "name": "North East Somerset"
+    }, 
+    {
+        "id": "mapit:65942", 
+        "identifier": "http://mapit.mysociety.org/area/65942", 
+        "name": "Spelthorne"
+    }, 
+    {
+        "id": "mapit:65733", 
+        "identifier": "http://mapit.mysociety.org/area/65733", 
+        "name": "Wakefield"
+    }, 
+    {
+        "id": "mapit:65641", 
+        "identifier": "http://mapit.mysociety.org/area/65641", 
+        "name": "Stockton North"
+    }, 
+    {
+        "id": "mapit:65699", 
+        "identifier": "http://mapit.mysociety.org/area/65699", 
+        "name": "Havant"
+    }, 
+    {
+        "id": "mapit:66024", 
+        "identifier": "http://mapit.mysociety.org/area/66024", 
+        "name": "North Warwickshire"
+    }, 
+    {
+        "id": "mapit:65616", 
+        "identifier": "http://mapit.mysociety.org/area/65616", 
+        "name": "Lewisham West and Penge"
+    }, 
+    {
+        "id": "mapit:65834", 
+        "identifier": "http://mapit.mysociety.org/area/65834", 
+        "name": "Manchester, Gorton"
+    }, 
+    {
+        "id": "mapit:66112", 
+        "identifier": "http://mapit.mysociety.org/area/66112", 
+        "name": "Delyn"
+    }, 
+    {
+        "id": "mapit:65730", 
+        "identifier": "http://mapit.mysociety.org/area/65730", 
+        "name": "Aldershot"
+    }, 
+    {
+        "id": "mapit:65712", 
+        "identifier": "http://mapit.mysociety.org/area/65712", 
+        "name": "Bolton South East"
+    }, 
+    {
+        "id": "mapit:65903", 
+        "identifier": "http://mapit.mysociety.org/area/65903", 
+        "name": "Oldham East and Saddleworth"
+    }, 
+    {
+        "id": "mapit:65992", 
+        "identifier": "http://mapit.mysociety.org/area/65992", 
+        "name": "Telford"
+    }, 
+    {
+        "id": "mapit:66061", 
+        "identifier": "http://mapit.mysociety.org/area/66061", 
+        "name": "Mid Dorset and North Poole"
+    }, 
+    {
+        "id": "mapit:65763", 
+        "identifier": "http://mapit.mysociety.org/area/65763", 
+        "name": "Sedgefield"
+    }, 
+    {
+        "id": "mapit:65802", 
+        "identifier": "http://mapit.mysociety.org/area/65802", 
+        "name": "Darlington"
+    }, 
+    {
+        "id": "mapit:65567", 
+        "identifier": "http://mapit.mysociety.org/area/65567", 
+        "name": "Enfield, Southgate"
+    }, 
+    {
+        "id": "mapit:65571", 
+        "identifier": "http://mapit.mysociety.org/area/65571", 
+        "name": "Stevenage"
+    }, 
+    {
+        "id": "mapit:65756", 
+        "identifier": "http://mapit.mysociety.org/area/65756", 
+        "name": "Eddisbury"
+    }, 
+    {
+        "id": "mapit:65972", 
+        "identifier": "http://mapit.mysociety.org/area/65972", 
+        "name": "Carshalton and Wallington"
+    }, 
+    {
+        "id": "mapit:65700", 
+        "identifier": "http://mapit.mysociety.org/area/65700", 
+        "name": "Redditch"
+    }, 
+    {
+        "id": "mapit:65680", 
+        "identifier": "http://mapit.mysociety.org/area/65680", 
+        "name": "Slough"
+    }, 
+    {
+        "id": "mapit:65605", 
+        "identifier": "http://mapit.mysociety.org/area/65605", 
+        "name": "North Thanet"
+    }, 
+    {
+        "id": "mapit:65569", 
+        "identifier": "http://mapit.mysociety.org/area/65569", 
+        "name": "East Hampshire"
+    }, 
+    {
+        "id": "mapit:65823", 
+        "identifier": "http://mapit.mysociety.org/area/65823", 
+        "name": "Easington"
+    }, 
+    {
+        "id": "mapit:65765", 
+        "identifier": "http://mapit.mysociety.org/area/65765", 
+        "name": "Leeds Central"
+    }, 
+    {
+        "id": "mapit:65944", 
+        "identifier": "http://mapit.mysociety.org/area/65944", 
+        "name": "Gravesham"
+    }, 
+    {
+        "id": "mapit:14445", 
+        "identifier": "http://mapit.mysociety.org/area/14445", 
+        "name": "North Ayrshire and Arran"
+    }, 
+    {
+        "id": "mapit:65981", 
+        "identifier": "http://mapit.mysociety.org/area/65981", 
+        "name": "Blackburn"
+    }, 
+    {
+        "id": "mapit:65769", 
+        "identifier": "http://mapit.mysociety.org/area/65769", 
+        "name": "Weaver Vale"
+    }, 
+    {
+        "id": "mapit:65926", 
+        "identifier": "http://mapit.mysociety.org/area/65926", 
+        "name": "Colchester"
+    }, 
+    {
+        "id": "mapit:66108", 
+        "identifier": "http://mapit.mysociety.org/area/66108", 
+        "name": "Arfon"
+    }, 
+    {
+        "id": "mapit:65686", 
+        "identifier": "http://mapit.mysociety.org/area/65686", 
+        "name": "Thirsk and Malton"
+    }, 
+    {
+        "id": "mapit:65875", 
+        "identifier": "http://mapit.mysociety.org/area/65875", 
+        "name": "Harlow"
+    }, 
+    {
+        "id": "mapit:65672", 
+        "identifier": "http://mapit.mysociety.org/area/65672", 
+        "name": "Doncaster North"
+    }, 
+    {
+        "id": "mapit:65771", 
+        "identifier": "http://mapit.mysociety.org/area/65771", 
+        "name": "Congleton"
+    }, 
+    {
+        "id": "mapit:65623", 
+        "identifier": "http://mapit.mysociety.org/area/65623", 
+        "name": "Basingstoke"
+    }, 
+    {
+        "id": "mapit:65974", 
+        "identifier": "http://mapit.mysociety.org/area/65974", 
+        "name": "Plymouth, Moor View"
+    }, 
+    {
+        "id": "mapit:65887", 
+        "identifier": "http://mapit.mysociety.org/area/65887", 
+        "name": "Luton North"
+    }, 
+    {
+        "id": "mapit:65935", 
+        "identifier": "http://mapit.mysociety.org/area/65935", 
+        "name": "Yeovil"
+    }, 
+    {
+        "id": "mapit:65774", 
+        "identifier": "http://mapit.mysociety.org/area/65774", 
+        "name": "Wokingham"
+    }, 
+    {
+        "id": "mapit:65679", 
+        "identifier": "http://mapit.mysociety.org/area/65679", 
+        "name": "Blackpool South"
+    }, 
+    {
+        "id": "mapit:65580", 
+        "identifier": "http://mapit.mysociety.org/area/65580", 
+        "name": "Southampton, Test"
+    }, 
+    {
+        "id": "mapit:66099", 
+        "identifier": "http://mapit.mysociety.org/area/66099", 
+        "name": "Newport West"
+    }, 
+    {
+        "id": "mapit:66042", 
+        "identifier": "http://mapit.mysociety.org/area/66042", 
+        "name": "Streatham"
+    }, 
+    {
+        "id": "mapit:66020", 
+        "identifier": "http://mapit.mysociety.org/area/66020", 
+        "name": "Lewes"
+    }, 
+    {
+        "id": "mapit:65638", 
+        "identifier": "http://mapit.mysociety.org/area/65638", 
+        "name": "Wantage"
+    }, 
+    {
+        "id": "mapit:65891", 
+        "identifier": "http://mapit.mysociety.org/area/65891", 
+        "name": "Scarborough and Whitby"
+    }, 
+    {
+        "id": "mapit:65998", 
+        "identifier": "http://mapit.mysociety.org/area/65998", 
+        "name": "Middlesbrough"
+    }, 
+    {
+        "id": "mapit:65626", 
+        "identifier": "http://mapit.mysociety.org/area/65626", 
+        "name": "Watford"
+    }, 
+    {
+        "id": "mapit:65661", 
+        "identifier": "http://mapit.mysociety.org/area/65661", 
+        "name": "Maldon"
+    }, 
+    {
+        "id": "mapit:65820", 
+        "identifier": "http://mapit.mysociety.org/area/65820", 
+        "name": "Bishop Auckland"
+    }, 
+    {
+        "id": "mapit:66090", 
+        "identifier": "http://mapit.mysociety.org/area/66090", 
+        "name": "Cardiff Central"
+    }, 
+    {
+        "id": "mapit:65617", 
+        "identifier": "http://mapit.mysociety.org/area/65617", 
+        "name": "Bromsgrove"
+    }, 
+    {
+        "id": "mapit:65929", 
+        "identifier": "http://mapit.mysociety.org/area/65929", 
+        "name": "Carlisle"
+    }, 
+    {
+        "id": "mapit:14405", 
+        "identifier": "http://mapit.mysociety.org/area/14405", 
+        "name": "Berwickshire, Roxburgh and Selkirk"
+    }, 
+    {
+        "id": "mapit:65871", 
+        "identifier": "http://mapit.mysociety.org/area/65871", 
+        "name": "Keighley"
+    }, 
+    {
+        "id": "mapit:65912", 
+        "identifier": "http://mapit.mysociety.org/area/65912", 
+        "name": "Hayes and Harlington"
+    }, 
+    {
+        "id": "mapit:65692", 
+        "identifier": "http://mapit.mysociety.org/area/65692", 
+        "name": "Torbay"
+    }, 
+    {
+        "id": "mapit:65984", 
+        "identifier": "http://mapit.mysociety.org/area/65984", 
+        "name": "Kingston upon Hull West and Hessle"
+    }, 
+    {
+        "id": "mapit:65717", 
+        "identifier": "http://mapit.mysociety.org/area/65717", 
+        "name": "Horsham"
+    }, 
+    {
+        "id": "mapit:65804", 
+        "identifier": "http://mapit.mysociety.org/area/65804", 
+        "name": "Birmingham, Selly Oak"
+    }, 
+    {
+        "id": "mapit:65632", 
+        "identifier": "http://mapit.mysociety.org/area/65632", 
+        "name": "Sherwood"
+    }, 
+    {
+        "id": "mapit:65583", 
+        "identifier": "http://mapit.mysociety.org/area/65583", 
+        "name": "Blackley and Broughton"
+    }, 
+    {
+        "id": "mapit:14435", 
+        "identifier": "http://mapit.mysociety.org/area/14435", 
+        "name": "Inverness, Nairn, Badenoch and Strathspey"
+    }, 
+    {
+        "id": "mapit:65979", 
+        "identifier": "http://mapit.mysociety.org/area/65979", 
+        "name": "East Yorkshire"
+    }, 
+    {
+        "id": "mapit:65634", 
+        "identifier": "http://mapit.mysociety.org/area/65634", 
+        "name": "Norwich South"
+    }, 
+    {
+        "id": "mapit:65682", 
+        "identifier": "http://mapit.mysociety.org/area/65682", 
+        "name": "Orpington"
+    }, 
+    {
+        "id": "mapit:66011", 
+        "identifier": "http://mapit.mysociety.org/area/66011", 
+        "name": "Dartford"
+    }, 
+    {
+        "id": "mapit:65975", 
+        "identifier": "http://mapit.mysociety.org/area/65975", 
+        "name": "Bury South"
+    }, 
+    {
+        "id": "mapit:14439", 
+        "identifier": "http://mapit.mysociety.org/area/14439", 
+        "name": "Linlithgow and East Falkirk"
+    }, 
+    {
+        "id": "mapit:65697", 
+        "identifier": "http://mapit.mysociety.org/area/65697", 
+        "name": "Bracknell"
+    }, 
+    {
+        "id": "mapit:66084", 
+        "identifier": "http://mapit.mysociety.org/area/66084", 
+        "name": "Monmouth"
+    }, 
+    {
+        "id": "mapit:65751", 
+        "identifier": "http://mapit.mysociety.org/area/65751", 
+        "name": "Batley and Spen"
+    }, 
+    {
+        "id": "mapit:65755", 
+        "identifier": "http://mapit.mysociety.org/area/65755", 
+        "name": "Ealing Central and Acton"
+    }, 
+    {
+        "id": "mapit:66131", 
+        "identifier": "http://mapit.mysociety.org/area/66131", 
+        "name": "Foyle"
+    }, 
+    {
+        "id": "mapit:65667", 
+        "identifier": "http://mapit.mysociety.org/area/65667", 
+        "name": "Birmingham, Erdington"
+    }, 
+    {
+        "id": "mapit:65647", 
+        "identifier": "http://mapit.mysociety.org/area/65647", 
+        "name": "Mansfield"
+    }, 
+    {
+        "id": "mapit:66013", 
+        "identifier": "http://mapit.mysociety.org/area/66013", 
+        "name": "Leyton and Wanstead"
+    }, 
+    {
+        "id": "mapit:66025", 
+        "identifier": "http://mapit.mysociety.org/area/66025", 
+        "name": "Daventry"
+    }, 
+    {
+        "id": "mapit:66069", 
+        "identifier": "http://mapit.mysociety.org/area/66069", 
+        "name": "Hornchurch and Upminster"
+    }, 
+    {
+        "id": "mapit:66139", 
+        "identifier": "http://mapit.mysociety.org/area/66139", 
+        "name": "Strangford"
+    }, 
+    {
+        "id": "mapit:14425", 
+        "identifier": "http://mapit.mysociety.org/area/14425", 
+        "name": "Glasgow Central"
+    }, 
+    {
+        "id": "mapit:65821", 
+        "identifier": "http://mapit.mysociety.org/area/65821", 
+        "name": "Bootle"
+    }, 
+    {
+        "id": "mapit:66057", 
+        "identifier": "http://mapit.mysociety.org/area/66057", 
+        "name": "Cleethorpes"
+    }, 
+    {
+        "id": "mapit:66135", 
+        "identifier": "http://mapit.mysociety.org/area/66135", 
+        "name": "North Antrim"
+    }, 
+    {
+        "id": "mapit:65723", 
+        "identifier": "http://mapit.mysociety.org/area/65723", 
+        "name": "Devizes"
+    }, 
+    {
+        "id": "mapit:65663", 
+        "identifier": "http://mapit.mysociety.org/area/65663", 
+        "name": "Nuneaton"
+    }, 
+    {
+        "id": "mapit:66133", 
+        "identifier": "http://mapit.mysociety.org/area/66133", 
+        "name": "Mid Ulster"
+    }, 
+    {
+        "id": "mapit:65640", 
+        "identifier": "http://mapit.mysociety.org/area/65640", 
+        "name": "Hastings and Rye"
+    }, 
+    {
+        "id": "mapit:14440", 
+        "identifier": "http://mapit.mysociety.org/area/14440", 
+        "name": "Livingston"
+    }, 
+    {
+        "id": "mapit:65832", 
+        "identifier": "http://mapit.mysociety.org/area/65832", 
+        "name": "Walsall South"
+    }, 
+    {
+        "id": "mapit:14419", 
+        "identifier": "http://mapit.mysociety.org/area/14419", 
+        "name": "Edinburgh East"
+    }, 
+    {
+        "id": "mapit:65670", 
+        "identifier": "http://mapit.mysociety.org/area/65670", 
+        "name": "Braintree"
+    }, 
+    {
+        "id": "mapit:65578", 
+        "identifier": "http://mapit.mysociety.org/area/65578", 
+        "name": "Harrogate and Knaresborough"
+    }, 
+    {
+        "id": "mapit:65924", 
+        "identifier": "http://mapit.mysociety.org/area/65924", 
+        "name": "Denton and Reddish"
+    }, 
+    {
+        "id": "mapit:65591", 
+        "identifier": "http://mapit.mysociety.org/area/65591", 
+        "name": "St Austell and Newquay"
+    }, 
+    {
+        "id": "mapit:66079", 
+        "identifier": "http://mapit.mysociety.org/area/66079", 
+        "name": "Warley"
+    }, 
+    {
+        "id": "mapit:66114", 
+        "identifier": "http://mapit.mysociety.org/area/66114", 
+        "name": "Cardiff West"
+    }, 
+    {
+        "id": "mapit:66062", 
+        "identifier": "http://mapit.mysociety.org/area/66062", 
+        "name": "Esher and Walton"
+    }, 
+    {
+        "id": "mapit:66016", 
+        "identifier": "http://mapit.mysociety.org/area/66016", 
+        "name": "Southampton, Itchen"
+    }, 
+    {
+        "id": "mapit:65815", 
+        "identifier": "http://mapit.mysociety.org/area/65815", 
+        "name": "New Forest West"
+    }, 
+    {
+        "id": "mapit:65621", 
+        "identifier": "http://mapit.mysociety.org/area/65621", 
+        "name": "Doncaster Central"
+    }, 
+    {
+        "id": "mapit:65762", 
+        "identifier": "http://mapit.mysociety.org/area/65762", 
+        "name": "South Derbyshire"
+    }, 
+    {
+        "id": "mapit:66065", 
+        "identifier": "http://mapit.mysociety.org/area/66065", 
+        "name": "Brent Central"
+    }, 
+    {
+        "id": "mapit:66126", 
+        "identifier": "http://mapit.mysociety.org/area/66126", 
+        "name": "Belfast South"
+    }, 
+    {
+        "id": "mapit:14409", 
+        "identifier": "http://mapit.mysociety.org/area/14409", 
+        "name": "Cumbernauld, Kilsyth and Kirkintilloch East"
+    }, 
+    {
+        "id": "mapit:65822", 
+        "identifier": "http://mapit.mysociety.org/area/65822", 
+        "name": "North Wiltshire"
+    }, 
+    {
+        "id": "mapit:65573", 
+        "identifier": "http://mapit.mysociety.org/area/65573", 
+        "name": "East Ham"
+    }, 
+    {
+        "id": "mapit:65738", 
+        "identifier": "http://mapit.mysociety.org/area/65738", 
+        "name": "Bolton West"
+    }, 
+    {
+        "id": "mapit:66022", 
+        "identifier": "http://mapit.mysociety.org/area/66022", 
+        "name": "Oldham West and Royton"
+    }, 
+    {
+        "id": "mapit:14398", 
+        "identifier": "http://mapit.mysociety.org/area/14398", 
+        "name": "Aberdeen North"
+    }, 
+    {
+        "id": "mapit:65811", 
+        "identifier": "http://mapit.mysociety.org/area/65811", 
+        "name": "Ashford"
+    }, 
+    {
+        "id": "mapit:65687", 
+        "identifier": "http://mapit.mysociety.org/area/65687", 
+        "name": "Beaconsfield"
+    }, 
+    {
+        "id": "mapit:65658", 
+        "identifier": "http://mapit.mysociety.org/area/65658", 
+        "name": "North Devon"
+    }, 
+    {
+        "id": "mapit:65937", 
+        "identifier": "http://mapit.mysociety.org/area/65937", 
+        "name": "Islington North"
+    }, 
+    {
+        "id": "mapit:65590", 
+        "identifier": "http://mapit.mysociety.org/area/65590", 
+        "name": "Corby"
+    }, 
+    {
+        "id": "mapit:14415", 
+        "identifier": "http://mapit.mysociety.org/area/14415", 
+        "name": "East Dunbartonshire"
+    }, 
+    {
+        "id": "mapit:65837", 
+        "identifier": "http://mapit.mysociety.org/area/65837", 
+        "name": "Greenwich and Woolwich"
+    }, 
+    {
+        "id": "mapit:65732", 
+        "identifier": "http://mapit.mysociety.org/area/65732", 
+        "name": "St Helens South and Whiston"
+    }, 
+    {
+        "id": "mapit:66058", 
+        "identifier": "http://mapit.mysociety.org/area/66058", 
+        "name": "West Ham"
+    }, 
+    {
+        "id": "mapit:65991", 
+        "identifier": "http://mapit.mysociety.org/area/65991", 
+        "name": "Ellesmere Port and Neston"
+    }, 
+    {
+        "id": "mapit:14450", 
+        "identifier": "http://mapit.mysociety.org/area/14450", 
+        "name": "Paisley and Renfrewshire South"
+    }, 
+    {
+        "id": "mapit:66059", 
+        "identifier": "http://mapit.mysociety.org/area/66059", 
+        "name": "Northampton North"
+    }, 
+    {
+        "id": "mapit:66043", 
+        "identifier": "http://mapit.mysociety.org/area/66043", 
+        "name": "Rochester and Strood"
+    }, 
+    {
+        "id": "mapit:65827", 
+        "identifier": "http://mapit.mysociety.org/area/65827", 
+        "name": "Wimbledon"
+    }, 
+    {
+        "id": "mapit:65941", 
+        "identifier": "http://mapit.mysociety.org/area/65941", 
+        "name": "Leeds East"
+    }, 
+    {
+        "id": "mapit:65602", 
+        "identifier": "http://mapit.mysociety.org/area/65602", 
+        "name": "North Cornwall"
+    }, 
+    {
+        "id": "mapit:14456", 
+        "identifier": "http://mapit.mysociety.org/area/14456", 
+        "name": "West Dunbartonshire"
+    }, 
+    {
+        "id": "mapit:66087", 
+        "identifier": "http://mapit.mysociety.org/area/66087", 
+        "name": "Pontypridd"
+    }, 
+    {
+        "id": "mapit:65959", 
+        "identifier": "http://mapit.mysociety.org/area/65959", 
+        "name": "Shipley"
+    }, 
+    {
+        "id": "mapit:65898", 
+        "identifier": "http://mapit.mysociety.org/area/65898", 
+        "name": "Basildon and Billericay"
+    }, 
+    {
+        "id": "mapit:65958", 
+        "identifier": "http://mapit.mysociety.org/area/65958", 
+        "name": "Brentford and Isleworth"
+    }, 
+    {
+        "id": "mapit:65588", 
+        "identifier": "http://mapit.mysociety.org/area/65588", 
+        "name": "Wentworth and Dearne"
+    }, 
+    {
+        "id": "mapit:66031", 
+        "identifier": "http://mapit.mysociety.org/area/66031", 
+        "name": "Bristol South"
+    }, 
+    {
+        "id": "mapit:65779", 
+        "identifier": "http://mapit.mysociety.org/area/65779", 
+        "name": "Folkestone and Hythe"
+    }, 
+    {
+        "id": "mapit:65786", 
+        "identifier": "http://mapit.mysociety.org/area/65786", 
+        "name": "Henley"
+    }, 
+    {
+        "id": "mapit:66091", 
+        "identifier": "http://mapit.mysociety.org/area/66091", 
+        "name": "Swansea East"
+    }, 
+    {
+        "id": "mapit:65557", 
+        "identifier": "http://mapit.mysociety.org/area/65557", 
+        "name": "Hazel Grove"
+    }, 
+    {
+        "id": "mapit:65850", 
+        "identifier": "http://mapit.mysociety.org/area/65850", 
+        "name": "Hexham"
+    }, 
+    {
+        "id": "mapit:65637", 
+        "identifier": "http://mapit.mysociety.org/area/65637", 
+        "name": "Pudsey"
+    }, 
+    {
+        "id": "mapit:14416", 
+        "identifier": "http://mapit.mysociety.org/area/14416", 
+        "name": "East Kilbride, Strathaven and Lesmahagow"
+    }, 
+    {
+        "id": "mapit:65645", 
+        "identifier": "http://mapit.mysociety.org/area/65645", 
+        "name": "Makerfield"
+    }, 
+    {
+        "id": "mapit:65710", 
+        "identifier": "http://mapit.mysociety.org/area/65710", 
+        "name": "Stoke-on-Trent Central"
+    }, 
+    {
+        "id": "mapit:65675", 
+        "identifier": "http://mapit.mysociety.org/area/65675", 
+        "name": "Harborough"
+    }, 
+    {
+        "id": "mapit:65625", 
+        "identifier": "http://mapit.mysociety.org/area/65625", 
+        "name": "Workington"
+    }, 
+    {
+        "id": "mapit:65677", 
+        "identifier": "http://mapit.mysociety.org/area/65677", 
+        "name": "Elmet and Rothwell"
+    }, 
+    {
+        "id": "mapit:14420", 
+        "identifier": "http://mapit.mysociety.org/area/14420", 
+        "name": "Edinburgh North and Leith"
+    }, 
+    {
+        "id": "mapit:65893", 
+        "identifier": "http://mapit.mysociety.org/area/65893", 
+        "name": "Copeland"
+    }, 
+    {
+        "id": "mapit:65770", 
+        "identifier": "http://mapit.mysociety.org/area/65770", 
+        "name": "Stoke-on-Trent South"
+    }, 
+    {
+        "id": "mapit:65563", 
+        "identifier": "http://mapit.mysociety.org/area/65563", 
+        "name": "Shrewsbury and Atcham"
+    }, 
+    {
+        "id": "mapit:65669", 
+        "identifier": "http://mapit.mysociety.org/area/65669", 
+        "name": "Wythenshawe and Sale East"
+    }, 
+    {
+        "id": "mapit:14430", 
+        "identifier": "http://mapit.mysociety.org/area/14430", 
+        "name": "Glasgow South"
+    }, 
+    {
+        "id": "mapit:65565", 
+        "identifier": "http://mapit.mysociety.org/area/65565", 
+        "name": "North West Cambridgeshire"
+    }, 
+    {
+        "id": "mapit:66005", 
+        "identifier": "http://mapit.mysociety.org/area/66005", 
+        "name": "Reigate"
+    }, 
+    {
+        "id": "mapit:14423", 
+        "identifier": "http://mapit.mysociety.org/area/14423", 
+        "name": "Edinburgh West"
+    }, 
+    {
+        "id": "mapit:65653", 
+        "identifier": "http://mapit.mysociety.org/area/65653", 
+        "name": "Old Bexley and Sidcup"
+    }, 
+    {
+        "id": "mapit:65603", 
+        "identifier": "http://mapit.mysociety.org/area/65603", 
+        "name": "Croydon Central"
+    }, 
+    {
+        "id": "mapit:65919", 
+        "identifier": "http://mapit.mysociety.org/area/65919", 
+        "name": "Thurrock"
+    }, 
+    {
+        "id": "mapit:66071", 
+        "identifier": "http://mapit.mysociety.org/area/66071", 
+        "name": "Bosworth"
+    }, 
+    {
+        "id": "mapit:65818", 
+        "identifier": "http://mapit.mysociety.org/area/65818", 
+        "name": "Chelsea and Fulham"
+    }, 
+    {
+        "id": "mapit:65644", 
+        "identifier": "http://mapit.mysociety.org/area/65644", 
+        "name": "Liverpool, Wavertree"
+    }, 
+    {
+        "id": "mapit:65761", 
+        "identifier": "http://mapit.mysociety.org/area/65761", 
+        "name": "Tiverton and Honiton"
+    }, 
+    {
+        "id": "mapit:14453", 
+        "identifier": "http://mapit.mysociety.org/area/14453", 
+        "name": "Rutherglen and Hamilton West"
+    }, 
+    {
+        "id": "mapit:65844", 
+        "identifier": "http://mapit.mysociety.org/area/65844", 
+        "name": "Brighton, Kemptown"
+    }, 
+    {
+        "id": "mapit:65550", 
+        "identifier": "http://mapit.mysociety.org/area/65550", 
+        "name": "Hackney North and Stoke Newington"
+    }, 
+    {
+        "id": "mapit:65615", 
+        "identifier": "http://mapit.mysociety.org/area/65615", 
+        "name": "Charnwood"
+    }, 
+    {
+        "id": "mapit:65780", 
+        "identifier": "http://mapit.mysociety.org/area/65780", 
+        "name": "East Worthing and Shoreham"
+    }, 
+    {
+        "id": "mapit:65885", 
+        "identifier": "http://mapit.mysociety.org/area/65885", 
+        "name": "Christchurch"
+    }, 
+    {
+        "id": "mapit:65744", 
+        "identifier": "http://mapit.mysociety.org/area/65744", 
+        "name": "Tonbridge and Malling"
+    }, 
+    {
+        "id": "mapit:65997", 
+        "identifier": "http://mapit.mysociety.org/area/65997", 
+        "name": "South East Cambridgeshire"
+    }, 
+    {
+        "id": "mapit:65764", 
+        "identifier": "http://mapit.mysociety.org/area/65764", 
+        "name": "Faversham and Mid Kent"
+    }, 
+    {
+        "id": "mapit:65553", 
+        "identifier": "http://mapit.mysociety.org/area/65553", 
+        "name": "Don Valley"
+    }, 
+    {
+        "id": "mapit:14429", 
+        "identifier": "http://mapit.mysociety.org/area/14429", 
+        "name": "Glasgow North West"
+    }, 
+    {
+        "id": "mapit:65759", 
+        "identifier": "http://mapit.mysociety.org/area/65759", 
+        "name": "Cities of London and Westminster"
+    }, 
+    {
+        "id": "mapit:14426", 
+        "identifier": "http://mapit.mysociety.org/area/14426", 
+        "name": "Glasgow East"
+    }, 
+    {
+        "id": "mapit:65961", 
+        "identifier": "http://mapit.mysociety.org/area/65961", 
+        "name": "Wealden"
+    }, 
+    {
+        "id": "mapit:65842", 
+        "identifier": "http://mapit.mysociety.org/area/65842", 
+        "name": "Selby and Ainsty"
+    }, 
+    {
+        "id": "mapit:66053", 
+        "identifier": "http://mapit.mysociety.org/area/66053", 
+        "name": "Kingswood"
+    }, 
+    {
+        "id": "mapit:65819", 
+        "identifier": "http://mapit.mysociety.org/area/65819", 
+        "name": "Manchester, Withington"
+    }, 
+    {
+        "id": "mapit:66088", 
+        "identifier": "http://mapit.mysociety.org/area/66088", 
+        "name": "Brecon and Radnorshire"
+    }, 
+    {
+        "id": "mapit:66032", 
+        "identifier": "http://mapit.mysociety.org/area/66032", 
+        "name": "Redcar"
+    }, 
+    {
+        "id": "mapit:14400", 
+        "identifier": "http://mapit.mysociety.org/area/14400", 
+        "name": "Airdrie and Shotts"
+    }, 
+    {
+        "id": "mapit:65753", 
+        "identifier": "http://mapit.mysociety.org/area/65753", 
+        "name": "Blyth Valley"
+    }, 
+    {
+        "id": "mapit:66038", 
+        "identifier": "http://mapit.mysociety.org/area/66038", 
+        "name": "Mitcham and Morden"
+    }, 
+    {
+        "id": "mapit:65748", 
+        "identifier": "http://mapit.mysociety.org/area/65748", 
+        "name": "Central Suffolk and North Ipswich"
+    }, 
+    {
+        "id": "mapit:66008", 
+        "identifier": "http://mapit.mysociety.org/area/66008", 
+        "name": "Banbury"
+    }, 
+    {
+        "id": "mapit:65845", 
+        "identifier": "http://mapit.mysociety.org/area/65845", 
+        "name": "Bexhill and Battle"
+    }, 
+    {
+        "id": "mapit:65967", 
+        "identifier": "http://mapit.mysociety.org/area/65967", 
+        "name": "Hemel Hempstead"
+    }, 
+    {
+        "id": "mapit:65989", 
+        "identifier": "http://mapit.mysociety.org/area/65989", 
+        "name": "Birmingham, Ladywood"
+    }, 
+    {
+        "id": "mapit:65613", 
+        "identifier": "http://mapit.mysociety.org/area/65613", 
+        "name": "Uxbridge and South Ruislip"
+    }, 
+    {
+        "id": "mapit:66003", 
+        "identifier": "http://mapit.mysociety.org/area/66003", 
+        "name": "Hertford and Stortford"
+    }, 
+    {
+        "id": "mapit:66086", 
+        "identifier": "http://mapit.mysociety.org/area/66086", 
+        "name": "Merthyr Tydfil and Rhymney"
+    }, 
+    {
+        "id": "mapit:65854", 
+        "identifier": "http://mapit.mysociety.org/area/65854", 
+        "name": "St Ives"
+    }, 
+    {
+        "id": "mapit:66138", 
+        "identifier": "http://mapit.mysociety.org/area/66138", 
+        "name": "South Down"
+    }, 
+    {
+        "id": "mapit:14451", 
+        "identifier": "http://mapit.mysociety.org/area/14451", 
+        "name": "Perth and North Perthshire"
+    }, 
+    {
+        "id": "mapit:66096", 
+        "identifier": "http://mapit.mysociety.org/area/66096", 
+        "name": "Dwyfor Meirionnydd"
+    }, 
+    {
+        "id": "mapit:14414", 
+        "identifier": "http://mapit.mysociety.org/area/14414", 
+        "name": "Dunfermline and West Fife"
+    }, 
+    {
+        "id": "mapit:65646", 
+        "identifier": "http://mapit.mysociety.org/area/65646", 
+        "name": "Bolton North East"
+    }, 
+    {
+        "id": "mapit:66014", 
+        "identifier": "http://mapit.mysociety.org/area/66014", 
+        "name": "Portsmouth South"
+    }, 
+    {
+        "id": "mapit:65747", 
+        "identifier": "http://mapit.mysociety.org/area/65747", 
+        "name": "Surrey Heath"
+    }, 
+    {
+        "id": "mapit:65978", 
+        "identifier": "http://mapit.mysociety.org/area/65978", 
+        "name": "Leigh"
+    }, 
+    {
+        "id": "mapit:65947", 
+        "identifier": "http://mapit.mysociety.org/area/65947", 
+        "name": "Houghton and Sunderland South"
+    }, 
+    {
+        "id": "mapit:65586", 
+        "identifier": "http://mapit.mysociety.org/area/65586", 
+        "name": "Sunderland Central"
+    }, 
+    {
+        "id": "mapit:65899", 
+        "identifier": "http://mapit.mysociety.org/area/65899", 
+        "name": "Hyndburn"
+    }, 
+    {
+        "id": "mapit:66095", 
+        "identifier": "http://mapit.mysociety.org/area/66095", 
+        "name": "Bridgend"
+    }, 
+    {
+        "id": "mapit:66072", 
+        "identifier": "http://mapit.mysociety.org/area/66072", 
+        "name": "Birmingham, Hodge Hill"
+    }, 
+    {
+        "id": "mapit:65758", 
+        "identifier": "http://mapit.mysociety.org/area/65758", 
+        "name": "West Worcestershire"
+    }, 
+    {
+        "id": "mapit:65841", 
+        "identifier": "http://mapit.mysociety.org/area/65841", 
+        "name": "Bognor Regis and Littlehampton"
+    }, 
+    {
+        "id": "mapit:65930", 
+        "identifier": "http://mapit.mysociety.org/area/65930", 
+        "name": "Rother Valley"
+    }, 
+    {
+        "id": "mapit:65964", 
+        "identifier": "http://mapit.mysociety.org/area/65964", 
+        "name": "Tatton"
+    }, 
+    {
+        "id": "mapit:14417", 
+        "identifier": "http://mapit.mysociety.org/area/14417", 
+        "name": "East Lothian"
+    }, 
+    {
+        "id": "mapit:65874", 
+        "identifier": "http://mapit.mysociety.org/area/65874", 
+        "name": "Warrington North"
+    }, 
+    {
+        "id": "mapit:65956", 
+        "identifier": "http://mapit.mysociety.org/area/65956", 
+        "name": "South West Wiltshire"
+    }, 
+    {
+        "id": "mapit:65932", 
+        "identifier": "http://mapit.mysociety.org/area/65932", 
+        "name": "Meriden"
+    }, 
+    {
+        "id": "mapit:65788", 
+        "identifier": "http://mapit.mysociety.org/area/65788", 
+        "name": "South Dorset"
+    }, 
+    {
+        "id": "mapit:14428", 
+        "identifier": "http://mapit.mysociety.org/area/14428", 
+        "name": "Glasgow North East"
+    }, 
+    {
+        "id": "mapit:65986", 
+        "identifier": "http://mapit.mysociety.org/area/65986", 
+        "name": "Skipton and Ripon"
+    }, 
+    {
+        "id": "mapit:65757", 
+        "identifier": "http://mapit.mysociety.org/area/65757", 
+        "name": "Worsley and Eccles South"
+    }, 
+    {
+        "id": "mapit:66026", 
+        "identifier": "http://mapit.mysociety.org/area/66026", 
+        "name": "Jarrow"
+    }, 
+    {
+        "id": "mapit:65767", 
+        "identifier": "http://mapit.mysociety.org/area/65767", 
+        "name": "Taunton Deane"
+    }, 
+    {
+        "id": "mapit:65575", 
+        "identifier": "http://mapit.mysociety.org/area/65575", 
+        "name": "Coventry North West"
+    }, 
+    {
+        "id": "mapit:14449", 
+        "identifier": "http://mapit.mysociety.org/area/14449", 
+        "name": "Paisley and Renfrewshire North"
+    }, 
+    {
+        "id": "mapit:65952", 
+        "identifier": "http://mapit.mysociety.org/area/65952", 
+        "name": "Gainsborough"
+    }, 
+    {
+        "id": "mapit:14406", 
+        "identifier": "http://mapit.mysociety.org/area/14406", 
+        "name": "Caithness, Sutherland and Easter Ross"
+    }, 
+    {
+        "id": "mapit:65792", 
+        "identifier": "http://mapit.mysociety.org/area/65792", 
+        "name": "Chorley"
+    }, 
+    {
+        "id": "mapit:14444", 
+        "identifier": "http://mapit.mysociety.org/area/14444", 
+        "name": "Na h-Eileanan an Iar"
+    }, 
+    {
+        "id": "mapit:65896", 
+        "identifier": "http://mapit.mysociety.org/area/65896", 
+        "name": "Macclesfield"
+    }, 
+    {
+        "id": "mapit:66066", 
+        "identifier": "http://mapit.mysociety.org/area/66066", 
+        "name": "Liverpool, Riverside"
+    }, 
+    {
+        "id": "mapit:65614", 
+        "identifier": "http://mapit.mysociety.org/area/65614", 
+        "name": "South Suffolk"
+    }, 
+    {
+        "id": "mapit:66023", 
+        "identifier": "http://mapit.mysociety.org/area/66023", 
+        "name": "Erith and Thamesmead"
+    }, 
+    {
+        "id": "mapit:65951", 
+        "identifier": "http://mapit.mysociety.org/area/65951", 
+        "name": "South Ribble"
+    }, 
+    {
+        "id": "mapit:65982", 
+        "identifier": "http://mapit.mysociety.org/area/65982", 
+        "name": "Reading West"
+    }, 
+    {
+        "id": "mapit:65904", 
+        "identifier": "http://mapit.mysociety.org/area/65904", 
+        "name": "Torridge and West Devon"
+    }, 
+    {
+        "id": "mapit:65945", 
+        "identifier": "http://mapit.mysociety.org/area/65945", 
+        "name": "Nottingham South"
+    }, 
+    {
+        "id": "mapit:65716", 
+        "identifier": "http://mapit.mysociety.org/area/65716", 
+        "name": "West Dorset"
+    }, 
+    {
+        "id": "mapit:66094", 
+        "identifier": "http://mapit.mysociety.org/area/66094", 
+        "name": "Newport East"
+    }, 
+    {
+        "id": "mapit:65933", 
+        "identifier": "http://mapit.mysociety.org/area/65933", 
+        "name": "Bournemouth West"
+    }, 
+    {
+        "id": "mapit:65878", 
+        "identifier": "http://mapit.mysociety.org/area/65878", 
+        "name": "Canterbury"
+    }, 
+    {
+        "id": "mapit:65851", 
+        "identifier": "http://mapit.mysociety.org/area/65851", 
+        "name": "Westminster North"
+    }, 
+    {
+        "id": "mapit:65776", 
+        "identifier": "http://mapit.mysociety.org/area/65776", 
+        "name": "North West Leicestershire"
+    }, 
+    {
+        "id": "mapit:65775", 
+        "identifier": "http://mapit.mysociety.org/area/65775", 
+        "name": "South West Devon"
+    }, 
+    {
+        "id": "mapit:65713", 
+        "identifier": "http://mapit.mysociety.org/area/65713", 
+        "name": "North West Norfolk"
+    }, 
+    {
+        "id": "mapit:66015", 
+        "identifier": "http://mapit.mysociety.org/area/66015", 
+        "name": "Bury North"
+    }, 
+    {
+        "id": "mapit:65773", 
+        "identifier": "http://mapit.mysociety.org/area/65773", 
+        "name": "Aldridge-Brownhills"
+    }, 
+    {
+        "id": "mapit:66111", 
+        "identifier": "http://mapit.mysociety.org/area/66111", 
+        "name": "Montgomeryshire"
+    }, 
+    {
+        "id": "mapit:65673", 
+        "identifier": "http://mapit.mysociety.org/area/65673", 
+        "name": "Preston"
+    }, 
+    {
+        "id": "mapit:65595", 
+        "identifier": "http://mapit.mysociety.org/area/65595", 
+        "name": "Brent North"
+    }, 
+    {
+        "id": "mapit:65720", 
+        "identifier": "http://mapit.mysociety.org/area/65720", 
+        "name": "North Tyneside"
+    }, 
+    {
+        "id": "mapit:65729", 
+        "identifier": "http://mapit.mysociety.org/area/65729", 
+        "name": "North East Hampshire"
+    }, 
+    {
+        "id": "mapit:65643", 
+        "identifier": "http://mapit.mysociety.org/area/65643", 
+        "name": "Nottingham North"
+    }, 
+    {
+        "id": "mapit:65856", 
+        "identifier": "http://mapit.mysociety.org/area/65856", 
+        "name": "East Surrey"
+    }, 
+    {
+        "id": "mapit:65966", 
+        "identifier": "http://mapit.mysociety.org/area/65966", 
+        "name": "Birmingham, Northfield"
+    }, 
+    {
+        "id": "mapit:66081", 
+        "identifier": "http://mapit.mysociety.org/area/66081", 
+        "name": "Penrith and The Border"
+    }, 
+    {
+        "id": "mapit:66077", 
+        "identifier": "http://mapit.mysociety.org/area/66077", 
+        "name": "Romford"
+    }, 
+    {
+        "id": "mapit:65688", 
+        "identifier": "http://mapit.mysociety.org/area/65688", 
+        "name": "Salford and Eccles"
+    }, 
+    {
+        "id": "mapit:65853", 
+        "identifier": "http://mapit.mysociety.org/area/65853", 
+        "name": "Bethnal Green and Bow"
+    }, 
+    {
+        "id": "mapit:65825", 
+        "identifier": "http://mapit.mysociety.org/area/65825", 
+        "name": "Vauxhall"
+    }, 
+    {
+        "id": "mapit:14407", 
+        "identifier": "http://mapit.mysociety.org/area/14407", 
+        "name": "Central Ayrshire"
+    }, 
+    {
+        "id": "mapit:65584", 
+        "identifier": "http://mapit.mysociety.org/area/65584", 
+        "name": "Rochford and Southend East"
+    }, 
+    {
+        "id": "mapit:14402", 
+        "identifier": "http://mapit.mysociety.org/area/14402", 
+        "name": "Argyll and Bute"
+    }, 
+    {
+        "id": "mapit:65791", 
+        "identifier": "http://mapit.mysociety.org/area/65791", 
+        "name": "Isle of Wight"
+    }, 
+    {
+        "id": "mapit:65777", 
+        "identifier": "http://mapit.mysociety.org/area/65777", 
+        "name": "Wolverhampton North East"
+    }, 
+    {
+        "id": "mapit:66012", 
+        "identifier": "http://mapit.mysociety.org/area/66012", 
+        "name": "Barnsley East"
+    }, 
+    {
+        "id": "mapit:66124", 
+        "identifier": "http://mapit.mysociety.org/area/66124", 
+        "name": "Belfast East"
+    }, 
+    {
+        "id": "mapit:65864", 
+        "identifier": "http://mapit.mysociety.org/area/65864", 
+        "name": "Gillingham and Rainham"
+    }, 
+    {
+        "id": "mapit:66097", 
+        "identifier": "http://mapit.mysociety.org/area/66097", 
+        "name": "Islwyn"
+    }, 
+    {
+        "id": "mapit:65808", 
+        "identifier": "http://mapit.mysociety.org/area/65808", 
+        "name": "Dulwich and West Norwood"
+    }, 
+    {
+        "id": "mapit:66046", 
+        "identifier": "http://mapit.mysociety.org/area/66046", 
+        "name": "Lichfield"
+    }, 
+    {
+        "id": "mapit:65846", 
+        "identifier": "http://mapit.mysociety.org/area/65846", 
+        "name": "Burnley"
+    }, 
+    {
+        "id": "mapit:65560", 
+        "identifier": "http://mapit.mysociety.org/area/65560", 
+        "name": "Wells"
+    }, 
+    {
+        "id": "mapit:14455", 
+        "identifier": "http://mapit.mysociety.org/area/14455", 
+        "name": "West Aberdeenshire and Kincardine"
+    }, 
+    {
+        "id": "mapit:65727", 
+        "identifier": "http://mapit.mysociety.org/area/65727", 
+        "name": "Cheadle"
+    }, 
+    {
+        "id": "mapit:65596", 
+        "identifier": "http://mapit.mysociety.org/area/65596", 
+        "name": "South West Hertfordshire"
+    }, 
+    {
+        "id": "mapit:66074", 
+        "identifier": "http://mapit.mysociety.org/area/66074", 
+        "name": "Tottenham"
+    }, 
+    {
+        "id": "mapit:65587", 
+        "identifier": "http://mapit.mysociety.org/area/65587", 
+        "name": "Leicester West"
+    }, 
+    {
+        "id": "mapit:65830", 
+        "identifier": "http://mapit.mysociety.org/area/65830", 
+        "name": "Wellingborough"
+    }, 
+    {
+        "id": "mapit:65928", 
+        "identifier": "http://mapit.mysociety.org/area/65928", 
+        "name": "Gosport"
+    }, 
+    {
+        "id": "mapit:65931", 
+        "identifier": "http://mapit.mysociety.org/area/65931", 
+        "name": "Birmingham, Edgbaston"
+    }, 
+    {
+        "id": "mapit:65581", 
+        "identifier": "http://mapit.mysociety.org/area/65581", 
+        "name": "Birkenhead"
+    }, 
+    {
+        "id": "mapit:65917", 
+        "identifier": "http://mapit.mysociety.org/area/65917", 
+        "name": "Poplar and Limehouse"
+    }, 
+    {
+        "id": "mapit:66089", 
+        "identifier": "http://mapit.mysociety.org/area/66089", 
+        "name": "Carmarthen East and Dinefwr"
+    }, 
+    {
+        "id": "mapit:66050", 
+        "identifier": "http://mapit.mysociety.org/area/66050", 
+        "name": "Enfield North"
+    }, 
+    {
+        "id": "mapit:65666", 
+        "identifier": "http://mapit.mysociety.org/area/65666", 
+        "name": "South Norfolk"
+    }, 
+    {
+        "id": "mapit:65555", 
+        "identifier": "http://mapit.mysociety.org/area/65555", 
+        "name": "Dover"
+    }, 
+    {
+        "id": "mapit:65799", 
+        "identifier": "http://mapit.mysociety.org/area/65799", 
+        "name": "Derbyshire Dales"
+    }, 
+    {
+        "id": "mapit:65731", 
+        "identifier": "http://mapit.mysociety.org/area/65731", 
+        "name": "Battersea"
+    }, 
+    {
+        "id": "mapit:65650", 
+        "identifier": "http://mapit.mysociety.org/area/65650", 
+        "name": "Harrow East"
+    }, 
+    {
+        "id": "mapit:65654", 
+        "identifier": "http://mapit.mysociety.org/area/65654", 
+        "name": "Saffron Walden"
+    }, 
+    {
+        "id": "mapit:65768", 
+        "identifier": "http://mapit.mysociety.org/area/65768", 
+        "name": "Norwich North"
+    }, 
+    {
+        "id": "mapit:14410", 
+        "identifier": "http://mapit.mysociety.org/area/14410", 
+        "name": "Dumfries and Galloway"
+    }, 
+    {
+        "id": "mapit:14408", 
+        "identifier": "http://mapit.mysociety.org/area/14408", 
+        "name": "Coatbridge, Chryston and Bellshill"
+    }, 
+    {
+        "id": "mapit:65881", 
+        "identifier": "http://mapit.mysociety.org/area/65881", 
+        "name": "Eastleigh"
+    }, 
+    {
+        "id": "mapit:65585", 
+        "identifier": "http://mapit.mysociety.org/area/65585", 
+        "name": "Ilford South"
+    }, 
+    {
+        "id": "mapit:66040", 
+        "identifier": "http://mapit.mysociety.org/area/66040", 
+        "name": "Sutton and Cheam"
+    }, 
+    {
+        "id": "mapit:65734", 
+        "identifier": "http://mapit.mysociety.org/area/65734", 
+        "name": "City of Chester"
+    }, 
+    {
+        "id": "mapit:65816", 
+        "identifier": "http://mapit.mysociety.org/area/65816", 
+        "name": "Eltham"
+    }
+]

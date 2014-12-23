@@ -1,2 +1,3 @@
 *.pyc
 web/static/css/.sass-cache
+web/server-web-ppsay.log

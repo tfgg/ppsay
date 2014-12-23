@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 from pymongo import MongoClient
 
-from feeds import feeds, feed_types
+#from feeds import feeds, feed_types
 from article import ArticleGeneric
 
 client = MongoClient()
