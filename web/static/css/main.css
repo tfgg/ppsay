@@ -20,6 +20,7 @@ ul.article-list {
     padding: 0;
     margin-bottom: 20px; }
     ul.article-list li.article-item h2 {
+      margin-top: 0;
       margin-bottom: 10px;
       font-size: 1.6em; }
       ul.article-list li.article-item h2 a.article-link {

@@ -5,9 +5,9 @@ from collections import Counter
 
 candidates = json.load(open('parse_data/candidates.json'))
 
-inverse_full_name_count = Counter(candidate['name'] for candidate in candidates.values())
-inverse_last_name_count = Counter(candidate['name'].split()[-1] for candidate in candidates.values())
-inverse_first_name_count = Counter(candidate['name'].split()[0] for candidate in candidates.values())
+#inverse_full_name_count = Counter(candidate['name'] for candidate in candidates)
+#inverse_last_name_count = Counter(candidate['name'].split()[-1] for candidate in candidates)
+#inverse_first_name_count = Counter(candidate['name'].split()[0] for candidate in candidates)
 
 client = MongoClient()
 
@@ -48,7 +48,7 @@ for doc in docs:
 
   possible_candidate_matches = {}
 
-  for id, candidate in candidates.items():
+  for candidate in candidates:
     # If we have more than forename-surname, try middlename + surname
     # Catches, e.g. Máirtín Ó Muilleoir
 
@@ -58,7 +58,7 @@ for doc in docs:
       print candidate['name'], score
 
       candidate['score'] = score
-      possible_candidate_matches[id] = candidate
+      possible_candidate_matches[candidate['id']] = candidate
 
   doc['possible_candidate_matches'] = possible_candidate_matches.values()
 

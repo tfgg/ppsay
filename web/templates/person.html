@@ -21,32 +21,7 @@
       {% endfor %}
     </div>
     <div class='col-md-6'>
-      <ul class='article-list'>
-      {% for article in articles %}
-        {% if article.page %}
-        <li class='article-item'>
-          <h2><a class='article-link'href='{{ article.page.url }}'>
-          {% if article.page.title %}
-            {{ article.page.title }}
-          {% else %}
-            {{ article.page.url }}
-          {% endif %}
-          </a> <small>{{ article.domain }}</small></h2>
-          
-          <ul class='article-mentions-people'>
-          {% for candidate in article.possible_candidate_matches %}
-            <li><a href='/person/{{ candidate.id }}'>{{ candidate.name }}</a></li>
-          {% endfor %}
-          </ul>
-          <ul class='article-mentions-constituencies'>
-          {% for constituency in article.possible_constituency_matches %}
-            <li><a href='/constituency/{{ constituency.id_snip }}'>{{ constituency.name }}</a></li>
-          {% endfor %}
-          </ul>
-        </li>
-        {% endif %}
-      {% endfor %}
-      </ul>
+        {% include "article_list.html" %}
     </div>
   </div>
 </div>

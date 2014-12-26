@@ -8,8 +8,6 @@ from goose import Goose
 
 g = Goose()
 
-
-
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
 class ArticleGeneric(object):
@@ -22,7 +20,10 @@ class ArticleGeneric(object):
     self.html = cache_get(self.url, self.fetch)
 
     if self.html is not None:
-      self.article = g.extract(raw_html=self.html)
+      try:
+        self.article = g.extract(raw_html=self.html)
+      except IOError, e:
+        raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
     else:
       raise ArticleGeneric.FetchError("Could not fetch {}".format(article_url))
 

@@ -20,6 +20,7 @@ def get_page(page_url):
     try:
       page = klass(page_url)
     except klass.FetchError, e:
+      print e
       return None
 
     return page.as_dict()
