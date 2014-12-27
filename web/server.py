@@ -55,26 +55,40 @@ def constituency(constituency_id):
                          articles=article_docs,
                          area=area_doc)
 
-dashboard_queries = {'num_articles': {},
-                     'num_articles_no_page': {'page': None},
-                     'num_articles_no_date': {'page.date_published': None},
-                     'num_articles_no_candidates': {'possible_candidate_matches': {'$size': 0}},
-                     'num_articles_no_constituencies': {'possible_constituency_matches': {'$size': 0}},
-                    }
-                        
+dashboard_queries = [{'query': {},
+                      'id': 'num_articles',
+                      'name': 'Number of articles',},
+                     {'query': {'page': None},
+                      'id': 'num_articles_no_page',
+                      'name': 'Number of unscraped articles',},
+                     {'query': {'page.date_published': None},
+                      'id': 'num_articles_no_date',
+                      'name': 'Number of articles without a date',},
+                     {'query': {'possible_candidate_matches': {'$size': 0}},
+                      'id': 'num_articles_no_candidates',
+                      'name': 'Number of articles with no candidates',},
+                     {'query': {'possible_constituency_matches': {'$size': 0}},
+                      'id': 'num_articles_no_constituencies',
+                      'name': 'Number of articles with no constituencies',},
+                    ]
+
+dashboard_query_index = {q['id']: q for q in dashboard_queries}
+          
 @app.route('/dashboard')
 def dashboard():
-    stats = {name: articles.find(query).count() for name, query in dashboard_queries.items()}
+    stats = {query['id']: articles.find(query['query']).count() for query in dashboard_queries}
 
     return render_template('dashboard.html',
-                           **stats)
+                           queries=dashboard_queries,
+                           stats=stats)
 
-@app.route('/dashboard/articles/<query_name>')
-def dashboard_articles_query(query_name):
-    docs = articles.find(dashboard_queries[query_name])
+@app.route('/dashboard/articles/<query_id>')
+def dashboard_article(query_id):
+    query = dashboard_query_index[query_id]
+    docs = articles.find(query['query'])
 
     return render_template('dashboard_query.html',
-                           query_name=query_name,
+                           query=query,
                            articles=docs)
 
 if __name__ == "__main__":

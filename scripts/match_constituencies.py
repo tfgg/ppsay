@@ -41,6 +41,12 @@ def score_match(constituency, text, title):
                 names.append(" ".join(tokens[1:]))
                 names.append(" ".join(reversed(tokens)))
 
+    # Remove "upon tyne" to fix some Newcastle matching
+    for name in list(names):
+        name_ = name.replace(' upon tyne', '')
+        names.append(name_)
+     
+    # Filter out Southamton, Test --> Test
     names = [x for x in names if x != 'test']
 
     for name in names:

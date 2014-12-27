@@ -4,17 +4,15 @@
 <div class='container'>
   <div class='row'>
     <div class='col-md-12'>
-      <h1>{{ query }}</h1>
+      <h1>Dashboard</h1>
     </div>
   </div>
   <div class='row'>
     <div class='col-md-6'>
         <ul>
-            <li>Total number of articles <strong>{{ num_articles }}</strong></li>
-            <li>Number of articles without pages <strong>{{ num_articles_no_page }}</strong></li>
-            <li>Number of articles wthout dates <strong>{{ num_articles_no_date }}</strong></li>
-            <li>Number of articles without candidates <strong>{{ num_articles_no_candidates }}</strong></li>
-            <li>Number of articles without constituencies <strong>{{ num_articles_no_constituencies }}</strong></li>
+            {% for query in queries %}
+            <li><a href='{{ url_for('dashboard_article', query_id=query.id) }}'>{{ query.name }}</a> <strong>{{ stats[query.id] }}</strong></li>
+            {% endfor %}
         </ul>
     </div>
   </div>
