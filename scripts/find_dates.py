@@ -1,3 +1,4 @@
+import re
 from pymongo import MongoClient
 import lxml.html
 from iso8601 import parse_date
@@ -22,6 +23,19 @@ time_names = {'DC.date.issued': lambda s: datetime(*map(int, s.split('-'))),
 
 #names = set()
 
+months = {'January': 1,
+          'February': 2,
+          'March': 3,
+          'April': 4,
+          'May': 5,
+          'June': 6,
+          'July': 7,
+          'August': 8,
+          'September': 9,
+          'October': 10,
+          'November': 11,
+          'December': 12,}
+
 for doc in docs:
     if not doc['page']:
         continue
@@ -44,11 +58,31 @@ for doc in docs:
         for div in tree.xpath('//div[@class="updated  Published"]/p'):
             parsed_time = datetime.strptime(div.text, 'Published %d/%m/%Y %H:%M')
             dates.append(parsed_time)
-   
+  
+        # Fri 24th October 2014 - 8:49 am 
         # Lib dem voice
         for div in tree.xpath('//div[@class="entry-meta"]'):
-            print div.text_content().split('|')[-1].strip()
- 
+            text = div.text_content().split('|')[-1].strip()
+            cols = re.findall("([A-Za-z]+) ([0-9]+)(st|nd|rd|th) ([A-Za-z]+) ([0-9]+) - ([0-9]+):([0-9]+) (am|pm)", text)
+
+            if len(cols) > 0:
+                cols = cols[0]
+                year = int(cols[4])
+                month = months[cols[3]]
+                day = int(cols[1])
+                hours = int(cols[5])
+                minutes = int(cols[6])
+                if cols[7] == 'pm':
+                    hours += 12
+
+                parsed_time = datetime(year, month, day, hours, minutes)
+                dates.append(parsed_time)
+            else:
+                s = """Isle of Wight News"""
+                text = text[len(s):].strip()
+                parsed_time = datetime.strptime(text, "%B %d, %Y")
+                dates.append(parsed_time)
+
     if dates:
         earliest_date = min(dates)
 

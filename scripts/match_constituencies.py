@@ -23,7 +23,6 @@ def is_sublist(a, b):
             return True
         else:
             i = i + 1
-            #is_sublist(a, b[1:], i+1)
 
 def find_matches(names, text_tokens, title_tokens):
     names = [[y.lower() for y in sep_re.split(x)] for x in names]
