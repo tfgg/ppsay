@@ -1,62 +1,59 @@
 # -*- coding: utf-8 -*-
+import sys
 import json
-from pymongo import MongoClient
+import re
 from collections import Counter
 
-client = MongoClient()
+from bson import ObjectId
+from pymongo import MongoClient
 
-db = client.news.articles
-
-docs = db.find()
+sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+')
 
 cardinal_directions = ['north east', 'south east', 'south west', 'north west', 'north', 'south', 'east', 'west']
 
-def score_match(constituency, text, title):
-    names = [constituency]
-    name_tokens = constituency.split()
+def is_sublist(a, b):
+    i = 0
+    
+    if a == []: return True
 
-    # Replace " and " with " & "
-    for name in list(names):
-        if " and " in name:
-            names.append(name.replace(" and ", " & "))
+    while True:
+        if i == len(b): return False
 
-    # Transpose directions, e.g. Durham North -> North Durham
-    for name in list(names):
-        for direction in cardinal_directions:
-          if constituency.endswith(direction):
-            name_ = direction + " " + constituency[:-len(direction)].strip()
-            names.append(name_)
-            break
+        if b[i:i + len(a)] == a:
+            return True
+        else:
+            i = i + 1
+            #is_sublist(a, b[1:], i+1)
 
-    # Undo commas, e.g. Durham, City of -> City of Durham
-    # Also remove commas e.g. Sheffield, Hallam -> Sheffield Hallam
-    # And remove first word, e.g. Shieffield, Hallam -> Hallam
-    for name in list(names):
-        if ',' in constituency:
-            tokens = [x.strip() for x in constituency.split(',')]
-
-            names.append(" ".join(tokens))
-
-            if " and " not in constituency:
-                names.append(" ".join(tokens[1:]))
-                names.append(" ".join(reversed(tokens)))
-
-    # Remove "upon tyne" to fix some Newcastle matching
-    for name in list(names):
-        name_ = name.replace(' upon tyne', '')
-        names.append(name_)
-     
-    # Filter out Southamton, Test --> Test
-    names = [x for x in names if x != 'test']
+def find_matches(names, text_tokens, title_tokens):
+    names = [[y.lower() for y in sep_re.split(x)] for x in names]
 
     for name in names:
-        if name in text or name in title:
-            return 1.0
-    
-    return 0.0
+        ii = is_sublist(name, title_tokens)
+
+        if ii:
+            return 1.0, 'title', name, ii
+
+    for name in names:
+        ii = is_sublist(name, text_tokens)
+
+        if ii:
+            return 1.0, 'text', name, ii
+
+    return None
 
 if __name__ == "__main__": 
+    client = MongoClient()
+    db = client.news.articles
+
+    if len(sys.argv) == 1:
+        docs = db.find()
+    else:
+        doc_id = ObjectId(sys.argv[1])
+        docs = db.find({'_id': doc_id})
+
     constituencies = json.load(open('parse_data/constituencies.json'))
+    constituency_names = json.load(open('parse_data/constituencies_other_names.json'))
 
     for doc in docs:
       if doc['page'] is None:
@@ -66,16 +63,22 @@ if __name__ == "__main__":
 
       text = doc['page']['text'].lower()
       title = doc['page']['title'].lower()
+      title_tokens = sep_re.split(title)
+      text_tokens = sep_re.split(text)
 
       possible_constituency_matches = {}
 
       for constituency in constituencies:
-        score = score_match(constituency['name'].lower(), text, title)
+        names = constituency_names[constituency['id'].split(':')[-1]]
 
-        if score > 0.0:
-          print constituency['name'], score
+        score = find_matches(names, text_tokens, title_tokens)
 
-          constituency['score'] = score
+        if score is None:
+            continue
+        else:
+          print constituency['name'], score[0], score[2]
+
+          constituency['score'] = score[0]
           constituency['id_snip'] = constituency['id'].split(':')[1]
           possible_constituency_matches[constituency['id_snip']] = constituency
 
