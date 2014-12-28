@@ -47,7 +47,9 @@ def resolve_overlaps(matches):
 
         for i1, match1 in enumerate(matches):
             for i2, match2 in enumerate(matches):
-                if match1 != match2:
+                # Make sure we're not lookig at the same match object
+                # Also only look for matches in same text (e.g. title<->title)
+                if match1 != match2 and match1[1][0] == match2[1][0]:
                     if range_overlap(match1[2][1], match2[2][1]):
                         print "Overlap", match1, match2
                         size1 = match1[2][1][1] - match1[2][1][0]

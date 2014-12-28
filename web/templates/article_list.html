@@ -18,7 +18,7 @@
       </ul>
       <ul class='article-mentions-constituencies'>
       {% for constituency in article.possible_constituency_matches %}
-        <li><a href='/constituency/{{ constituency.id_snip }}'>{{ constituency.name }}</a></li>
+        <li><a href='/constituency/{{ constituency.id[6:] }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
     </li>

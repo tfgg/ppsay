@@ -43,7 +43,7 @@ def person(person_id):
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
   article_docs = articles.find({'possible_constituency_matches':
-                                {'$elemMatch': {'id_snip': str(constituency_id)}}}) \
+                                {'$elemMatch': {'id': "mapit:{}".format(constituency_id)}}}) \
                          .sort([('page.date_published', -1)])
 
   area_doc = get_mapit_area(constituency_id)
