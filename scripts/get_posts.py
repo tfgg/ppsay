@@ -13,12 +13,18 @@ while resp:
     constituencies[post['area']['name']] = post['area']
 
     for membership in post['memberships']:
-      parties = {(x['name'], x['id']) for x in membership['person_id']['party_memberships'].values()}
+      candidacies = {year: {'party': {'name': x['name'],
+                                      'id': x['id'].split(':')[1],},
+                            'constituency': {'name': membership['person_id']['standing_in'][year]['name'], 
+                                             'id': membership['person_id']['standing_in'][year]['post_id'],}
+                           } 
+                     for year, x in membership['person_id']['party_memberships'].items() if x is not None}
 
-      candidates[membership['person_id']['id']] = {'name': membership['person_id']['name'],
+      candidates[membership['person_id']['id']] = {'name': membership['person_id']['name'].strip(),
+                    'other_names': [x['name'] for x in membership['person_id']['other_names']],
                     'url': membership['person_id']['url'],
                     'id': membership['person_id']['id'],
-                    'parties': [{'name': name, 'id': id} for name, id in parties],}
+                    'candidacies': candidacies,}
 
   json.dump(candidates.values(), open('parse_data/candidates.json', 'w+'), indent=4, sort_keys=True)
   json.dump(constituencies.values(), open('parse_data/constituencies.json', 'w+'), indent=4, sort_keys=True)
