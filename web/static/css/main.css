@@ -42,5 +42,13 @@ ul.article-list {
         color: #3333cc; }
     ul.article-list li.article-item ul.article-mentions-people li {
       background: #FFFECE; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-0-0 {
+        background: none; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-0-5 {
+        background: #FFFEEE; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-1-0 {
+        background: #FFFEDE; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-1-5 {
+        background: #FFFECE; }
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }

@@ -12,8 +12,8 @@
       </a> <small>{{ article.domain }}</small></h2>
  
       <ul class='article-mentions-people'>
-      {% for candidate in article.possible_candidate_matches %}
-        <li><a href='/person/{{ candidate.id }}'>{{ candidate.name }}</a></li>
+      {% for candidate in article.possible_candidate_matches|sort(attribute='score',reverse=True) %}
+        <li class='candidate-score-{{ candidate.score|replace(".", "-") }}'><a href='/person/{{ candidate.id }}'>{{ candidate.name }}</a></li>
       {% endfor %}
       </ul>
       <ul class='article-mentions-constituencies'>

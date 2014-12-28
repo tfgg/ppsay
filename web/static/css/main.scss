@@ -71,7 +71,23 @@ ul.article-list {
   
     ul.article-mentions-people {
       li {
-        background: #FFFECE;       
+        background: #FFFECE;
+        
+        &.candidate-score-0-0 {
+            background: none;
+        }   
+        
+        &.candidate-score-0-5 {
+            background: #FFFEEE;
+        }   
+        
+        &.candidate-score-1-0 {
+            background: #FFFEDE;
+        }   
+        
+        &.candidate-score-1-5 {
+            background: #FFFECE;
+        }   
  
         a {
           color: darken($highlight, 25%);
