@@ -11,6 +11,50 @@ p.person-candidacy {
     display: block;
     color: #333; }
 
+ul.people-tagged {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+  ul.people-tagged li.person-tagged {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd; }
+    ul.people-tagged li.person-tagged .name {
+      font-size: 1.2em; }
+    ul.people-tagged li.person-tagged .candidacy .year {
+      display: block;
+      font-size: 1.1em;
+      color: #666; }
+    ul.people-tagged li.person-tagged .candidacy .party {
+      display: block;
+      font-size: 1.2em; }
+    ul.people-tagged li.person-tagged .candidacy .constituency {
+      display: block;
+      color: #333; }
+  ul.people-tagged li.person-tagged-confirmed {
+    background: #dfd;
+    border: 0; }
+  ul.people-tagged li.person-tagged-removed {
+    background: #fdd;
+    border: 0; }
+
+ul.constituencies-tagged {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+  ul.constituencies-tagged li.constituency-tagged {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd; }
+    ul.constituencies-tagged li.constituency-tagged .name {
+      font-size: 1.2em; }
+  ul.constituencies-tagged li.constituency-tagged-confirmed {
+    background: #dfd;
+    border: 0; }
+  ul.constituencies-tagged li.constituency-tagged-removed {
+    background: #fdd;
+    border: 0; }
+
 ul.article-list {
   list-style: none;
   margin: 0;

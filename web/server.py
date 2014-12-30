@@ -1,4 +1,5 @@
 import requests
+from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, url_for, render_template, request
 
@@ -54,6 +55,107 @@ def constituency(constituency_id):
   return render_template('constituency.html',
                          articles=article_docs,
                          area=area_doc)
+
+@app.route('/article/<doc_id>')
+def article(doc_id):
+    doc_id = ObjectId(doc_id)
+
+    doc = articles.find_one({'_id': doc_id})
+
+    return render_template('article.html',
+                           article=doc)
+
+@app.route('/article/<doc_id>/people', methods=['PUT'])
+def article_person_confirm(doc_id):
+    doc_id = ObjectId(doc_id)
+    doc = articles.find_one({'_id': doc_id})
+
+    person_id = request.form.get('person_id', None)
+
+    if 'user_candidate_matches' not in doc:
+        doc['user_candidate_matches'] = {'confirm': [], 'remove': []}
+        
+    doc['user_candidate_matches']['confirm'].append(person_id)
+
+    if person_id in doc['user_candidate_matches']['remove']:
+        doc['user_candidate_matches']['remove'].remove(person_id)
+    
+    doc['user_candidate_matches']['confirm'] = list(set(doc['user_candidate_matches']['confirm']))
+    doc['user_candidate_matches']['remove'] = list(set(doc['user_candidate_matches']['remove']))
+    
+    articles.save(doc)
+ 
+    return render_template('article_people_tagged.html',
+                           article=doc)
+ 
+@app.route('/article/<doc_id>/people', methods=['DELETE'])
+def article_person_remove(doc_id):
+    doc_id = ObjectId(doc_id)
+    doc = articles.find_one({'_id': doc_id})
+    
+    person_id = request.form.get('person_id', None)
+
+    if 'user_candidate_matches' not in doc:
+        doc['user_candidate_matches'] = {'confirm': [], 'remove': []}
+        
+    doc['user_candidate_matches']['remove'].append(person_id)
+    
+    if person_id in doc['user_candidate_matches']['confirm']:
+        doc['user_candidate_matches']['confirm'].remove(person_id)
+    
+    doc['user_candidate_matches']['confirm'] = list(set(doc['user_candidate_matches']['confirm']))
+    doc['user_candidate_matches']['remove'] = list(set(doc['user_candidate_matches']['remove']))
+
+    articles.save(doc)
+ 
+    return render_template('article_people_tagged.html',
+                           article=doc)
+
+@app.route('/article/<doc_id>/constituencies', methods=['PUT'])
+def article_constituency_confirm(doc_id):
+    doc_id = ObjectId(doc_id)
+    doc = articles.find_one({'_id': doc_id})
+
+    constituency_id = request.form.get('constituency_id', None)
+
+    if 'user_constituency_matches' not in doc:
+        doc['user_constituency_matches'] = {'confirm': [], 'remove': []}
+        
+    doc['user_constituency_matches']['confirm'].append(constituency_id)
+
+    if constituency_id in doc['user_constituency_matches']['remove']:
+        doc['user_constituency_matches']['remove'].remove(constituency_id)
+    
+    doc['user_constituency_matches']['confirm'] = list(set(doc['user_constituency_matches']['confirm']))
+    doc['user_constituency_matches']['remove'] = list(set(doc['user_constituency_matches']['remove']))
+    
+    articles.save(doc)
+ 
+    return render_template('article_constituencies_tagged.html',
+                           article=doc)
+ 
+@app.route('/article/<doc_id>/constituencies', methods=['DELETE'])
+def article_constituency_remove(doc_id):
+    doc_id = ObjectId(doc_id)
+    doc = articles.find_one({'_id': doc_id})
+
+    constituency_id = request.form.get('constituency_id', None)
+
+    if 'user_constituency_matches' not in doc:
+        doc['user_constituency_matches'] = {'confirm': [], 'remove': []}
+        
+    doc['user_constituency_matches']['remove'].append(constituency_id)
+
+    if constituency_id in doc['user_constituency_matches']['confirm']:
+        doc['user_constituency_matches']['confirm'].remove(constituency_id)
+    
+    doc['user_constituency_matches']['confirm'] = list(set(doc['user_constituency_matches']['confirm']))
+    doc['user_constituency_matches']['remove'] = list(set(doc['user_constituency_matches']['remove']))
+    
+    articles.save(doc)
+ 
+    return render_template('article_constituencies_tagged.html',
+                           article=doc)
 
 dashboard_queries = [{'query': {},
                       'id': 'num_articles',

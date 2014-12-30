@@ -23,6 +23,77 @@ p.person-candidacy {
   }  
 }
 
+ul.people-tagged {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.person-tagged {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+
+
+        .name {
+            font-size: 1.2em;
+        }
+
+        .candidacy {
+            .year {
+                display: block;
+                font-size: 1.1em;
+                color: #666;
+            }
+
+            .party {
+                display: block;
+                font-size: 1.2em;
+            }
+
+            .constituency {
+                display: block;
+                color: #333;
+            }  
+        }
+    }
+
+    li.person-tagged-confirmed {
+        background: #dfd;
+        border: 0;
+    }
+    
+    li.person-tagged-removed {
+        background: #fdd;
+        border: 0;
+    }
+}
+
+ul.constituencies-tagged {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.constituency-tagged {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+
+        .name {
+            font-size: 1.2em;
+        }
+    }
+
+    li.constituency-tagged-confirmed {
+        background: #dfd;
+        border: 0;
+    }
+    
+    li.constituency-tagged-removed {
+        background: #fdd;
+        border: 0;
+    }
+}
+
 ul.article-list {
   list-style:none;
   margin:0;

@@ -1,0 +1,21 @@
+    {% for constituency in article.possible_constituency_matches %}
+        {% set constituency_state = 'unknown' %}
+
+        {% if 'user_constituency_matches' in article and constituency.id in article.user_constituency_matches.confirm %}
+            {% set constituency_state = 'confirmed' %}
+        {% elif 'user_constituency_matches' in article and constituency.id in article.user_constituency_matches.remove %}
+            {% set constituency_state = 'removed' %}
+        {% endif %}
+
+        <li class='constituency-tagged constituency-tagged-{{ constituency_state }}'>
+            <div class='name'>{{ constituency.name }}</div>
+
+            {% if constituency_state == 'confirmed' %}
+                Confirmed, <button onclick='remove_constituency("{{ constituency.id }}")'>un-tag</button>
+            {% elif constituency_state == 'removed' %}
+                Removed, <button onclick='confirm_constituency("{{ constituency.id }}")'>re-tag</button>
+            {% else %}
+                <button onclick='confirm_constituency("{{ constituency.id }}")'>confirm tag</button> <button onclick='remove_constituency("{{ constituency.id }}")'>remove tag</button>
+            {% endif %}
+        </li>
+    {% endfor %}

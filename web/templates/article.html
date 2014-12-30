@@ -1,0 +1,85 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<script>
+function confirm_person(person_id) {
+    $.ajax({
+        url: '{{ url_for('article_person_remove', doc_id=article._id) }}',
+        type: 'PUT',
+        data: {person_id: person_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#people-tagged').html(data);
+    }); 
+}
+
+function remove_person(person_id) {
+    $.ajax({
+        url: '{{ url_for('article_person_remove', doc_id=article._id) }}',
+        type: 'DELETE',
+        data: {person_id: person_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#people-tagged').html(data);
+    });  
+}
+
+function confirm_constituency(constituency_id) {
+    $.ajax({
+        url: '{{ url_for('article_constituency_remove', doc_id=article._id) }}',
+        type: 'PUT',
+        data: {constituency_id: constituency_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#constituencies-tagged').html(data);
+    }); 
+}
+
+function remove_constituency(constituency_id) {
+    $.ajax({
+        url: '{{ url_for('article_constituency_remove', doc_id=article._id) }}',
+        type: 'DELETE',
+        data: {constituency_id: constituency_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#constituencies-tagged').html(data);
+    });  
+}
+</script>
+
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h1>{{ article.page.title }}</h1>
+      <small><a href='{{ article.page.url }}'>{{ article.domain }}</a></small>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-3'>
+    <h2>People tagged</h2>
+
+    <button style='margin-bottom: 5px;'>add person</button>
+    <ul class='people-tagged' id='people-tagged'>
+        {% include "article_people_tagged.html" %}
+    </ul>
+
+    <h2>Constituencies tagged</h2>
+
+    <ul class='constituencies-tagged' id='constituencies-tagged'>
+        {% include "article_constituencies_tagged.html" %}
+    </ul>
+
+    <h2>Parties tagged</h2>
+
+    <ul class='parties-tagged'>
+    {% for party in article.possible_party_matches %}
+        <li class='party-tagged'>
+            <span class='name'>{{ party.name }}</span>
+            <button>confirm</button> <button>remove</button>
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+    <div class='col-md-9'>
+        {#{{ article.page.text|replace('\n', '<br/>')|safe }}#}
+        <iframe src='{{ article.page.url }}' style='width:100%;height:800px;'></iframe>
+    </div>
+  </div>
+</div>
+{% endblock content %}

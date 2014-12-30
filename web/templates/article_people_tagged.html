@@ -1,0 +1,28 @@
+    {% for person in article.possible_candidate_matches %}
+        {% set person_state = 'unknown' %}
+
+        {% if 'user_candidate_matches' in article and person.id in article.user_candidate_matches.confirm %}
+            {% set person_state = 'confirmed' %}
+        {% elif 'user_candidate_matches' in article and person.id in article.user_candidate_matches.remove %}
+            {% set person_state = 'removed' %}
+        {% endif %}
+
+        <li class='person-tagged person-tagged-{{ person_state }}'>
+            <div class='name'>{{ person.name }}</a></div>
+            {% for year, candidacy in person.candidacies.items() %}
+                <div class='candidacy'>
+                    <span class='year'>{{ year }}</span>
+                    <span class='party'>{{ candidacy.party.name }}</span>
+                    <span class='constituency'>{{ candidacy.constituency.name }}</span>
+                </div>
+            {% endfor %}
+
+            {% if person_state == 'confirmed' %}
+                Confirmed, <button onclick='remove_person("{{ person.id }}")'>un-tag</button>
+            {% elif person_state == 'removed' %}
+                Removed, <button onclick='confirm_person("{{ person.id }}")'>re-tag</button>
+            {% else %}
+                <button onclick='confirm_person("{{ person.id }}")'>confirm tag</button> <button onclick='remove_person("{{ person.id }}")'>remove tag</button>
+            {% endif %}
+        </li>
+    {% endfor %}
