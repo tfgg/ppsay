@@ -9,6 +9,7 @@
 
         <li class='person-tagged person-tagged-{{ person_state }}'>
             <div class='name'>{{ person.name }}</a></div>
+            <div class='candidacies'>
             {% for year, candidacy in person.candidacies.items() %}
                 <div class='candidacy'>
                     <span class='year'>{{ year }}</span>
@@ -16,6 +17,7 @@
                     <span class='constituency'>{{ candidacy.constituency.name }}</span>
                 </div>
             {% endfor %}
+            </div>
 
             {% if person_state == 'confirmed' %}
                 Confirmed, <button onclick='remove_person("{{ person.id }}")'>un-tag</button>

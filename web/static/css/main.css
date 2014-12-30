@@ -21,16 +21,23 @@ ul.people-tagged {
     border: 1px solid #ddd; }
     ul.people-tagged li.person-tagged .name {
       font-size: 1.2em; }
-    ul.people-tagged li.person-tagged .candidacy .year {
-      display: block;
-      font-size: 1.1em;
-      color: #666; }
-    ul.people-tagged li.person-tagged .candidacy .party {
-      display: block;
-      font-size: 1.2em; }
-    ul.people-tagged li.person-tagged .candidacy .constituency {
-      display: block;
-      color: #333; }
+    ul.people-tagged li.person-tagged .candidacies {
+      font-size: 0.9em;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px;
+      margin: 5px; }
+      ul.people-tagged li.person-tagged .candidacies .candidacy {
+        margin-bottom: 10px; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .year {
+          display: block;
+          font-size: 1.1em;
+          color: #666; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .party {
+          display: block;
+          font-size: 1.2em; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .constituency {
+          display: block;
+          color: #333; }
   ul.people-tagged li.person-tagged-confirmed {
     background: #dfd;
     border: 0; }

@@ -38,22 +38,31 @@ ul.people-tagged {
             font-size: 1.2em;
         }
 
-        .candidacy {
-            .year {
-                display: block;
-                font-size: 1.1em;
-                color: #666;
-            }
+        .candidacies {
+            font-size: 0.9em;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            margin: 5px;
 
-            .party {
-                display: block;
-                font-size: 1.2em;
-            }
+            .candidacy {
+                margin-bottom:10px;
 
-            .constituency {
-                display: block;
-                color: #333;
-            }  
+                .year {
+                    display: block;
+                    font-size: 1.1em;
+                    color: #666;
+                }
+
+                .party {
+                    display: block;
+                    font-size: 1.2em;
+                }
+
+                .constituency {
+                    display: block;
+                    color: #333;
+                }  
+            }
         }
     }
 
