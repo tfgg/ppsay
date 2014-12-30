@@ -1,13 +1,5 @@
-    {% for constituency in article.possible_constituency_matches %}
-        {% set constituency_state = 'unknown' %}
-
-        {% if 'user_constituency_matches' in article and constituency.id in article.user_constituency_matches.confirm %}
-            {% set constituency_state = 'confirmed' %}
-        {% elif 'user_constituency_matches' in article and constituency.id in article.user_constituency_matches.remove %}
-            {% set constituency_state = 'removed' %}
-        {% endif %}
-
-        <li class='constituency-tagged constituency-tagged-{{ constituency_state }}'>
+    {% for constituency in article.constituencies %}
+        <li class='constituency-tagged constituency-tagged-{{ constituency.state }}'>
             <div class='name'>{{ constituency.name }}</div>
 
             {% if constituency_state == 'confirmed' %}

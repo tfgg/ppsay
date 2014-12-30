@@ -145,12 +145,12 @@ if __name__ == "__main__":
       possible_party_matches = {}
       for match_type, match_id, _ in matches:
           if match_type == 'party':
-              possible_party_matches[match_id] = parties[match_id]
+              possible_party_matches[match_id] = {'id': parties[match_id]['id']}
 
       possible_constituency_matches = {}
       for match_type, match_id, _ in matches:
           if match_type == 'constituency':
-              possible_constituency_matches[match_id] = constituency_index[match_id]
+              possible_constituency_matches[match_id] = {'id': cid(constituency_index[match_id]['id'])}
 
       possible_candidate_matches = {}
       for match_type, match_id, _ in matches:
@@ -182,14 +182,17 @@ if __name__ == "__main__":
 
             print candidate['name'], score, party_match, constituency_match, is_running_2015
 
-            candidate['match_party'] = party_match
-            candidate['match_constituency'] = constituency_match
-            candidate['score'] = score
-            possible_candidate_matches[candidate['id']] = candidate
+            match_doc = {'match_party': party_match,
+                         'match_constituency': constituency_match,
+                         'running_2015': is_running_2015,
+                         'score': score,
+                         'id': candidate['id'],}
 
-      doc['possible_candidate_matches'] = possible_candidate_matches.values()
-      doc['possible_constituency_matches'] = possible_constituency_matches.values()
-      doc['possible_party_matches'] = possible_party_matches.values()
+            possible_candidate_matches[candidate['id']] = match_doc
+
+      doc['possible']['candidates'] = possible_candidate_matches.values()
+      doc['possible']['constituencies'] = possible_constituency_matches.values()
+      doc['possible']['parties'] = possible_party_matches.values()
 
       db.save(doc)
 

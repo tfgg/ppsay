@@ -12,13 +12,13 @@
       </a> <small>{{ article.domain }}</small> <small><a href='{{ url_for('article', doc_id=article._id) }}'>edit</a></small></h2>
  
       <ul class='article-mentions-people'>
-      {% for candidate in article.possible_candidate_matches|sort(attribute='score',reverse=True) %}
-        <li class='candidate-score-{{ candidate.score|replace(".", "-") }}'><a href='{{ url_for('person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
+      {% for candidate in article.candidates %}
+        <li class='candidate-score-1.0'><a href='{{ url_for('person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
       {% endfor %}
       </ul>
       <ul class='article-mentions-constituencies'>
-      {% for constituency in article.possible_constituency_matches %}
-        <li><a href='{{ url_for('constituency', constituency_id=constituency.id[6:]) }}'>{{ constituency.name }}</a></li>
+      {% for constituency in article.constituencies %}
+        <li><a href='{{ url_for('constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
     </li>

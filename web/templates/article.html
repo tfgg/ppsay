@@ -41,6 +41,18 @@ function remove_constituency(constituency_id) {
         $('#constituencies-tagged').html(data);
     });  
 }
+
+function add_person() {
+    person_id = $('#autocomplete').val();
+
+    $.ajax({
+        url: '{{ url_for('article_person_confirm', doc_id=article._id) }}',
+        type: 'PUT',
+        data: {person_id: person_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#people-tagged').html(data);
+    }); 
+}
 </script>
 
 <div class='container'>
@@ -55,6 +67,13 @@ function remove_constituency(constituency_id) {
     <h2>People tagged</h2>
 
     <button style='margin-bottom: 5px;'>add person</button>
+
+    <div class='add-person'>
+    <label for="autocomplete">Name </label>
+    <input id="autocomplete">
+    <button onclick='add_person();'>add</button>
+    </div>
+
     <ul class='people-tagged' id='people-tagged'>
         {% include "article_people_tagged.html" %}
     </ul>
@@ -93,6 +112,7 @@ function remove_constituency(constituency_id) {
 <script>
 $(function() {
     $("#article-tabs").tabs();
+    $("#autocomplete").autocomplete({source: "{{ url_for('autocomplete_person') }}"});
 });
 </script>
 {% endblock content %}

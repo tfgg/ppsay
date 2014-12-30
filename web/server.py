@@ -1,7 +1,10 @@
 import requests
+import json
 from bson import ObjectId
 from pymongo import MongoClient
-from flask import Flask, url_for, render_template, request
+from flask import Flask, url_for, render_template, request, jsonify
+
+from ppsay.matches import regenerate_matches 
 
 db_client = MongoClient()
 
@@ -29,7 +32,7 @@ def index():
 
 @app.route('/person/<int:person_id>')
 def person(person_id):
-  article_docs = articles.find({'possible_candidate_matches':
+  article_docs = articles.find({'candidates':
                                 {'$elemMatch': {'id': str(person_id)}}}) \
                          .sort([('page.date_published', -1)])
 
@@ -43,8 +46,8 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
-  article_docs = articles.find({'possible_constituency_matches':
-                                {'$elemMatch': {'id': "mapit:{}".format(constituency_id)}}}) \
+  article_docs = articles.find({'constituencies':
+                                {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
                          .sort([('page.date_published', -1)])
 
   area_doc = get_mapit_area(constituency_id)
@@ -72,17 +75,16 @@ def article_person_confirm(doc_id):
 
     person_id = request.form.get('person_id', None)
 
-    if 'user_candidate_matches' not in doc:
-        doc['user_candidate_matches'] = {'confirm': [], 'remove': []}
-        
-    doc['user_candidate_matches']['confirm'].append(person_id)
+    doc['user']['candidates']['confirm'].append(person_id)
 
-    if person_id in doc['user_candidate_matches']['remove']:
-        doc['user_candidate_matches']['remove'].remove(person_id)
+    if person_id in doc['user']['candidates']['remove']:
+        doc['user']['candidates']['remove'].remove(person_id)
     
-    doc['user_candidate_matches']['confirm'] = list(set(doc['user_candidate_matches']['confirm']))
-    doc['user_candidate_matches']['remove'] = list(set(doc['user_candidate_matches']['remove']))
-    
+    doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
+    doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
+   
+    regenerate_matches(doc)
+ 
     articles.save(doc)
  
     return render_template('article_people_tagged.html',
@@ -95,16 +97,15 @@ def article_person_remove(doc_id):
     
     person_id = request.form.get('person_id', None)
 
-    if 'user_candidate_matches' not in doc:
-        doc['user_candidate_matches'] = {'confirm': [], 'remove': []}
-        
-    doc['user_candidate_matches']['remove'].append(person_id)
+    doc['user']['candidates']['remove'].append(person_id)
     
-    if person_id in doc['user_candidate_matches']['confirm']:
-        doc['user_candidate_matches']['confirm'].remove(person_id)
+    if person_id in doc['user']['candidates']['confirm']:
+        doc['user']['candidates']['confirm'].remove(person_id)
     
-    doc['user_candidate_matches']['confirm'] = list(set(doc['user_candidate_matches']['confirm']))
-    doc['user_candidate_matches']['remove'] = list(set(doc['user_candidate_matches']['remove']))
+    doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
+    doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
+
+    regenerate_matches(doc)
 
     articles.save(doc)
  
@@ -118,17 +119,16 @@ def article_constituency_confirm(doc_id):
 
     constituency_id = request.form.get('constituency_id', None)
 
-    if 'user_constituency_matches' not in doc:
-        doc['user_constituency_matches'] = {'confirm': [], 'remove': []}
-        
-    doc['user_constituency_matches']['confirm'].append(constituency_id)
+    doc['user']['constituencies']['confirm'].append(constituency_id)
 
-    if constituency_id in doc['user_constituency_matches']['remove']:
-        doc['user_constituency_matches']['remove'].remove(constituency_id)
+    if constituency_id in doc['user']['constituencies']['remove']:
+        doc['user']['constituencies']['remove'].remove(constituency_id)
     
-    doc['user_constituency_matches']['confirm'] = list(set(doc['user_constituency_matches']['confirm']))
-    doc['user_constituency_matches']['remove'] = list(set(doc['user_constituency_matches']['remove']))
+    doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
+    doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
     
+    regenerate_matches(doc)
+
     articles.save(doc)
  
     return render_template('article_constituencies_tagged.html',
@@ -141,21 +141,45 @@ def article_constituency_remove(doc_id):
 
     constituency_id = request.form.get('constituency_id', None)
 
-    if 'user_constituency_matches' not in doc:
-        doc['user_constituency_matches'] = {'confirm': [], 'remove': []}
-        
-    doc['user_constituency_matches']['remove'].append(constituency_id)
+    doc['user']['constituencies']['remove'].append(constituency_id)
 
-    if constituency_id in doc['user_constituency_matches']['confirm']:
-        doc['user_constituency_matches']['confirm'].remove(constituency_id)
+    if constituency_id in doc['user']['constituencies']['confirm']:
+        doc['user']['constituencies']['confirm'].remove(constituency_id)
     
-    doc['user_constituency_matches']['confirm'] = list(set(doc['user_constituency_matches']['confirm']))
-    doc['user_constituency_matches']['remove'] = list(set(doc['user_constituency_matches']['remove']))
+    doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
+    doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
     
+    regenerate_matches(doc)
+
     articles.save(doc)
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
+
+# So dirty.
+candidates = json.load(open('../parse_data/candidates.json'))
+candidates_index = {candidate['id']: candidate for candidate in candidates}
+
+@app.route('/autocomplete/person', methods=['GET'])
+def autocomplete_person():
+    partial_person_name = request.args.get('term')
+
+    matches = []
+    for candidate in candidates:
+        if candidate['name'].lower().startswith(partial_person_name.lower()):
+            party = constituency = 'Unknown'
+
+            if '2015' in candidate['candidacies']:
+                party = candidate['candidacies']['2015']['party']['name']
+                constituency = candidate['candidacies']['2015']['constituency']['name']
+            elif '2010' in candidate['candidacies']:
+                party = candidate['candidacies']['2010']['party']['name']
+                constituency = candidate['candidacies']['2010']['constituency']['name']
+
+            label = u"{} ({}) - {}".format(candidate['name'], party, constituency)
+            matches.append({'label': label, 'value': candidate['id']})
+
+    return json.dumps(matches)
 
 dashboard_queries = [{'query': {},
                       'id': 'num_articles',
