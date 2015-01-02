@@ -4,7 +4,12 @@ from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, url_for, render_template, request, jsonify
 
-from ppsay.matches import regenerate_matches 
+from ppsay.matches import resolve_matches
+from ppsay.data import (
+    constituencies,
+    candidates,
+    constituencies_names
+)
 
 db_client = MongoClient()
 
@@ -83,7 +88,7 @@ def article_person_confirm(doc_id):
     doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
     doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
    
-    regenerate_matches(doc)
+    resolve_matches(doc)
  
     articles.save(doc)
  
@@ -105,7 +110,7 @@ def article_person_remove(doc_id):
     doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
     doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
 
-    regenerate_matches(doc)
+    resolve_matches(doc)
 
     articles.save(doc)
  
@@ -127,7 +132,7 @@ def article_constituency_confirm(doc_id):
     doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
     doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
     
-    regenerate_matches(doc)
+    resolve_matches(doc)
 
     articles.save(doc)
  
@@ -149,16 +154,12 @@ def article_constituency_remove(doc_id):
     doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
     doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
     
-    regenerate_matches(doc)
+    resolve_matches(doc)
 
     articles.save(doc)
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
-
-# So dirty.
-candidates = json.load(open('../parse_data/candidates.json'))
-candidates_index = {candidate['id']: candidate for candidate in candidates}
 
 @app.route('/autocomplete/person', methods=['GET'])
 def autocomplete_person():
@@ -180,8 +181,6 @@ def autocomplete_person():
             matches.append({'label': label, 'value': candidate['id']})
 
     return json.dumps(matches)
-
-constituencies_names = json.load(open('../parse_data/constituencies_other_names.json'))
 
 @app.route('/autocomplete/constituency', methods=['GET'])
 def autocomplete_constituency():
