@@ -153,22 +153,14 @@ ul.article-list {
       li {
         background: #FFFECE;
         
-        &.candidate-score-0-0 {
-            background: none;
-        }   
-        
-        &.candidate-score-0-5 {
+        &.candidate-score-unknown {
             background: #FFFEEE;
         }   
         
-        &.candidate-score-1-0 {
-            background: #FFFEDE;
-        }   
-        
-        &.candidate-score-1-5 {
+        &.candidate-score-confirmed {
             background: #FFFECE;
         }   
- 
+        
         a {
           color: darken($highlight, 25%);
         }

@@ -24,7 +24,7 @@ function remove_person(person_id) {
 
 function confirm_constituency(constituency_id) {
     $.ajax({
-        url: '{{ url_for('article_constituency_remove', doc_id=article._id) }}',
+        url: '{{ url_for('article_constituency_confirm', doc_id=article._id) }}',
         type: 'PUT',
         data: {constituency_id: constituency_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -43,7 +43,7 @@ function remove_constituency(constituency_id) {
 }
 
 function add_person() {
-    person_id = $('#autocomplete').val();
+    person_id = $('#autocomplete-person').val();
 
     $.ajax({
         url: '{{ url_for('article_person_confirm', doc_id=article._id) }}',
@@ -53,9 +53,21 @@ function add_person() {
         $('#people-tagged').html(data);
     }); 
 }
+
+function add_constituency() {
+    constituency_id = $('#autocomplete-constituency').val();
+
+    $.ajax({
+        url: '{{ url_for('article_constituency_confirm', doc_id=article._id) }}',
+        type: 'PUT',
+        data: {constituency_id: constituency_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        $('#constituencies-tagged').html(data);
+    }); 
+}
 </script>
 
-<div class='container'>
+<div class='container-fluid'>
   <div class='row'>
     <div class='col-md-12'>
       <h1>{{ article.page.title }}</h1>
@@ -69,8 +81,8 @@ function add_person() {
     <button style='margin-bottom: 5px;'>add person</button>
 
     <div class='add-person'>
-    <label for="autocomplete">Name </label>
-    <input id="autocomplete">
+    <label for="autocomplete-person">Name </label>
+    <input id="autocomplete-person">
     <button onclick='add_person();'>add</button>
     </div>
 
@@ -80,6 +92,11 @@ function add_person() {
 
     <h2>Constituencies tagged</h2>
 
+    <div class='add-constituency'>
+    <label for="autocomplete-constituency">Name </label>
+    <input id="autocomplete-constituency">
+    <button onclick='add_constituency();'>add</button>
+    </div>
     <ul class='constituencies-tagged' id='constituencies-tagged'>
         {% include "article_constituencies_tagged.html" %}
     </ul>
@@ -112,7 +129,8 @@ function add_person() {
 <script>
 $(function() {
     $("#article-tabs").tabs();
-    $("#autocomplete").autocomplete({source: "{{ url_for('autocomplete_person') }}"});
+    $("#autocomplete-person").autocomplete({source: "{{ url_for('autocomplete_person') }}"});
+    $("#autocomplete-constituency").autocomplete({source: "{{ url_for('autocomplete_constituency') }}"});
 });
 </script>
 {% endblock content %}

@@ -181,6 +181,20 @@ def autocomplete_person():
 
     return json.dumps(matches)
 
+constituencies_names = json.load(open('../parse_data/constituencies_other_names.json'))
+
+@app.route('/autocomplete/constituency', methods=['GET'])
+def autocomplete_constituency():
+    partial_constituency_name = request.args.get('term')
+
+    matches = []
+    for constituency_id, names in constituencies_names.items():
+        for name in names:
+            if name.lower().startswith(partial_constituency_name.lower()):
+                matches.append({'label': name, 'value': constituency_id})
+
+    return json.dumps(matches)
+
 dashboard_queries = [{'query': {},
                       'id': 'num_articles',
                       'name': 'Number of articles',},
