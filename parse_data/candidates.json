@@ -5061,6 +5061,34 @@
         "candidacies": {
             "2010": {
                 "constituency": {
+                    "id": "14435", 
+                    "name": "Inverness, Nairn, Badenoch and Strathspey"
+                }, 
+                "party": {
+                    "id": "53", 
+                    "name": "Labour Party"
+                }
+            }, 
+            "2015": {
+                "constituency": {
+                    "id": "14435", 
+                    "name": "Inverness, Nairn, Badenoch and Strathspey"
+                }, 
+                "party": {
+                    "id": "53", 
+                    "name": "Labour Party"
+                }
+            }
+        }, 
+        "id": "2643", 
+        "name": "Mike Robb", 
+        "other_names": [], 
+        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/2643"
+    }, 
+    {
+        "candidacies": {
+            "2010": {
+                "constituency": {
                     "id": "66120", 
                     "name": "Cardiff North"
                 }, 
@@ -17415,31 +17443,21 @@
     }, 
     {
         "candidacies": {
-            "2010": {
-                "constituency": {
-                    "id": "14435", 
-                    "name": "Inverness, Nairn, Badenoch and Strathspey"
-                }, 
-                "party": {
-                    "id": "53", 
-                    "name": "Labour Party"
-                }
-            }, 
             "2015": {
                 "constituency": {
-                    "id": "14435", 
-                    "name": "Inverness, Nairn, Badenoch and Strathspey"
+                    "id": "65822", 
+                    "name": "North Wiltshire"
                 }, 
                 "party": {
-                    "id": "53", 
-                    "name": "Labour Party"
+                    "id": "2", 
+                    "name": "Independent"
                 }
             }
         }, 
-        "id": "2643", 
-        "name": "Mike Robb", 
+        "id": "5290", 
+        "name": "Simon Killane", 
         "other_names": [], 
-        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/2643"
+        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/5290"
     }, 
     {
         "candidacies": {
@@ -50253,6 +50271,24 @@
     }, 
     {
         "candidacies": {
+            "2015": {
+                "constituency": {
+                    "id": "65798", 
+                    "name": "Bath"
+                }, 
+                "party": {
+                    "id": "90", 
+                    "name": "Liberal Democrats"
+                }
+            }
+        }, 
+        "id": "4477", 
+        "name": "Steve Bradley", 
+        "other_names": [], 
+        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/4477"
+    }, 
+    {
+        "candidacies": {
             "2010": {
                 "constituency": {
                     "id": "14410", 
@@ -81826,6 +81862,16 @@
                     "id": "85", 
                     "name": "UK Independence Party (UKIP)"
                 }
+            }, 
+            "2015": {
+                "constituency": {
+                    "id": "65704", 
+                    "name": "Lincoln"
+                }, 
+                "party": {
+                    "id": "85", 
+                    "name": "UK Independence Party (UKIP)"
+                }
             }
         }, 
         "id": "1452", 
@@ -87213,19 +87259,19 @@
         "candidacies": {
             "2015": {
                 "constituency": {
-                    "id": "65798", 
-                    "name": "Bath"
+                    "id": "65631", 
+                    "name": "Wansbeck"
                 }, 
                 "party": {
-                    "id": "90", 
-                    "name": "Liberal Democrats"
+                    "id": "52", 
+                    "name": "Conservative Party"
                 }
             }
         }, 
-        "id": "4477", 
-        "name": "Steve Bradley", 
+        "id": "5289", 
+        "name": "Chris Galley", 
         "other_names": [], 
-        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/4477"
+        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/5289"
     }, 
     {
         "candidacies": {

@@ -10,6 +10,7 @@ while resp:
   print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
 
   for post in resp['result']:
+    post['area']['id'] = post['area']['id'].split(':')[-1]
     constituencies[post['area']['name']] = post['area']
 
     for membership in post['memberships']:

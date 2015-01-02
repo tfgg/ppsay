@@ -1,4 +1,5 @@
 import lxml.html
+import re
 
 from pymongo import MongoClient
 from iso8601 import parse_date
