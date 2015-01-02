@@ -67,9 +67,10 @@ function add_constituency() {
 }
 </script>
 
-<div class='container-fluid'>
+<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
+      <a href='{{ url_for("index") }}' class='link-back'>&lt; all articles</a>
       <h1>{{ article.page.title }}</h1>
       <p><a href='{{ article.page.url }}'>{{ article.domain }}</a></p>
     </div>

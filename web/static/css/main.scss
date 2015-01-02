@@ -3,6 +3,11 @@ $white: #ffffff;
 $highlight: #3333CC;
 $grey: #cccccc;
 
+a.link-back {
+    padding: 10px;
+    display: block;
+}
+
 p.person-candidacy {
   font-size: 1.0em;
   color: #666;
@@ -107,6 +112,7 @@ ul.article-list {
   list-style:none;
   margin:0;
   padding:0;
+  word-wrap: break-word;
 
   li.article-item {
     margin:0;

@@ -4,7 +4,7 @@ import sys
 from bson import ObjectId
 from pymongo import MongoClient
 
-from ppsay.matches import add_matches
+from ppsay.matches import add_matches, resolve_matches
 
 if __name__ == "__main__":
     client = MongoClient()
@@ -23,6 +23,7 @@ if __name__ == "__main__":
       print doc['key']
 
       add_matches(doc)     
- 
+      resolve_matches(doc)
+
       db.save(doc)
 

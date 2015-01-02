@@ -79,6 +79,31 @@ def resolve_overlaps(matches):
             if overlap_found:
                 break
 
+"""
+Stupidly wrote this forgetting that it won't work.
+
+Match ranges are based on tokens, not position in the raw string!
+
+def annotate_text(matches, text, text_index):
+    out = ""
+
+    last = 0
+
+    for match_type, match_id, (match_text_index, match_range, match_string) in matches:
+        if text_index != match_text_index:
+            continue
+
+        out += text[last:match_range[0]]
+        out += "<{}>".format(match_type)
+        out += text[match_range[0]:match_range[1]]
+        out += "</{}>".format(match_type)
+
+        last = match_range[1]
+
+    out += text[last:]
+
+    return out"""
+
 def add_matches(doc):
     text = doc['page']['text'].lower()
     title = doc['page']['title'].lower()
@@ -177,7 +202,9 @@ def add_matches(doc):
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
     doc['possible']['parties'] = possible_party_matches.values()
-    
+   
+    #doc['annotated'] = {'title': 
+ 
     if 'user' not in doc:
         doc['user'] = {}
 
