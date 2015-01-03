@@ -5,6 +5,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, url_for, render_template, request, jsonify
 
+from ppsay.log import log
 from ppsay.matches import resolve_matches
 from ppsay.data import (
     constituencies,
@@ -21,16 +22,7 @@ db_log = db_client.news.action_log
 
 app = Flask(__name__)
 
-def log(action, url, extra_data):
-    doc = {'time_now': datetime.now(),
-           'client_ip': request.remote_addr,
-           'action': action,
-           'url': url,
-           'extra': extra_data}
 
-    doc_id = db_log.save(doc)
-
-    return doc_id
 
 def get_person(person_id):
   req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
