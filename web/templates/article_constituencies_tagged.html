@@ -2,12 +2,12 @@
         <li class='constituency-tagged constituency-tagged-{{ constituency.state }}'>
             <div class='name'><a href='{{ url_for("constituency", constituency_id=constituency.id) }}'>{{ constituency.name }}</a></div>
 
-            {% if constituency_state == 'confirmed' %}
-                Confirmed, <button onclick='remove_constituency("{{ constituency.id }}")'>un-tag</button>
-            {% elif constituency_state == 'removed' %}
-                Removed, <button onclick='confirm_constituency("{{ constituency.id }}")'>re-tag</button>
+            {% if constituency.state == 'confirmed' %}
+                Tagged, <button onclick='remove_constituency("{{ constituency.id }}")'>un-tag</button>
+            {% elif constituency.state == 'removed' %}
+                Tag removed, <button onclick='confirm_constituency("{{ constituency.id }}")'>re-tag</button>
             {% else %}
-                <button onclick='confirm_constituency("{{ constituency.id }}")'>confirm tag</button> <button onclick='remove_constituency("{{ constituency.id }}")'>remove tag</button>
+                Is this constituency mentioned in the article? <button onclick='confirm_constituency("{{ constituency.id }}")'>yes</button> <button onclick='remove_constituency("{{ constituency.id }}")'>no</button>
             {% endif %}
         </li>
     {% endfor %}

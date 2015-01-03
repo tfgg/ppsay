@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, url_for, render_template, request, jsonify
@@ -7,15 +8,29 @@ from flask import Flask, url_for, render_template, request, jsonify
 from ppsay.matches import resolve_matches
 from ppsay.data import (
     constituencies,
+    constituencies_index,
     candidates,
+    candidates_index,
     constituencies_names
 )
 
 db_client = MongoClient()
 
 articles = db_client.news.articles
+db_log = db_client.news.action_log
 
 app = Flask(__name__)
+
+def log(action, url, extra_data):
+    doc = {'time_now': datetime.now(),
+           'client_ip': request.remote_addr,
+           'action': action,
+           'url': url,
+           'extra': extra_data}
+
+    doc_id = db_log.save(doc)
+
+    return doc_id
 
 def get_person(person_id):
   req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
@@ -30,7 +45,7 @@ def get_mapit_area(area_id):
 @app.route('/')
 def index():
   article_docs = articles.find() \
-                         .sort([('page.date_published', -1)])
+                         .sort([('time_added', -1)])
 
   return render_template('index.html',
                          articles=article_docs)
@@ -39,7 +54,7 @@ def index():
 def person(person_id):
   article_docs = articles.find({'candidates':
                                 {'$elemMatch': {'id': str(person_id)}}}) \
-                         .sort([('page.date_published', -1)])
+                         .sort([('time_added', -1)])
 
   person_doc = get_person(person_id)
 
@@ -53,7 +68,7 @@ def person(person_id):
 def constituency(constituency_id):
   article_docs = articles.find({'constituencies':
                                 {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
-                         .sort([('page.date_published', -1)])
+                         .sort([('time_added', -1)])
 
   area_doc = get_mapit_area(constituency_id)
   #posts_doc = get_person(person_id)
@@ -91,6 +106,9 @@ def article_person_confirm(doc_id):
     resolve_matches(doc)
  
     articles.save(doc)
+
+    log('person_confirm', url_for('article', doc_id=str(doc_id)), {'person_id': person_id,
+                                                                   'person_name': candidates_index[person_id]['name']})
  
     return render_template('article_people_tagged.html',
                            article=doc)
@@ -113,6 +131,9 @@ def article_person_remove(doc_id):
     resolve_matches(doc)
 
     articles.save(doc)
+    
+    log('person_remove', url_for('article', doc_id=str(doc_id)), {'person_id': person_id, 
+                                                                  'person_name': candidates_index[person_id]['name']})
  
     return render_template('article_people_tagged.html',
                            article=doc)
@@ -135,6 +156,9 @@ def article_constituency_confirm(doc_id):
     resolve_matches(doc)
 
     articles.save(doc)
+    
+    log('constituency_confirm', url_for('article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
+                                                                         'constituency_name': constituencies_index[constituency_id]['name']})
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
@@ -157,6 +181,9 @@ def article_constituency_remove(doc_id):
     resolve_matches(doc)
 
     articles.save(doc)
+    
+    log('constituency_remove', url_for('article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
+                                                                        'constituency_name': constituencies_index[constituency_id]['name']})
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
@@ -229,6 +256,14 @@ def dashboard_article(query_id):
     return render_template('dashboard_query.html',
                            query=query,
                            articles=docs)
+
+@app.route('/recent')
+def action_log():
+    log = db_log.find() \
+                .sort([('time_now', -1)])[:50]
+
+    return render_template('action_log.html',
+                           log=log)
 
 if __name__ == "__main__":
   app.run("0.0.0.0", debug=True)
