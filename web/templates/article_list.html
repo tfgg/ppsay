@@ -18,7 +18,7 @@
       </ul>
       <ul class='article-mentions-constituencies'>
       {% for constituency in article.constituencies %}
-        <li><a href='{{ url_for('constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+        <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
     </li>

@@ -152,6 +152,18 @@ ul.article-list {
         a {
           color: darken($highlight, 0%);
         }
+
+        &.constituency-score-unknown {
+            background: lighten($highlight, 55%);
+        }
+        
+        &.constituency-score-removed {
+            display: none;
+        }
+        
+        &.constituency-score-confirmed {
+            background: lighten($highlight, 45%);
+        }
       }
     }
   
@@ -165,6 +177,10 @@ ul.article-list {
         
         &.candidate-score-confirmed {
             background: #FFFECE;
+        }   
+        
+        &.candidate-score-removed {
+            display: none;
         }   
         
         a {

@@ -96,11 +96,19 @@ ul.article-list {
       background: #ebebfa; }
       ul.article-list li.article-item ul.article-mentions-constituencies li a {
         color: #3333cc; }
+      ul.article-list li.article-item ul.article-mentions-constituencies li.constituency-score-unknown {
+        background: white; }
+      ul.article-list li.article-item ul.article-mentions-constituencies li.constituency-score-removed {
+        display: none; }
+      ul.article-list li.article-item ul.article-mentions-constituencies li.constituency-score-confirmed {
+        background: #ebebfa; }
     ul.article-list li.article-item ul.article-mentions-people li {
       background: #FFFECE; }
       ul.article-list li.article-item ul.article-mentions-people li.candidate-score-unknown {
         background: #FFFEEE; }
       ul.article-list li.article-item ul.article-mentions-people li.candidate-score-confirmed {
         background: #FFFECE; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-removed {
+        display: none; }
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
