@@ -10,9 +10,9 @@ from ppsay.matches import resolve_matches
 from ppsay.data import (
     constituencies,
     constituencies_index,
-    candidates,
-    candidates_index,
-    constituencies_names
+    constituencies_names,
+    get_candidate,
+    get_candidates,
 )
 
 db_client = MongoClient()
@@ -21,8 +21,6 @@ articles = db_client.news.articles
 db_log = db_client.news.action_log
 
 app = Flask(__name__)
-
-
 
 def get_person(person_id):
   req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
@@ -100,7 +98,7 @@ def article_person_confirm(doc_id):
     articles.save(doc)
 
     log('person_confirm', url_for('article', doc_id=str(doc_id)), {'person_id': person_id,
-                                                                   'person_name': candidates_index[person_id]['name']})
+                                                                   'person_name': get_candidate(person_id)['name']})
  
     return render_template('article_people_tagged.html',
                            article=doc)
@@ -125,7 +123,7 @@ def article_person_remove(doc_id):
     articles.save(doc)
     
     log('person_remove', url_for('article', doc_id=str(doc_id)), {'person_id': person_id, 
-                                                                  'person_name': candidates_index[person_id]['name']})
+                                                                  'person_name': get_candidate(person_id)['name']})
  
     return render_template('article_people_tagged.html',
                            article=doc)
@@ -185,7 +183,7 @@ def autocomplete_person():
     partial_person_name = request.args.get('term')
 
     matches = []
-    for candidate in candidates:
+    for candidate in get_candidates():
         if candidate['name'].lower().startswith(partial_person_name.lower()):
             party = constituency = 'Unknown'
 

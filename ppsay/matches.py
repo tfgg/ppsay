@@ -3,12 +3,12 @@
 import json
 from bson import ObjectId
 from ppsay.data import (
-    candidates,
-    candidates_index,
     constituencies,
     constituencies_index,
     constituencies_names,
-    parties
+    parties,
+    get_candidate,
+    get_candidates
 )
 
 import re
@@ -129,7 +129,7 @@ def add_matches(doc):
         if match is not None:
             matches.append(('constituency', cid(constituency['id']), match))
 
-    for candidate in candidates:
+    for candidate in get_candidates():
       names = [candidate['name']] + candidate['other_names']
 
       for name in list(names):
@@ -165,7 +165,7 @@ def add_matches(doc):
     possible_candidate_matches = {}
     for match_type, match_id, _ in matches:
         if match_type == 'candidate':
-            candidate = candidates_index[match_id]
+            candidate = get_candidate(match_id)
 
             party_match = False
             for _, candidacy in candidate['candidacies'].items():
@@ -222,7 +222,7 @@ def resolve_candidates(doc):
     # Add candidates that users have added that the machine didn't find.
     for candidate_id in doc['user']['candidates']['confirm']:
         if not any([candidate_id == candidate['id'] for candidate in doc['possible']['candidates']]):
-            candidate = candidates_index[candidate_id]
+            candidate = get_candidate(candidate_id)
             candidate['state'] = 'confirmed'
             resolved_candidates.append(candidate)
 
@@ -235,7 +235,7 @@ def resolve_candidates(doc):
         elif candidate['id'] in doc['user']['candidates']['remove']:
             candidate_state = 'removed'
 
-        candidate_ = candidates_index[candidate['id']]
+        candidate_ = get_candidate(candidate['id'])
         candidate_['state'] = candidate_state
 
         resolved_candidates.append(candidate_)

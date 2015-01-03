@@ -1,5 +1,6 @@
 import json
 from os.path import realpath, join, dirname
+from pymongo import MongoClient
 
 BASE_PATH = dirname(realpath(__file__))
 
@@ -13,3 +14,21 @@ constituencies_names = json.load(open(x('../parse_data/constituencies_other_name
 
 candidates_index = {candidate['id']: candidate for candidate in candidates}
 constituencies_index = {constituency['id']: constituency for constituency in constituencies}
+
+client = MongoClient()
+
+db_candidates = client.news.candidates
+
+def get_candidate(candidate_id):
+    doc = db_candidates.find_one({'id': candidate_id})
+
+    del doc['_id']
+
+    return doc
+
+def get_candidates():
+    for candidate in db_candidates.find():
+        del candidate['_id']
+
+        yield candidate
+
