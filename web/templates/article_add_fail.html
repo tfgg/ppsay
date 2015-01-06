@@ -1,0 +1,19 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <a href='{{ url_for("index") }}' class='link-back'>&lt; all articles</a>
+      <h1>Failed to add article</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+        <p>The web domain of article you provided, <em>{{ domain }}</em>, was not on our whitelist. You can try a different url below. If you think <em>{{ domain }}</em> should be whitelisted, please contact X@X.com.</p>
+
+        {% include "article_add_form.html" %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

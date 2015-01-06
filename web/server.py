@@ -1,12 +1,17 @@
 import requests
 import json
+from urlparse import urlparse
+
 from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient
-from flask import Flask, url_for, render_template, request, jsonify
+from flask import Flask, url_for, render_template, request, jsonify, abort, redirect
 
 from ppsay.log import log
-from ppsay.matches import resolve_matches
+from ppsay.tasks import task_get_page
+from ppsay.dates import add_date
+from ppsay.domains import add_domain
+from ppsay.matches import add_matches, resolve_matches
 from ppsay.data import (
     constituencies,
     constituencies_index,
@@ -17,7 +22,7 @@ from ppsay.data import (
 
 db_client = MongoClient()
 
-articles = db_client.news.articles
+db_articles = db_client.news.articles
 db_log = db_client.news.action_log
 
 app = Flask(__name__)
@@ -34,7 +39,7 @@ def get_mapit_area(area_id):
 
 @app.route('/')
 def index():
-  article_docs = articles.find() \
+  article_docs = db_articles.find() \
                          .sort([('time_added', -1)])
 
   return render_template('index.html',
@@ -42,7 +47,7 @@ def index():
 
 @app.route('/person/<int:person_id>')
 def person(person_id):
-  article_docs = articles.find({'candidates':
+  article_docs = db_articles.find({'candidates':
                                 {'$elemMatch': {'id': str(person_id)}}}) \
                          .sort([('time_added', -1)])
 
@@ -56,7 +61,7 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
-  article_docs = articles.find({'constituencies':
+  article_docs = db_articles.find({'constituencies':
                                 {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
                          .sort([('time_added', -1)])
 
@@ -69,11 +74,47 @@ def constituency(constituency_id):
                          articles=article_docs,
                          area=area_doc)
 
+with open('../parse_data/sources_news.dat', 'r') as f:
+    domain_whitelist = {line.split()[0] for line in f}
+
+@app.route('/article', methods=['POST'])
+def article_add():
+    url = request.form.get('url', None)
+
+    if url is None:
+        return abort(500, "URL of article not supplied")
+
+    url_parsed = urlparse(url)
+
+    if url_parsed.scheme == "":
+        url = "http://" + url
+        url_parsed = urlparse(url)
+
+    if url_parsed.netloc not in domain_whitelist:
+        return render_template("article_add_fail.html",
+                               url=url,
+                               domain=url_parsed.netloc)
+
+    doc_id = task_get_page(url, "User")
+
+    doc = db_articles.find_one({'_id': doc_id})
+
+    add_date(doc)
+    add_domain(doc)
+    add_matches(doc)
+
+    resolve_matches(doc)
+
+    db_articles.save(doc)
+    
+    return redirect(url_for("article", doc_id=str(doc['_id'])))
+
+
 @app.route('/article/<doc_id>')
 def article(doc_id):
     doc_id = ObjectId(doc_id)
 
-    doc = articles.find_one({'_id': doc_id})
+    doc = db_articles.find_one({'_id': doc_id})
 
     return render_template('article.html',
                            article=doc)
@@ -81,7 +122,7 @@ def article(doc_id):
 @app.route('/article/<doc_id>/people', methods=['PUT'])
 def article_person_confirm(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = articles.find_one({'_id': doc_id})
+    doc = db_articles.find_one({'_id': doc_id})
 
     person_id = request.form.get('person_id', None)
 
@@ -95,7 +136,7 @@ def article_person_confirm(doc_id):
    
     resolve_matches(doc)
  
-    articles.save(doc)
+    db_articles.save(doc)
 
     log('person_confirm', url_for('article', doc_id=str(doc_id)), {'person_id': person_id,
                                                                    'person_name': get_candidate(person_id)['name']})
@@ -106,7 +147,7 @@ def article_person_confirm(doc_id):
 @app.route('/article/<doc_id>/people', methods=['DELETE'])
 def article_person_remove(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = articles.find_one({'_id': doc_id})
+    doc = db_articles.find_one({'_id': doc_id})
     
     person_id = request.form.get('person_id', None)
 
@@ -120,7 +161,7 @@ def article_person_remove(doc_id):
 
     resolve_matches(doc)
 
-    articles.save(doc)
+    db_articles.save(doc)
     
     log('person_remove', url_for('article', doc_id=str(doc_id)), {'person_id': person_id, 
                                                                   'person_name': get_candidate(person_id)['name']})
@@ -131,7 +172,7 @@ def article_person_remove(doc_id):
 @app.route('/article/<doc_id>/constituencies', methods=['PUT'])
 def article_constituency_confirm(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = articles.find_one({'_id': doc_id})
+    doc = db_articles.find_one({'_id': doc_id})
 
     constituency_id = request.form.get('constituency_id', None)
 
@@ -145,7 +186,7 @@ def article_constituency_confirm(doc_id):
     
     resolve_matches(doc)
 
-    articles.save(doc)
+    db_articles.save(doc)
     
     log('constituency_confirm', url_for('article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
                                                                          'constituency_name': constituencies_index[constituency_id]['name']})
@@ -156,7 +197,7 @@ def article_constituency_confirm(doc_id):
 @app.route('/article/<doc_id>/constituencies', methods=['DELETE'])
 def article_constituency_remove(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = articles.find_one({'_id': doc_id})
+    doc = db_articles.find_one({'_id': doc_id})
 
     constituency_id = request.form.get('constituency_id', None)
 
@@ -170,7 +211,7 @@ def article_constituency_remove(doc_id):
     
     resolve_matches(doc)
 
-    articles.save(doc)
+    db_articles.save(doc)
     
     log('constituency_remove', url_for('article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
                                                                         'constituency_name': constituencies_index[constituency_id]['name']})
@@ -232,7 +273,7 @@ dashboard_query_index = {q['id']: q for q in dashboard_queries}
           
 @app.route('/dashboard')
 def dashboard():
-    stats = {query['id']: articles.find(query['query']).count() for query in dashboard_queries}
+    stats = {query['id']: db_articles.find(query['query']).count() for query in dashboard_queries}
 
     return render_template('dashboard.html',
                            queries=dashboard_queries,
@@ -241,7 +282,7 @@ def dashboard():
 @app.route('/dashboard/articles/<query_id>')
 def dashboard_article(query_id):
     query = dashboard_query_index[query_id]
-    docs = articles.find(query['query'])
+    docs = db_articles.find(query['query'])
 
     return render_template('dashboard_query.html',
                            query=query,
