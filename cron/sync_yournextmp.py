@@ -1,11 +1,18 @@
+import re
 import sys
 import requests
 import json
-from bson import ObjectId
 from pymongo import MongoClient
+from urlparse import urlparse
+
+from ppsay.tasks import task_get_page
+from ppsay.dates import add_date
+from ppsay.domains import add_domain
+from ppsay.matches import add_matches, resolve_matches
 
 client = MongoClient()
 
+db_articles = client.news.articles
 db_candidates = client.news.candidates
 
 url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons?per_page=100"
@@ -13,7 +20,6 @@ url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons?per_page=100"
 if len(sys.argv) > 1:
     url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(sys.argv[1])
 
-print url
 resp = requests.get(url).json()
 
 def save_person(person):
@@ -42,6 +48,13 @@ def save_person(person):
 
     db_candidates.save(candidate_doc)
 
+url_regex = re.compile("(http|https)://([^\s]+)")
+
+with open('parse_data/sources_news.dat', 'r') as f:
+    domain_whitelist = {line.split()[0] for line in f}
+
+sources = []
+
 while True:
     if 'page' in resp:
         print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
@@ -55,9 +68,9 @@ while True:
         print i, 
         save_person(person)
 
-      # Look for any new sources
-      #for version in membership['person_id']['versions']:
-      #  print version['source']
+        # Look for any new sources
+        for version in person['versions']:
+            sources.append(version['information_source'])
 
     print '\n',
 
@@ -66,3 +79,30 @@ while True:
     else:
         break
 
+print "Processing sources"
+
+for source in sources:
+    matches = url_regex.findall(source)
+  
+    for match in matches:
+        source_url = "{}://{}".format(*match)
+        url_parsed = urlparse(source_url)
+
+        if url_parsed.netloc in domain_whitelist:
+            doc = db_articles.find_one({'key': source_url})
+
+            if doc is None:
+                print "New source", source_url
+                doc_id = task_get_page(source_url, "Source")
+
+                doc = db_articles.find_one({'_id': doc_id})
+
+                add_date(doc)
+                add_domain(doc)
+                add_matches(doc)
+
+                resolve_matches(doc)
+
+                db_articles.save(doc)
+        else:
+            print "Not in whitelist:", source_url
