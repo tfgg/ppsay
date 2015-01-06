@@ -1,6 +1,6 @@
     {% for constituency in article.constituencies %}
         <li class='constituency-tagged constituency-tagged-{{ constituency.state }}'>
-            <div class='name'><a href='{{ url_for("constituency", constituency_id=constituency.id) }}'>{{ constituency.name }}</a></div>
+            <div class='name'><a href='{{ url_for(".constituency", constituency_id=constituency.id) }}'>{{ constituency.name }}</a></div>
 
             {% if constituency.state == 'confirmed' %}
                 Tagged, <button onclick='remove_constituency("{{ constituency.id }}")'>un-tag</button>

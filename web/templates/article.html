@@ -4,7 +4,7 @@
 <script>
 function confirm_person(person_id) {
     $.ajax({
-        url: '{{ url_for('article_person_remove', doc_id=article._id) }}',
+        url: '{{ url_for('.article_person_remove', doc_id=article._id) }}',
         type: 'PUT',
         data: {person_id: person_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -14,7 +14,7 @@ function confirm_person(person_id) {
 
 function remove_person(person_id) {
     $.ajax({
-        url: '{{ url_for('article_person_remove', doc_id=article._id) }}',
+        url: '{{ url_for('.article_person_remove', doc_id=article._id) }}',
         type: 'DELETE',
         data: {person_id: person_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -24,7 +24,7 @@ function remove_person(person_id) {
 
 function confirm_constituency(constituency_id) {
     $.ajax({
-        url: '{{ url_for('article_constituency_confirm', doc_id=article._id) }}',
+        url: '{{ url_for('.article_constituency_confirm', doc_id=article._id) }}',
         type: 'PUT',
         data: {constituency_id: constituency_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -34,7 +34,7 @@ function confirm_constituency(constituency_id) {
 
 function remove_constituency(constituency_id) {
     $.ajax({
-        url: '{{ url_for('article_constituency_remove', doc_id=article._id) }}',
+        url: '{{ url_for('.article_constituency_remove', doc_id=article._id) }}',
         type: 'DELETE',
         data: {constituency_id: constituency_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -46,7 +46,7 @@ function add_person() {
     person_id = $('#autocomplete-person').val();
 
     $.ajax({
-        url: '{{ url_for('article_person_confirm', doc_id=article._id) }}',
+        url: '{{ url_for('.article_person_confirm', doc_id=article._id) }}',
         type: 'PUT',
         data: {person_id: person_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -58,7 +58,7 @@ function add_constituency() {
     constituency_id = $('#autocomplete-constituency').val();
 
     $.ajax({
-        url: '{{ url_for('article_constituency_confirm', doc_id=article._id) }}',
+        url: '{{ url_for('.article_constituency_confirm', doc_id=article._id) }}',
         type: 'PUT',
         data: {constituency_id: constituency_id}    
     }).done(function(data, textStatus, jqXHR) {
@@ -70,7 +70,7 @@ function add_constituency() {
 <div class='container'>
   <div class='row'>
     <div class='col-md-12'>
-      <a href='{{ url_for("index") }}' class='link-back'>&lt; all articles</a>
+      <a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>
       <h1>{{ article.page.title }}</h1>
       <p><a href='{{ article.page.url }}'>{{ article.domain }}</a></p>
     </div>
@@ -130,8 +130,8 @@ function add_constituency() {
 <script>
 $(function() {
     $("#article-tabs").tabs();
-    $("#autocomplete-person").autocomplete({source: "{{ url_for('autocomplete_person') }}"});
-    $("#autocomplete-constituency").autocomplete({source: "{{ url_for('autocomplete_constituency') }}"});
+    $("#autocomplete-person").autocomplete({source: "{{ url_for('.autocomplete_person') }}"});
+    $("#autocomplete-constituency").autocomplete({source: "{{ url_for('.autocomplete_constituency') }}"});
 });
 </script>
 {% endblock content %}

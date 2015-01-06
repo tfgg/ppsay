@@ -1,6 +1,7 @@
 server {
-    listen      2015;
-    server_name localhost;
+    listen      80;
+    server_name democracylab.uk
+                www.democracylab.uk;
     charset     utf-8;
     client_max_body_size 75M;
 
@@ -10,10 +11,9 @@ server {
     gzip_comp_level 2;
     gzip_types       text/plain application/xml application/json;
 
-    location / { try_files $uri @yourapplication; }
-    location @yourapplication {
+    location / { try_files $uri @ppsay; }
+    location @ppsay {
         include uwsgi_params;
         uwsgi_pass unix:/home/ppsay/site/ppsay/web/server.sock;
     }
 }
-
