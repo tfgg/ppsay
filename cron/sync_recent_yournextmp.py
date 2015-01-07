@@ -1,7 +1,11 @@
+from iso8601 import parse_date
 import re
 import sys
 import requests
 import json
+import pytz
+import os.path
+from datetime import datetime, timedelta
 from pymongo import MongoClient
 from urlparse import urlparse
 
@@ -10,17 +14,12 @@ from ppsay.dates import add_date
 from ppsay.domains import add_domain
 from ppsay.matches import add_matches, resolve_matches
 
+import feedparser
+
 client = MongoClient()
 
 db_articles = client.news.articles
 db_candidates = client.news.candidates
-
-url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons?per_page=100"
-
-if len(sys.argv) > 1:
-    url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(sys.argv[1])
-
-resp = requests.get(url).json()
 
 def save_person(person):
     if person['party_memberships']:
@@ -48,38 +47,50 @@ def save_person(person):
 
     db_candidates.save(candidate_doc)
 
-url_regex = re.compile("(http|https)://([^\s]+)")
-
-with open('parse_data/sources_news.dat', 'r') as f:
-    domain_whitelist = {line.split()[0] for line in f}
-
 sources = []
 
-while True:
-    if 'page' in resp:
-        print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
+feed_url = "http://yournextmp.com/feeds/changes.xml"
 
-    if type(resp['result']) is list:
-        results = resp['result']
-    else:
-        results = [resp['result']]
+feed = feedparser.parse(feed_url)
 
-    for i, person in enumerate(results):
-        print i, 
+time_now = datetime.now(pytz.utc)
+
+print "Checking at", time_now
+
+person_ids_done = set()
+
+for item in feed['items']:
+    person_id = item['id'].split('/')[-1]
+
+    if person_id in person_ids_done:
+        print "Skipping", person_id
+        continue
+
+    update_time = parse_date(item['summary'].split('Updated at ')[-1])
+
+    if update_time + timedelta(minutes=15) > time_now:
+        print "Getting {}".format(person_id)
+        url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id)
+
+        resp = requests.get(url).json()
+
+        person = resp['result']
+
         save_person(person)
+
+        person_ids_done.add(person_id)
 
         # Look for any new sources
         for version in person['versions']:
             sources.append(version['information_source'])
 
-    print '\n',
-
-    if 'next_url' in resp:
-        resp = requests.get(resp['next_url']).json()
-    else:
-        break
-
 print "Processing sources"
+
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
+with open(os.path.join(BASE_PATH, '../parse_data/sources_news.dat'), 'r') as f:
+    domain_whitelist = {line.split()[0] for line in f}
+
+url_regex = re.compile("(http|https)://([^\s]+)")
 
 for source in sources:
     matches = url_regex.findall(source)
