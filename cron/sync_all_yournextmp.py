@@ -2,13 +2,12 @@ import re
 import sys
 import requests
 import json
-import os.path
 from pymongo import MongoClient
 from urlparse import urlparse
 
 from ppsay.tasks import task_get_page
 from ppsay.dates import add_date
-from ppsay.domains import add_domain
+from ppsay.domains import add_domain, domain_whitelist
 from ppsay.matches import add_matches, resolve_matches
 
 client = MongoClient()
@@ -50,10 +49,6 @@ def save_person(person):
     db_candidates.save(candidate_doc)
 
 url_regex = re.compile("(http|https)://([^\s]+)")
-
-BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-with open(os.path.join(BASE_PATH, '../parse_data/sources_news.dat'), 'r') as f:
-    domain_whitelist = {line.split()[0] for line in f}
 
 sources = []
 
@@ -99,7 +94,11 @@ for source in sources:
 
                 doc = db_articles.find_one({'_id': doc_id})
 
-                add_date(doc)
+                try:
+                    add_date(doc)
+                except ValueError: # ignore date errors for now
+                    pass
+
                 add_domain(doc)
                 add_matches(doc)
 

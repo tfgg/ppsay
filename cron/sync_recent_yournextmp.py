@@ -4,14 +4,13 @@ import sys
 import requests
 import json
 import pytz
-import os.path
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from urlparse import urlparse
 
 from ppsay.tasks import task_get_page
 from ppsay.dates import add_date
-from ppsay.domains import add_domain
+from ppsay.domains import add_domain, domain_whitelist
 from ppsay.matches import add_matches, resolve_matches
 
 import feedparser
@@ -85,10 +84,6 @@ for item in feed['items']:
             sources.append(version['information_source'])
 
 print "Processing sources"
-
-BASE_PATH = os.path.dirname(os.path.realpath(__file__))
-with open(os.path.join(BASE_PATH, '../parse_data/sources_news.dat'), 'r') as f:
-    domain_whitelist = {line.split()[0] for line in f}
 
 url_regex = re.compile("(http|https)://([^\s]+)")
 

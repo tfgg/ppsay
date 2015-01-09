@@ -10,7 +10,7 @@ from flask import Blueprint, url_for, render_template, request, jsonify, abort, 
 from ppsay.log import log
 from ppsay.tasks import task_get_page
 from ppsay.dates import add_date
-from ppsay.domains import add_domain
+from ppsay.domains import add_domain, domain_whitelist
 from ppsay.matches import add_matches, resolve_matches
 from ppsay.data import (
     constituencies,
@@ -75,9 +75,6 @@ def constituency(constituency_id):
   return render_template('constituency.html',
                          articles=article_docs,
                          area=area_doc)
-
-with open('../parse_data/sources_news.dat', 'r') as f:
-    domain_whitelist = {line.split()[0] for line in f}
 
 @app.route('/article', methods=['POST'])
 def article_add():

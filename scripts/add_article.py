@@ -4,13 +4,8 @@ from urlparse import urlparse
 from pymongo import MongoClient
 from ppsay.tasks import task_get_page
 from ppsay.dates import add_date
-from ppsay.domains import add_domain
+from ppsay.domains import add_domain, domain_whitelist
 from ppsay.matches import add_matches, resolve_matches
-
-sources_domains_text = open('parse_data/sources_news.dat', 'r')
-source_domains = []
-for line in sources_domains_text:
-  source_domains.append(line.split()[0])
 
 client = MongoClient()
 db_articles = client.news.articles
@@ -19,7 +14,7 @@ source = sys.argv[1]
 
 url_parsed = urlparse(source)
 
-if url_parsed.netloc in source_domains:
+if url_parsed.netloc in domain_whitelist:
     doc_id = task_get_page(source, "User")
 
     print doc_id
