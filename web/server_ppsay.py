@@ -23,16 +23,17 @@ from ppsay.data import (
 db_client = MongoClient()
 
 db_articles = db_client.news.articles
+db_candidates = db_client.news.candidates
 db_log = db_client.news.action_log
 
 app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
 
-def get_person(person_id):
-  req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
+#def get_person(person_id):
+#  req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
 
-  return req.json()['result']
+#  return req.json()['result']
 
 def get_mapit_area(area_id):
   req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
@@ -50,12 +51,11 @@ def index():
 @app.route('/person/<int:person_id>')
 def person(person_id):
   article_docs = db_articles.find({'candidates':
-                                {'$elemMatch': {'id': str(person_id)}}}) \
+                                {'$elemMatch': {'id': str(person_id), 'state': {'$ne': 'removed'}}}}) \
                          .sort([('time_added', -1)])
 
-  person_doc = get_person(person_id)
-
-  person_doc['current_party'] = person_doc['party_memberships'][max(person_doc['party_memberships'])]
+  person_doc = db_candidates.find_one({'id': str(person_id)})
+  #get_person(person_id)
 
   return render_template('person.html',
                          articles=article_docs,

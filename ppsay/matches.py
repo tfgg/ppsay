@@ -223,8 +223,10 @@ def resolve_candidates(doc):
     for candidate_id in doc['user']['candidates']['confirm']:
         if not any([candidate_id == candidate['id'] for candidate in doc['possible']['candidates']]):
             candidate = get_candidate(candidate_id)
-            candidate['state'] = 'confirmed'
-            resolved_candidates.append(candidate)
+
+            if 'deleted' not in candidate or not candidate['deleted']:
+                candidate['state'] = 'confirmed'
+                resolved_candidates.append(candidate)
 
     # Add candidates that the machine found.
     for candidate in doc['possible']['candidates']:
@@ -236,9 +238,9 @@ def resolve_candidates(doc):
             candidate_state = 'removed'
 
         candidate_ = get_candidate(candidate['id'])
-        candidate_['state'] = candidate_state
-
-        resolved_candidates.append(candidate_)
+        if 'deleted' not in candidate_ or not candidate_['deleted']:
+            candidate_['state'] = candidate_state
+            resolved_candidates.append(candidate_)
 
     return resolved_candidates
 
