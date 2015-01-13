@@ -8,10 +8,9 @@ from pymongo import MongoClient
 from flask import Blueprint, url_for, render_template, request, jsonify, abort, redirect
 
 from ppsay.log import log
-from ppsay.tasks import task_get_page
-from ppsay.dates import add_date
-from ppsay.domains import add_domain, domain_whitelist
-from ppsay.matches import add_matches, resolve_matches
+from ppsay.domains import domain_whitelist
+from ppsay.matches import resolve_matches
+from ppsay.sources import get_source
 from ppsay.data import (
     constituencies,
     constituencies_index,
@@ -30,11 +29,6 @@ app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
 
-#def get_person(person_id):
-#  req = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(person_id))
-
-#  return req.json()['result']
-
 def get_mapit_area(area_id):
   req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
 
@@ -42,20 +36,19 @@ def get_mapit_area(area_id):
 
 @app.route('/')
 def index():
-  article_docs = db_articles.find() \
-                         .sort([('time_added', -1)])
+  article_docs = db_articles.find({'state': 'approved'}) \
+                            .sort([('time_added', -1)])
 
   return render_template('index.html',
                          articles=article_docs)
 
 @app.route('/person/<int:person_id>')
 def person(person_id):
-  article_docs = db_articles.find({'candidates':
-                                {'$elemMatch': {'id': str(person_id), 'state': {'$ne': 'removed'}}}}) \
-                         .sort([('time_added', -1)])
+  article_docs = db_articles.find({'state': 'approved',
+                                   'candidates': {'$elemMatch': {'id': str(person_id), 'state': {'$ne': 'removed'}}}}) \
+                            .sort([('time_added', -1)])
 
   person_doc = db_candidates.find_one({'id': str(person_id)})
-  #get_person(person_id)
 
   return render_template('person.html',
                          articles=article_docs,
@@ -63,14 +56,11 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
-  article_docs = db_articles.find({'constituencies':
-                                {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
-                         .sort([('time_added', -1)])
+  article_docs = db_articles.find({'state': 'approved',
+                                   'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
+                            .sort([('time_added', -1)])
 
   area_doc = get_mapit_area(constituency_id)
-  #posts_doc = get_person(person_id)
-
-  #person_doc['current_party'] = person_doc['party_memberships'][max(person_doc['party_memberships'])]
 
   return render_template('constituency.html',
                          articles=article_docs,
@@ -83,11 +73,15 @@ def article_add():
     if url is None:
         return abort(500, "URL of article not supplied")
 
-    source_doc, article_doc = add_source(url, 'user/tim')
+    article_doc = get_source(url, 'user/tim', 'moderated')
 
-    if 
+    url_parsed = urlparse(url)
+
+    if url_parsed.netloc in domain_whitelist:
+        article_doc['state'] = 'whitelisted'
+        db_articles.save(article_doc)
         
-    return redirect(url_for(".article", doc_id=str(doc['_id'])))
+    return redirect(url_for(".article", doc_id=str(article_doc['_id'])))
 
 
 @app.route('/article/<doc_id>')

@@ -5,7 +5,7 @@ import json
 from pymongo import MongoClient
 from urlparse import urlparse
 
-from ppsay.sources import add_source
+from ppsay.sources import get_source_whitelist
 
 client = MongoClient()
 
@@ -97,5 +97,5 @@ for source in sources:
   
     for match in matches:
         source_url = "{}://{}".format(*match)
-        add_source(source_url, 'ynmp-all')
+        get_source_whitelist(source_url, 'ynmp-all')
  

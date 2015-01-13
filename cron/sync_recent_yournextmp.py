@@ -8,7 +8,7 @@ import feedparser
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 
-from ppsay.sources import add_source
+from ppsay.sources import get_source_whitelist
 
 client = MongoClient()
 
@@ -87,5 +87,5 @@ for source in sources:
   
     for match in matches:
         source_url = "{}://{}".format(*match)
-        add_source(source_url, 'ynmp-recent')
+        get_source_whitelist(source_url, 'ynmp-recent')
  
