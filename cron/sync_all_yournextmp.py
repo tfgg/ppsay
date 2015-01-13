@@ -5,10 +5,7 @@ import json
 from pymongo import MongoClient
 from urlparse import urlparse
 
-from ppsay.tasks import task_get_page
-from ppsay.dates import add_date
-from ppsay.domains import add_domain, domain_whitelist
-from ppsay.matches import add_matches, resolve_matches
+from ppsay.sources import add_source
 
 client = MongoClient()
 
@@ -27,7 +24,8 @@ def save_person(person):
         candidacies = {year: {'party': {'name': x['name'],
                                         'id': x['id'].split(':')[1],},
                               'constituency': {'name': person['standing_in'][year]['name'], 
-                                               'id': person['standing_in'][year]['post_id'],}
+                                               'id': person['standing_in'][year]['post_id'],},
+                              'year': year,
                              } 
                        for year, x in person['party_memberships'].items() if x is not None}
     else:
@@ -37,6 +35,7 @@ def save_person(person):
                  'other_names': [x['name'] for x in person['other_names']],
                  'url': person['url'],
                  'id': person['id'],
+                 'image': person.get('image', None),
                  'candidacies': candidacies,}
 
     candidate_doc = db_candidates.find_one({'id': person['id']})
@@ -98,27 +97,5 @@ for source in sources:
   
     for match in matches:
         source_url = "{}://{}".format(*match)
-        url_parsed = urlparse(source_url)
-
-        if url_parsed.netloc in domain_whitelist:
-            doc = db_articles.find_one({'key': source_url})
-
-            if doc is None:
-                print "New source", source_url
-                doc_id = task_get_page(source_url, "Source")
-
-                doc = db_articles.find_one({'_id': doc_id})
-
-                try:
-                    add_date(doc)
-                except ValueError: # ignore date errors for now
-                    pass
-
-                add_domain(doc)
-                add_matches(doc)
-
-                resolve_matches(doc)
-
-                db_articles.save(doc)
-        else:
-            print "Not in whitelist:", source_url
+        add_source(source_url, 'ynmp-all')
+ 

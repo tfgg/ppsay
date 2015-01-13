@@ -4,16 +4,11 @@ import sys
 import requests
 import json
 import pytz
+import feedparser
 from datetime import datetime, timedelta
 from pymongo import MongoClient
-from urlparse import urlparse
 
-from ppsay.tasks import task_get_page
-from ppsay.dates import add_date
-from ppsay.domains import add_domain, domain_whitelist
-from ppsay.matches import add_matches, resolve_matches
-
-import feedparser
+from ppsay.sources import add_source
 
 client = MongoClient()
 
@@ -92,23 +87,5 @@ for source in sources:
   
     for match in matches:
         source_url = "{}://{}".format(*match)
-        url_parsed = urlparse(source_url)
-
-        if url_parsed.netloc in domain_whitelist:
-            doc = db_articles.find_one({'key': source_url})
-
-            if doc is None:
-                print "New source", source_url
-                doc_id = task_get_page(source_url, "Source")
-
-                doc = db_articles.find_one({'_id': doc_id})
-
-                add_date(doc)
-                add_domain(doc)
-                add_matches(doc)
-
-                resolve_matches(doc)
-
-                db_articles.save(doc)
-        else:
-            print "Not in whitelist:", source_url
+        add_source(source_url, 'ynmp-recent')
+ 

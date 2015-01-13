@@ -83,29 +83,10 @@ def article_add():
     if url is None:
         return abort(500, "URL of article not supplied")
 
-    url_parsed = urlparse(url)
+    source_doc, article_doc = add_source(url, 'user/tim')
 
-    if url_parsed.scheme == "":
-        url = "http://" + url
-        url_parsed = urlparse(url)
-
-    if url_parsed.netloc not in domain_whitelist:
-        return render_template("article_add_fail.html",
-                               url=url,
-                               domain=url_parsed.netloc)
-
-    doc_id = task_get_page(url, "User")
-
-    doc = db_articles.find_one({'_id': doc_id})
-
-    add_date(doc)
-    add_domain(doc)
-    add_matches(doc)
-
-    resolve_matches(doc)
-
-    db_articles.save(doc)
-    
+    if 
+        
     return redirect(url_for(".article", doc_id=str(doc['_id'])))
 
 

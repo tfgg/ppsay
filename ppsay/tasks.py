@@ -41,11 +41,9 @@ def task_get_page(page_url, source):
 
             return None
         
-        doc_id = db_articles.save(page_doc)
-    else:
-        doc_id = page_doc['_id']
+        page_doc['_id'] = db_articles.save(page_doc)
 
-    return doc_id
+    return page_doc
 
 def task_get_feed(feed_url, feed_type):
   klass = feed_types[feed_type]
