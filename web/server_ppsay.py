@@ -78,7 +78,7 @@ def article_add():
     url_parsed = urlparse(url)
 
     if url_parsed.netloc in domain_whitelist:
-        article_doc['state'] = 'whitelisted'
+        article_doc['state'] = 'approved'
         db_articles.save(article_doc)
         
     return redirect(url_for(".article", doc_id=str(article_doc['_id'])))
@@ -193,6 +193,23 @@ def article_constituency_remove(doc_id):
     return render_template('article_constituencies_tagged.html',
                            article=doc)
 
+permitted_states = {'approved', 'removed', 'moderated'}
+
+@app.route('/article/state', methods=['PUT'])
+def article_update_state():
+    doc_id = ObjectId(request.form.get('doc_id'))
+    doc = db_articles.find_one({'_id': doc_id})
+
+    state = request.form.get('state', None)
+    state_old = doc['state']
+
+    if state in permitted_states:
+        doc['state'] = state
+        db_articles.save(doc)
+
+        log('update_state', url_for('.article', doc_id=str(doc_id)), {'state': state,
+                                                                     'state_old': state_old})
+
 @app.route('/autocomplete/person', methods=['GET'])
 def autocomplete_person():
     partial_person_name = request.args.get('term')
@@ -270,4 +287,11 @@ def action_log():
     return render_template('action_log.html',
                            log=log)
 
+@app.route('/queue')
+def moderation_queue():
+    articles = db_articles.find({'state': 'moderated'}) \
+                          .sort([('time_added', -1)])[:50]
+
+    return render_template('moderation_queue.html',
+                           articles=articles)
 

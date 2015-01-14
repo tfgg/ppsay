@@ -75,6 +75,8 @@ function add_constituency() {
       <p><a href='{{ article.page.url }}'>{{ article.domain }}</a></p>
       {% if article.state == 'moderated' %}
         <p style='background:#FCC;padding:10px;color:black;'>This article is being moderated and won't appear in listings yet.</p>
+      {% elif article.state == 'removed' %}
+        <p style='background:#FCC;padding:10px;color:black;'>This article has been removed.</p>
       {% endif %}
     </div>
   </div>

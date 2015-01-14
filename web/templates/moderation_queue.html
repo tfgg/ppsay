@@ -1,0 +1,45 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<script>
+function article_approve(state, doc_id) {
+    $.ajax({
+        url: '{{ url_for('.article_update_state') }}',
+        type: 'PUT',
+        data: {state: state,
+               doc_id: doc_id}    
+    }).done(function(data, textStatus, jqXHR) {
+        /*$('#people-tagged').html(data);*/
+    }); 
+}
+</script>
+
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <a href='{{ url_for(".dashboard") }}' class='link-back'>&lt; dashboard</a>
+      <h1>Moderation queue</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+        <table class='table table-striped'>
+        {% for item in articles %}
+            <tr>
+                <td>{{ item.time_added.date() }}</td>
+                <td>{{ item.time_added.time() }}</td>
+                <td>{{ item.source }}</td>
+                <td><a href='{{ item.key }}'>{{ item.domain }}</a></td>
+                <td>{{ item.page.title }}</td>
+                <td>
+                    <button onclick='article_approve("approved","{{ item._id }}")'>approve</button>
+                    <button onclick='article_approve("removed","{{ item._id }}")'>deny</button>
+                    <button onclick='article_approve("approved","{{ item._id }}")'>whitelist domain</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
