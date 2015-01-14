@@ -13,7 +13,7 @@ def get_source_whitelist(source_url, source):
     source_url_parsed = urlparse(source_url)
     
     if source_url_parsed.netloc in domain_whitelist:
-        article_doc = get_source(source_url, source, 'whitelisted')
+        article_doc = get_source(source_url, source, 'approved')
 
         return article_doc
     else:
