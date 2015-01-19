@@ -31,6 +31,8 @@ def get_source_if_matches(source_url, source, state):
     new, doc = task_get_page(source_url, source, False)
     
     if new and doc['page'] is not None:
+        print "  New"
+
         try:
             add_date(doc)
         except ValueError: # ignore date errors for now
@@ -43,8 +45,16 @@ def get_source_if_matches(source_url, source, state):
         if len(doc['possible']['candidates']) > 0 or \
            len(doc['possible']['constituencies']) > 0:
 
+            print "    Matches"
+
             resolve_matches(doc)
+        
+            doc['state'] = state
             doc['_id'] = db_articles.save(doc)
+        else:
+            print "    No matches"
+    else:
+        print "  Not new"
 
     return doc
 

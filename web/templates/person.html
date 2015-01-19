@@ -13,7 +13,9 @@
   </div>
   <div class='row'>
     <div class='col-md-2'>
-      <img width='100%' src='{{ person.image }}'/>
+      {% if person.image %}
+        <img width='100%' src='{{ person.image }}'/>
+      {% endif %}
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
           <span class='year'>{{ year }}</span>

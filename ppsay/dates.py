@@ -11,6 +11,7 @@ time_names = {'DC.date.issued': lambda s: datetime(*map(int, s.split('-'))),
               'DCTERMS.modified': parse_date,
               'published-date': lambda s: datetime.strptime(s, "%a, %d %b %Y %H:%M:%S GMT"), # Sat, 22 Nov 2014 11:15:00 GMT
               'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8])),
+              'article:published_time': parse_date,
              }
 
 months = {'January': 1,
@@ -48,7 +49,10 @@ def find_dates(html):
     for meta in tree.xpath('//meta'):
         if 'name' in meta.attrib and meta.attrib['name'] in time_names:
             parsed_time = time_names[meta.attrib['name']](meta.attrib['content'])
-
+            dates.append(parsed_time)
+        
+        if 'property' in meta.attrib and meta.attrib['property'] in time_names:
+            parsed_time = time_names[meta.attrib['property']](meta.attrib['content'])
             dates.append(parsed_time)
 
 

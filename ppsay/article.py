@@ -5,10 +5,17 @@ import lxml.html
 import requests
 from webcache import cache_get
 from goose import Goose
+from iso8601 import parse_date
 
 g = Goose()
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+def try_parse_date(x):
+  try:
+    return parse_date(x)
+  except:
+    return x
 
 class ArticleGeneric(object):
   class FetchError(Exception):
@@ -42,7 +49,7 @@ class ArticleGeneric(object):
             'url_canonical': self.article.canonical_link,
             'title': self.article.title,
             'text': self.article.cleaned_text,
-            'date_published': self.article.publish_date,
+            'date_published': try_parse_date(self.article.publish_date),
             'parser': 'ArticleGeneric'}
 
 if __name__ == "__main__":
