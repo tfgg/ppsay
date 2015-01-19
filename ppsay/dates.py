@@ -2,15 +2,15 @@ import lxml.html
 import re
 
 from pymongo import MongoClient
-from iso8601 import parse_date
+from iso8601.iso8601 import parse_date, UTC
 from datetime import datetime
 
-time_names = {'DC.date.issued': lambda s: datetime(*map(int, s.split('-'))), 
+time_names = {'DC.date.issued': lambda s: datetime(*map(int, s.split('-')),tzinfo=UTC), 
               'DCTERMS.created': parse_date,
               'OriginalPublicationDate': lambda s: parse_date(s.replace('/', '-')),
               'DCTERMS.modified': parse_date,
-              'published-date': lambda s: datetime.strptime(s, "%a, %d %b %Y %H:%M:%S GMT"), # Sat, 22 Nov 2014 11:15:00 GMT
-              'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8])),
+              'published-date': lambda s: datetime.strptime(s, "%a, %d %b %Y %H:%M:%S GMT").replace(tzinfo=UTC), # Sat, 22 Nov 2014 11:15:00 GMT
+              'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8]), tzinfo=UTC),
               'article:published_time': parse_date,
              }
 
@@ -58,7 +58,7 @@ def find_dates(html):
 
     # Particular newspaper CMS with lots of domains
     for div in tree.xpath('//div[@class="updated  Published"]/p'):
-        parsed_time = datetime.strptime(div.text, 'Published %d/%m/%Y %H:%M')
+        parsed_time = datetime.strptime(div.text, 'Published %d/%m/%Y %H:%M').replace(tzinfo=UTC)
         dates.append(parsed_time)
 
     # Fri 24th October 2014 - 8:49 am 
@@ -77,12 +77,12 @@ def find_dates(html):
             if cols[7] == 'pm':
                 hours += 12
 
-            parsed_time = datetime(year, month, day, hours, minutes)
+            parsed_time = datetime(year, month, day, hours, minutes, tzinfo=UTC)
             dates.append(parsed_time)
         else:
             s = """Isle of Wight News"""
             text = text[len(s):].strip()
-            parsed_time = datetime.strptime(text, "%B %d, %Y")
+            parsed_time = datetime.strptime(text, "%B %d, %Y").replace(tzinfo=UTC)
             dates.append(parsed_time)
 
     return dates

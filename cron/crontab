@@ -1,0 +1,9 @@
+*/15 * * * * ~/venv/bin/python ~/site/ppsay/cron/sync_recent_yournextmp.py &> ~/ynmp_sync_recent.out
+5 */12 * * * ~/venv/bin/python ~/site/ppsay/cron/sync_all_yournextmp.py &> ~/ynmp_sync_all.out
+15 0,6,12,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_bbc.py &> ~/rss_bbc.out
+15 1,7,13,19 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_conservative_home.py &> ~/rss_conservative_home.out
+15 2,8,14,20 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_guardian.py &> ~/rss_guardian.out
+15 3,9,15,21 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_labour_list.py &> ~/rss_labour_list.out
+15 4,10,16,22 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_libdem_voice.py &> ~/rss_libdem_voice.out
+15 5,11,17,23* * * * ~/venv/bin/python ~/site/ppsay/cron/rss_telegraph.py &> ~/rss_telegraph.out
+
