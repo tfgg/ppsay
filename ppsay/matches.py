@@ -292,7 +292,14 @@ if __name__ == "__main__":
     client = MongoClient()
     db = client.news.articles
 
+    print db.find().count()
+
     for doc in db.find():
+        print doc['key']
+
+        if doc['page'] is not None and doc['page']['text'] is not None:
+            add_matches(doc)
+
         resolve_matches(doc)
         db.save(doc)
 

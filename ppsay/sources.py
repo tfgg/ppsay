@@ -8,6 +8,7 @@ from matches import add_matches, resolve_matches
 client = MongoClient()
 
 db_articles = client.news.articles
+db_cache = client.news.web_cache
 
 def get_source_whitelist(source_url, source):
     """
@@ -27,6 +28,12 @@ def get_source_if_matches(source_url, source, state):
     """
         Get a source and save it if there are matches.
     """
+
+    doc_cache = db_cache.find_one({'url': source_url})
+
+    if doc_cache is not None:
+        print "Already in cache, skipping"
+        return None
 
     new, doc = task_get_page(source_url, source, False)
     
