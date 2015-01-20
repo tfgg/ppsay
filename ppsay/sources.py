@@ -42,8 +42,8 @@ def get_source_if_matches(source_url, source, state):
         add_matches(doc)
 
         # Only save if it has matches
-        if len(doc['possible']['candidates']) > 0 or \
-           len(doc['possible']['constituencies']) > 0:
+        if len(doc['possible']['candidates']) > 0:
+           #len(doc['possible']['constituencies']) > 0:
 
             print "    Matches"
 

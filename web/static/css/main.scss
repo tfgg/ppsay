@@ -3,15 +3,23 @@ $white: #ffffff;
 $highlight: #3333CC;
 $grey: #cccccc;
 
+body {
+    font-family: 'Droid Sans';
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Droid Serif';
+}
+
 a.link-back {
     padding: 10px;
     display: block;
 }
 
 form.add-article-form {
-    margin-bottom:10px;
-    padding:10px;
-    background:#EEF;
+    padding: 10px;
+    background: #4665FF;
+    color: white;
 
     h3 {
         margin-top: 0;
@@ -126,13 +134,14 @@ ul.article-list {
 
   li.article-item {
     margin:0;
-    padding:0;
-    margin-bottom: 20px;
+    padding: 10px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #eee;
 
     h2 {
       margin-top: 0;
       margin-bottom: 10px;
-      font-size:1.6em;
+      font-size:1.4em;
       a.article-link {
         color: $highlight;
       }

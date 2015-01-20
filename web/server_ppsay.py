@@ -39,6 +39,9 @@ def index():
   article_docs = db_articles.find({'state': 'approved'}) \
                             .sort([('time_added', -1)])
 
+  article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] != 'removed']) > 0 
+                                          or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
+
   return render_template('index.html',
                          articles=article_docs)
 

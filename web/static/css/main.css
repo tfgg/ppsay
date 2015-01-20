@@ -1,11 +1,17 @@
+body {
+  font-family: 'Droid Sans'; }
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Droid Serif'; }
+
 a.link-back {
   padding: 10px;
   display: block; }
 
 form.add-article-form {
-  margin-bottom: 10px;
   padding: 10px;
-  background: #EEF; }
+  background: #4665FF;
+  color: white; }
   form.add-article-form h3 {
     margin-top: 0; }
 
@@ -80,12 +86,13 @@ ul.article-list {
   word-wrap: break-word; }
   ul.article-list li.article-item {
     margin: 0;
-    padding: 0;
-    margin-bottom: 20px; }
+    padding: 10px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #eee; }
     ul.article-list li.article-item h2 {
       margin-top: 0;
       margin-bottom: 10px;
-      font-size: 1.6em; }
+      font-size: 1.4em; }
       ul.article-list li.article-item h2 a.article-link {
         color: #3333cc; }
     ul.article-list li.article-item ul.article-mentions-people, ul.article-list li.article-item ul.article-mentions-constituencies {
