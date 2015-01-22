@@ -31,17 +31,28 @@ def is_sublist(a, b):
         else:
             i = i + 1
 
+token_re = re.compile(u'([^ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+)')
+            
+def get_tokens(s):
+    tokens = []
+    spans = []
+    
+    for match in token_re.finditer(s):
+        tokens.append(match.groups()[0])
+        spans.append(match.span())
+        
+    return tokens, spans
+
 def find_matches(ss, *tokenss):
   for s in ss:
-    s_tokens = sep_re.split(s.lower())
+    tokens, _ = get_tokens(s.lower())
 
-    for i, tokens in enumerate(tokenss):
-        sub = is_sublist(s_tokens, tokens)
+    for i, (s_tokens, s_spans) in enumerate(tokenss):
+
+        sub = is_sublist(tokens, s_tokens)
 
         if sub is not None:
-            return (i, sub, s)
-
-  return None
+            yield (i, sub, s)
 
 def range_overlap(a, b):
     if a[1] <= b[0] or b[1] <= a[0]:
@@ -79,59 +90,40 @@ def resolve_overlaps(matches):
             if overlap_found:
                 break
 
-"""
-Stupidly wrote this forgetting that it won't work.
+def make_quote(text, spans, sub):
+  match_start = spans[max(sub[0]-10, 0)]
+  match_end = spans[min(sub[1]+10, len(spans)-1)]
 
-Match ranges are based on tokens, not position in the raw string!
+  quote = text[match_start[0]:match_end[1]]
 
-def annotate_text(matches, text, text_index):
-    out = ""
-
-    last = 0
-
-    for match_type, match_id, (match_text_index, match_range, match_string) in matches:
-        if text_index != match_text_index:
-            continue
-
-        out += text[last:match_range[0]]
-        out += "<{}>".format(match_type)
-        out += text[match_range[0]:match_range[1]]
-        out += "</{}>".format(match_type)
-
-        last = match_range[1]
-
-    out += text[last:]
-
-    return out"""
+  return quote
 
 def add_matches(doc):
-    text = doc['page']['text'].lower()
-    title = doc['page']['title'].lower()
-    text_tokens = sep_re.split(text)
-    title_tokens = sep_re.split(title)
+    texts = [doc['page']['text'],
+             doc['page']['title']]
+
+    texts_tokens = [get_tokens(text.lower()) for text in texts]
 
     matches = []
 
     for party_id, party in parties.items():
-        match = find_matches([party['name']] + parties[party_id]['other_names'],
-                             text_tokens,
-                             title_tokens)
+        names = [party['name']] + parties[party_id]['other_names']
 
-        if match is not None:
-            matches.append(('party', party_id, match))
+        for match in find_matches(names, *texts_tokens):
+          if match is not None:
+            quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
+            matches.append(('party', party_id, match, quote))
 
 
     for constituency in constituencies:
-        match = find_matches([constituency['name']] + constituencies_names[cid(constituency['id'])],
-                             text_tokens,
-                             title_tokens)
+        names = [constituency['name']] + constituencies_names[cid(constituency['id'])]
 
-        if match is not None:
-            matches.append(('constituency', cid(constituency['id']), match))
+        for match in find_matches(names, *texts_tokens):
+          if match is not None:
+            quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
+            matches.append(('constituency', cid(constituency['id']), match, quote))
 
-    for candidate in get_candidates():
-      names = [candidate['name']] + candidate['other_names']
-
+    def munge_names(names):
       for name in list(names):
           name_tokens = name.split()
 
@@ -145,25 +137,30 @@ def add_matches(doc):
           if ' Mac' in name:
               names.append(name.replace('Mac', 'Mc'))
 
-      match = find_matches(names, text_tokens, title_tokens)
 
-      if match is not None:
-          matches.append(('candidate', candidate['id'], match))
+    for candidate in get_candidates():
+      names = [candidate['name']] + candidate['other_names']
+
+      munge_names(names)
+      for match in find_matches(names, *texts_tokens):
+        if match is not None:
+          quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
+          matches.append(('candidate', candidate['id'], match, quote))
 
     resolve_overlaps(matches)
 
     possible_party_matches = {}
-    for match_type, match_id, _ in matches:
+    for match_type, match_id, _, quote in matches:
       if match_type == 'party':
-          possible_party_matches[match_id] = {'id': parties[match_id]['id']}
+          possible_party_matches[match_id] = {'id': parties[match_id]['id'], 'quote': quote}
 
     possible_constituency_matches = {}
-    for match_type, match_id, _ in matches:
+    for match_type, match_id, _, quote in matches:
         if match_type == 'constituency':
-            possible_constituency_matches[match_id] = {'id': cid(constituencies_index[match_id]['id'])}
+            possible_constituency_matches[match_id] = {'id': cid(constituencies_index[match_id]['id']), 'quote': quote}
 
     possible_candidate_matches = {}
-    for match_type, match_id, _ in matches:
+    for match_type, match_id, _, quote in matches:
         if match_type == 'candidate':
             candidate = get_candidate(match_id)
 
@@ -194,7 +191,8 @@ def add_matches(doc):
                          'match_constituency': constituency_match,
                          'running_2015': is_running_2015,
                          'score': score,
-                         'id': candidate['id'],}
+                         'id': candidate['id'],
+                         'quote': quote,}
 
             possible_candidate_matches[candidate['id']] = match_doc
 
@@ -226,6 +224,7 @@ def resolve_candidates(doc):
 
             if 'deleted' not in candidate or not candidate['deleted']:
                 candidate['state'] = 'confirmed'
+                candidate['quote'] = None
                 resolved_candidates.append(candidate)
 
     # Add candidates that the machine found.
@@ -240,6 +239,7 @@ def resolve_candidates(doc):
         candidate_ = get_candidate(candidate['id'])
         if 'deleted' not in candidate_ or not candidate_['deleted']:
             candidate_['state'] = candidate_state
+            candidate_['quote'] = candidate['quote']
             resolved_candidates.append(candidate_)
 
     return resolved_candidates
@@ -254,6 +254,7 @@ def resolve_constituencies(doc):
             constituency = constituencies_index[constituency_id]
             constituency['state'] = 'confirmed'
             constituency['score'] = 1.5
+            constituency['quite'] = None
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
@@ -268,6 +269,7 @@ def resolve_constituencies(doc):
         constituency_ = constituencies_index[constituency['id']]
         constituency_['id'] = cid(constituency_['id'])
         constituency_['state'] = constituency_state
+        constituency_['quote'] = constituency['quote']
         constituency_['score'] = 1.0
 
         resolved_constituencies.append(constituency_)
@@ -292,10 +294,8 @@ if __name__ == "__main__":
     client = MongoClient()
     db = client.news.articles
 
-    print db.find().count()
-
     for doc in db.find():
-        print doc['key']
+        print doc['key'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
             add_matches(doc)

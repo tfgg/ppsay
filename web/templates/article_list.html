@@ -21,6 +21,14 @@
         <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
+      <ul>
+      {% for candidate in article.candidates %}
+        <li>
+          {{ candidate.name }}
+          <p class='quote'>{{ candidate.quote }}</p>
+        </li>
+      {% endfor %}
+      </ul>
     </li>
     {% endif %}
 {% endfor %}
