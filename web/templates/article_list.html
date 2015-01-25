@@ -21,11 +21,21 @@
         <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
-      <ul>
-      {% for candidate in article.candidates %}
-        <li>
-          {{ candidate.name }}
-          <p class='quote'>{{ candidate.quote }}</p>
+      <ul class='quotes'>
+      {% for quote in article.quotes %}
+        <li class='quote'>
+          <ul class='quote-mentions'>
+          {% for candidate in quote.candidates %}
+            <li class='quote-mention-candidate'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
+          {% endfor %}
+          {% for party in quote.parties %}
+            <li class='quote-mention-party'><a href=''>{{ party.name }}</a></li>
+          {% endfor %}
+          {% for constituency in quote.constituencies %}
+            <li class='quote-mention-constituency'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+          {% endfor %}
+          </ul>
+          <p class='quote-text'>{{ quote.text }}</p>
         </li>
       {% endfor %}
       </ul>

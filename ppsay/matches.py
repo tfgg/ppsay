@@ -10,14 +10,12 @@ from ppsay.data import (
     get_candidate,
     get_candidates
 )
+from ss import Text
 
 import re
 
 sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+')
  
-def cid(s):
-    return s.split(':')[-1]
-
 def is_sublist(a, b):
     i = 0
     
@@ -90,6 +88,7 @@ def resolve_overlaps(matches):
             if overlap_found:
                 break
 
+
 def make_quote(text, spans, sub):
   match_start = spans[max(sub[0]-10, 0)]
   match_end = spans[min(sub[1]+10, len(spans)-1)]
@@ -98,11 +97,29 @@ def make_quote(text, spans, sub):
 
   return quote
 
+
+def munge_names(names):
+    for name in list(names):
+        name_tokens = name.split()
+
+        # If we have more than forename-surname, try middlename + surname
+        # Catches, e.g. Máirtín Ó Muilleoir
+        if len(name_tokens) > 2:
+            names.append(" ".join(name_tokens[1:]))
+            names.append(name_tokens[0] + " " + name_tokens[-1])
+
+        # Macdonald -> Mcdonald
+        if ' Mac' in name:
+            names.append(name.replace('Mac', 'Mc'))
+
+
 def add_matches(doc):
     texts = [doc['page']['text'],
              doc['page']['title']]
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
+
+    parsed_texts = [Text(text) for text in texts]
 
     matches = []
 
@@ -110,57 +127,87 @@ def add_matches(doc):
         names = [party['name']] + parties[party_id]['other_names']
 
         for match in find_matches(names, *texts_tokens):
-          if match is not None:
-            quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
-            matches.append(('party', party_id, match, quote))
+            if match is not None:
+                matches.append(('party', party_id, match))
 
 
     for constituency in constituencies:
-        names = [constituency['name']] + constituencies_names[cid(constituency['id'])]
+        names = [constituency['name']] + constituencies_names[constituency['id']]
 
         for match in find_matches(names, *texts_tokens):
-          if match is not None:
-            quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
-            matches.append(('constituency', cid(constituency['id']), match, quote))
-
-    def munge_names(names):
-      for name in list(names):
-          name_tokens = name.split()
-
-          # If we have more than forename-surname, try middlename + surname
-          # Catches, e.g. Máirtín Ó Muilleoir
-          if len(name_tokens) > 2:
-              names.append(" ".join(name_tokens[1:]))
-              names.append(name_tokens[0] + " " + name_tokens[-1])
-
-          # Macdonald -> Mcdonald
-          if ' Mac' in name:
-              names.append(name.replace('Mac', 'Mc'))
+            if match is not None:
+                matches.append(('constituency', constituency['id'], match))
 
 
     for candidate in get_candidates():
-      names = [candidate['name']] + candidate['other_names']
+        names = [candidate['name']] + candidate['other_names']
+        munge_names(names)
 
-      munge_names(names)
-      for match in find_matches(names, *texts_tokens):
-        if match is not None:
-          quote = make_quote(texts[match[0]], texts_tokens[match[0]][1], match[1]) 
-          matches.append(('candidate', candidate['id'], match, quote))
+        for match in find_matches(names, *texts_tokens):
+            if match is not None:
+                matches.append(('candidate', candidate['id'], match))
 
     resolve_overlaps(matches)
 
+    quotes = []
+    for match_type, match_id, match in matches:
+        sub = match[1]
+        spans = texts_tokens[match[0]][1]
+
+        match_start = spans[max(sub[0], 0)][0]
+        match_end = spans[min(sub[1], len(spans)-1)][1]
+
+        for i, eos in enumerate(parsed_texts[0].end_of_sentences):
+            if eos > match_start:
+                if i != 0:
+                    match_start = parsed_texts[0].end_of_sentences[i-1] + 1
+                    match_end = eos
+                else:
+                    match_start = 0
+                    match_end = parsed_texts[0].end_of_sentences[0] + 1
+                break
+
+        quote_doc = {'constituency_ids': [],
+                     'party_ids': [],
+                     'candidate_ids': [],
+                     'quote_span': (match_start, match_end),
+                     'match_text': match[0]}
+
+        if match_type == 'candidate':
+            quote_doc['candidate_ids'].append(match_id)
+        elif match_type == 'party':
+            quote_doc['party_ids'].append(match_id)
+        elif match_type == 'constituency':
+            quote_doc['constituency_ids'].append(match_id)
+
+        quotes.append(quote_doc)
+
+    similar_pairs = []
+    for i, quote1 in enumerate(quotes):
+        for j, quote2 in enumerate(quotes):
+            if i != j and range_overlap(quote1['quote_span'], quote2['quote_span']):
+                similar_pairs.append((i,j))
+
+    print similar_pairs
+
+    for quote_doc in quotes:
+        quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
+    
+        quote_doc['text'] = quote_text
+
+
     possible_party_matches = {}
-    for match_type, match_id, _, quote in matches:
-      if match_type == 'party':
-          possible_party_matches[match_id] = {'id': parties[match_id]['id'], 'quote': quote}
+    for match_type, match_id, _ in matches:
+        if match_type == 'party':
+            possible_party_matches[match_id] = {'id': parties[match_id]['id']}
 
     possible_constituency_matches = {}
-    for match_type, match_id, _, quote in matches:
+    for match_type, match_id, _ in matches:
         if match_type == 'constituency':
-            possible_constituency_matches[match_id] = {'id': cid(constituencies_index[match_id]['id']), 'quote': quote}
+            possible_constituency_matches[match_id] = {'id': constituencies_index[match_id]['id']}
 
     possible_candidate_matches = {}
-    for match_type, match_id, _, quote in matches:
+    for match_type, match_id, _ in matches:
         if match_type == 'candidate':
             candidate = get_candidate(match_id)
 
@@ -191,8 +238,7 @@ def add_matches(doc):
                          'match_constituency': constituency_match,
                          'running_2015': is_running_2015,
                          'score': score,
-                         'id': candidate['id'],
-                         'quote': quote,}
+                         'id': candidate['id'],}
 
             possible_candidate_matches[candidate['id']] = match_doc
 
@@ -200,8 +246,7 @@ def add_matches(doc):
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
     doc['possible']['parties'] = possible_party_matches.values()
-   
-    #doc['annotated'] = {'title': 
+    doc['quotes'] = quotes
  
     if 'user' not in doc:
         doc['user'] = {}
@@ -224,7 +269,6 @@ def resolve_candidates(doc):
 
             if 'deleted' not in candidate or not candidate['deleted']:
                 candidate['state'] = 'confirmed'
-                candidate['quote'] = None
                 resolved_candidates.append(candidate)
 
     # Add candidates that the machine found.
@@ -239,7 +283,6 @@ def resolve_candidates(doc):
         candidate_ = get_candidate(candidate['id'])
         if 'deleted' not in candidate_ or not candidate_['deleted']:
             candidate_['state'] = candidate_state
-            candidate_['quote'] = candidate['quote']
             resolved_candidates.append(candidate_)
 
     return resolved_candidates
@@ -254,7 +297,6 @@ def resolve_constituencies(doc):
             constituency = constituencies_index[constituency_id]
             constituency['state'] = 'confirmed'
             constituency['score'] = 1.5
-            constituency['quite'] = None
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
@@ -267,14 +309,21 @@ def resolve_constituencies(doc):
             constituency_state = 'removed'
 
         constituency_ = constituencies_index[constituency['id']]
-        constituency_['id'] = cid(constituency_['id'])
+        constituency_['id'] = constituency_['id']
         constituency_['state'] = constituency_state
-        constituency_['quote'] = constituency['quote']
         constituency_['score'] = 1.0
 
         resolved_constituencies.append(constituency_)
 
     return resolved_constituencies
+
+
+def resolve_quotes(doc):
+    for quote in doc['quotes']:
+        quote['candidates'] = [get_candidate(candidate_id) for candidate_id in quote['candidate_ids']]
+        quote['constituencies'] = [constituencies_index[constituency_id] for constituency_id in quote['constituency_ids']]
+        quote['parties'] = [parties[party_id] for party_id in quote['party_ids']]
+
 
 def resolve_matches(doc):
     """
@@ -285,6 +334,9 @@ def resolve_matches(doc):
     if 'possible' in doc:
         doc['candidates'] = resolve_candidates(doc)
         doc['constituencies'] = resolve_constituencies(doc) 
+
+    if 'quotes' in doc:
+        resolve_quotes(doc)
 
     return
 
