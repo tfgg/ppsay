@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import json
 from bson import ObjectId
 from ppsay.data import (
@@ -182,13 +183,43 @@ def add_matches(doc):
 
         quotes.append(quote_doc)
 
+    print quotes
+
     similar_pairs = []
     for i, quote1 in enumerate(quotes):
         for j, quote2 in enumerate(quotes):
-            if i != j and range_overlap(quote1['quote_span'], quote2['quote_span']):
+            if quote1['match_text'] == quote2['match_text'] and \
+               range_overlap(quote1['quote_span'], quote2['quote_span']):
                 similar_pairs.append((i,j))
 
     print similar_pairs
+
+    groups = []
+    for similar_pair in similar_pairs:
+        for group in groups:
+            if similar_pair[0] in group or similar_pair[1] in group:
+                group.add(similar_pair[0])
+                group.add(similar_pair[1])
+                break
+        else:
+            groups.append(set(similar_pair))
+
+    print groups
+
+    merged_quotes = []
+    for group in groups:
+        quote = {'constituency_ids': list(set(sum([quotes[i]['constituency_ids'] for i in group], []))),
+                 'party_ids': list(set(sum([quotes[i]['party_ids'] for i in group], []))),
+                 'candidate_ids': list(set(sum([quotes[i]['candidate_ids'] for i in group], []))),
+                 'quote_span': (min(quotes[i]['quote_span'][0] for i in group),
+                                max(quotes[i]['quote_span'][1] for i in group),),
+                 'match_text': quotes[i]['match_text'],}
+ 
+        print quote
+ 
+        merged_quotes.append(quote)
+ 
+    quotes = merged_quotes 
 
     for quote_doc in quotes:
         quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
@@ -346,7 +377,12 @@ if __name__ == "__main__":
     client = MongoClient()
     db = client.news.articles
 
-    for doc in db.find():
+    if len(sys.argv) == 1:
+        docs = db.find()
+    else:
+        docs = db.find({'_id': ObjectId(sys.argv[1])})
+
+    for doc in docs:
         print doc['key'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
