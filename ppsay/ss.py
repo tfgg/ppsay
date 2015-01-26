@@ -10,43 +10,14 @@ end_marks = [u'.', u'?', u'!']
 whitespace = [u' ', u'\n', u'\r', u'\t', u'’']
 
 def is_end_of_sentence(s):
-  if s[4] in end_marks and (s[2:4] in titles or s[1:4] in titles):
+  if s[3] in end_marks and (s[1:3] in titles or s[0:3] in titles):
     return False
-  elif s[4] in end_marks and s[5] in quotes:
+  elif s[2] in end_marks and s[3] in quotes:
     return True
-  elif s[4] in end_marks and s[5] in whitespace:
-    return True
-  else:
-    return False
-
-def is_start_of_word(s):
-  if (s[3] in whitespace and s[4] not in quotes) or s[3] in quotes:
+  elif s[3] in end_marks and s[4] in whitespace:
     return True
   else:
     return False
-
-def is_end_of_word(s):
-  eos = is_end_of_sentence(s)
-  eos1 = is_end_of_sentence(" " + s)
-
-  if (((s[4] in whitespace and s[3] != ',') or s[4] == ',') and not eos1) or eos:
-    return True
-  else:
-    return False
-
-def is_start_bracket(s):
-  if s[3] == '(':
-    return True
-  else:
-    return False
-
-def is_end_bracket(s):
-  if s[4] == ')':
-    return True
-  else:
-    return False
-
-#sample = "Hello my name is Dr. Tim. 'Why am I a doctor?' Well, I completed my Ph.D. recently."
 
 def samples(ss, l, r):
   for i in range(len(ss) + 1):
@@ -71,15 +42,15 @@ class Text(object):
 
     for i, s in samples(sample, 4, 4):
       end_of_sentence = is_end_of_sentence(s)
-      start_of_word = is_start_of_word(s)
-      end_of_word = is_end_of_word(s)
-      start_of_bracket = is_start_bracket(s)
-      end_of_bracket = is_end_bracket(s)
+      #start_of_word = is_start_of_word(s)
+      #end_of_word = is_end_of_word(s)
+      #start_of_bracket = is_start_bracket(s)
+      #end_of_bracket = is_end_bracket(s)
 
       if end_of_sentence:
         self.end_of_sentences.append(i)
 
-      if start_of_word:
+      """if start_of_word:
         self.start_of_words.append(i)
 
       if end_of_word:
@@ -89,7 +60,7 @@ class Text(object):
         self.start_of_brackets.append(i)
       
       if end_of_bracket:
-        self.end_of_brackets.append(i)
+        self.end_of_brackets.append(i)"""
 
   def print_debug(self):
     for i, s in samples(sample, 4, 4):

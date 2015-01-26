@@ -384,8 +384,8 @@ if __name__ == "__main__":
         docs = db.find({'_id': ObjectId(sys.argv[1])})
 
     for doc in docs:
-        if 'quotes' in doc:
-            continue
+        #if 'quotes' in doc:
+        #    continue
 
         print doc['key'], doc['_id']
 
