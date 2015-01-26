@@ -11,13 +11,24 @@
       {% endif %}
       </a> <small>{{ article.domain }}</small> <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small></h2>
  
+      <ul class='article-mentions-people'>
+      {% for candidate in article.candidates %}
+        <li class='candidate-score-{{ candidate.state }}'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a><a onclick='$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}").show()' class='candidate-mention-expand'>+</a></li>
+      {% endfor %}
+      </ul>
+      <ul class='article-mentions-constituencies'>
+      {% for constituency in article.constituencies %}
+        <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+      {% endfor %}
+      </ul>
+
       <ul class='quotes' id='quotes-{{ article._id }}'>
       {% for quote in article.quotes %}
         <li class='quote
                   {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
                   {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
                   {% if quotes_closed %} quote-closed{% endif %}'>
-          <ul class='quote-mentions'>
+          <!--<ul class='quote-mentions'>
           {% for candidate in quote.candidates %}
             <li class='quote-mention-candidate'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
           {% endfor %}
@@ -27,20 +38,9 @@
           {% for constituency in quote.constituencies %}
             <li class='quote-mention-constituency'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
           {% endfor %}
-          </ul>
+          </ul>-->
           <p class='quote-text'>{{ quote.text }}</p>
         </li>
-      {% endfor %}
-      </ul>
-
-      <ul class='article-mentions-people'>
-      {% for candidate in article.candidates %}
-        <li class='candidate-score-{{ candidate.state }}'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
-      {% endfor %}
-      </ul>
-      <ul class='article-mentions-constituencies'>
-      {% for constituency in article.constituencies %}
-        <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
       {% endfor %}
       </ul>
     </li>

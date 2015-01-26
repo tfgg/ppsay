@@ -203,9 +203,18 @@ ul.article-list {
         display: inline-block;
 
         a {
-          display: block;
-          margin: 2px;
-          padding: 3px;
+          /*display: block;
+          margin: 2px;*/
+          padding: 5px;
+          cursor: pointer;
+        }
+
+        a.candidate-mention-expand {
+          font-size: 1.2em;
+
+          &:hover {
+            text-decoration: none;
+          }
         }
       }
     }

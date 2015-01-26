@@ -21,6 +21,10 @@ resp = requests.get(url).json()
 
 def save_person(person):
     if person['party_memberships']:
+        for year, x in person['party_memberships'].items():
+            if person['standing_in'][year] is None:
+                print person['id']
+
         candidacies = {year: {'party': {'name': x['name'],
                                         'id': x['id'].split(':')[1],},
                               'constituency': {'name': person['standing_in'][year]['name'], 

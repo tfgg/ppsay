@@ -26,6 +26,9 @@
       <a href='http://yournextmp.com/person/{{ person.id }}'>View on YourNextMP</a>
     </div>
     <div class='col-md-10'>
+      {% include "article_add_form.html" %}
+    </div>
+    <div class='col-md-10'>
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
         <script>

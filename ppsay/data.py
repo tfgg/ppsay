@@ -30,5 +30,8 @@ def get_candidates():
     for candidate in db_candidates.find():
         del candidate['_id']
 
+        if 'deleted' in candidate and candidate['deleted']:
+            continue
+
         yield candidate
 
