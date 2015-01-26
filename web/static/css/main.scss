@@ -152,6 +152,12 @@ ul.article-list {
         padding: 0;
 
         li.quote {
+            p.quote-text {
+                background: #F0F0F0;
+                padding: 10px;
+                margin: 10px;
+            }
+
             ul.quote-mentions {
                 font-size:0.8em;
                 list-style: none;
@@ -180,6 +186,10 @@ ul.article-list {
                     background: lighten($highlight, 45%);
                 }
             }
+        }
+
+        li.quote-closed {
+            display: none;
         }
     }
 

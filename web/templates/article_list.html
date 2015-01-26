@@ -23,7 +23,10 @@
       </ul>
       <ul class='quotes'>
       {% for quote in article.quotes %}
-        <li class='quote'>
+        <li class='quote
+                  {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
+                  {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
+                  {% if quotes_closed %} quote-closed{% endif %}'>
           <ul class='quote-mentions'>
           {% for candidate in quote.candidates %}
             <li class='quote-mention-candidate'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>

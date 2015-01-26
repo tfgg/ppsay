@@ -7,7 +7,7 @@ import sys
 quotes = [u'"', u'”', u"'", u'“']
 titles = [u'Dr', u'Mr', u'Mrs', u'Ms', u'h.D']
 end_marks = [u'.', u'?', u'!']
-whitespace = [u' ', u'\n', u'\r', u'\t']
+whitespace = [u' ', u'\n', u'\r', u'\t', u'’']
 
 def is_end_of_sentence(s):
   if s[4] in end_marks and (s[2:4] in titles or s[1:4] in titles):

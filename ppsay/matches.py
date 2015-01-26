@@ -378,11 +378,15 @@ if __name__ == "__main__":
     db = client.news.articles
 
     if len(sys.argv) == 1:
-        docs = db.find()
+        docs = db.find() \
+                 .sort([('time_added', -1)])
     else:
         docs = db.find({'_id': ObjectId(sys.argv[1])})
 
     for doc in docs:
+        if 'quotes' in doc:
+            continue
+
         print doc['key'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:

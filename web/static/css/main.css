@@ -94,10 +94,14 @@ ul.article-list {
       margin-bottom: 10px;
       font-size: 1.4em; }
       ul.article-list li.article-item h2 a.article-link {
-        color: #3333CC; }
+        color: #3333cc; }
     ul.article-list li.article-item ul.quotes {
       list-style: none;
       padding: 0; }
+      ul.article-list li.article-item ul.quotes li.quote p.quote-text {
+        background: #F0F0F0;
+        padding: 10px;
+        margin: 10px; }
       ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions {
         font-size: 0.8em;
         list-style: none;
@@ -115,6 +119,8 @@ ul.article-list {
           background: #E7FFE6; }
         ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li.quote-mention-constituency {
           background: #ebebfa; }
+      ul.article-list li.article-item ul.quotes li.quote-closed {
+        display: none; }
     ul.article-list li.article-item ul.article-mentions-people, ul.article-list li.article-item ul.article-mentions-constituencies {
       list-style: none;
       margin: 0;
