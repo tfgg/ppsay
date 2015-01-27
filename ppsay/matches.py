@@ -122,6 +122,9 @@ def add_matches(doc):
 
     parsed_texts = [Text(text) for text in texts]
 
+    for parsed_text in parsed_texts:
+        parsed_text.end_of_sentences.append(len(parsed_text.sample))
+
     matches = []
 
     for party_id, party in parties.items():
@@ -155,11 +158,11 @@ def add_matches(doc):
         sub = match[1]
         spans = texts_tokens[match[0]][1]
 
-        match_start = spans[max(sub[0], 0)][0]
-        match_end = spans[min(sub[1], len(spans)-1)][1]
+        wmatch_start = spans[max(sub[0], 0)][0]
+        wmatch_end = spans[min(sub[1], len(spans)-1)-1][1]
 
         for i, eos in enumerate(parsed_texts[0].end_of_sentences):
-            if eos > match_start:
+            if eos >= wmatch_start:
                 if i != 0:
                     match_start = parsed_texts[0].end_of_sentences[i-1] + 1
                     match_end = eos
@@ -167,6 +170,10 @@ def add_matches(doc):
                     match_start = 0
                     match_end = parsed_texts[0].end_of_sentences[0] + 1
                 break
+        else:
+            print "Fallthrough"
+            match_start = 0
+            match_end = len(texts[match[0]])
 
         quote_doc = {'constituency_ids': [],
                      'party_ids': [],
@@ -175,15 +182,15 @@ def add_matches(doc):
                      'match_text': match[0]}
 
         if match_type == 'candidate':
-            quote_doc['candidate_ids'].append(match_id)
+            quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
         elif match_type == 'party':
-            quote_doc['party_ids'].append(match_id)
+            quote_doc['party_ids'].append((match_id, wmatch_start, wmatch_end))
         elif match_type == 'constituency':
-            quote_doc['constituency_ids'].append(match_id)
+            quote_doc['constituency_ids'].append((match_id, wmatch_start, wmatch_end))
 
         quotes.append(quote_doc)
 
-    print quotes
+        print quote_doc
 
     similar_pairs = []
     for i, quote1 in enumerate(quotes):
@@ -191,8 +198,6 @@ def add_matches(doc):
             if quote1['match_text'] == quote2['match_text'] and \
                range_overlap(quote1['quote_span'], quote2['quote_span']):
                 similar_pairs.append((i,j))
-
-    print similar_pairs
 
     groups = []
     for similar_pair in similar_pairs:
@@ -204,8 +209,6 @@ def add_matches(doc):
         else:
             groups.append(set(similar_pair))
 
-    print groups
-
     merged_quotes = []
     for group in groups:
         quote = {'constituency_ids': list(set(sum([quotes[i]['constituency_ids'] for i in group], []))),
@@ -214,8 +217,6 @@ def add_matches(doc):
                  'quote_span': (min(quotes[i]['quote_span'][0] for i in group),
                                 max(quotes[i]['quote_span'][1] for i in group),),
                  'match_text': quotes[i]['match_text'],}
- 
-        print quote
  
         merged_quotes.append(quote)
  
@@ -226,6 +227,21 @@ def add_matches(doc):
     
         quote_doc['text'] = quote_text
 
+        quote_html = unicode(quote_text)
+        offset = quote_doc['quote_span'][0]
+       
+        to_highlight = [('candidate', x) for x in quote_doc['candidate_ids']] + \
+                       [('constituency', x) for x in quote_doc['constituency_ids']]
+ 
+        for highlight_type, (id, s, e) in sorted(to_highlight, key=lambda x: x[1][1], reverse=True):
+            quote_html = quote_html[:e-offset] + '</a>' + quote_html[e-offset:]
+
+            if highlight_type == 'candidate':
+                quote_html = quote_html[:s-offset] + '<a href="/articles/person/' + id + '" class="quote-candidate-highlight">' + quote_html[s-offset:]
+            elif highlight_type == 'constituency':
+                quote_html = quote_html[:s-offset] + '<a href="/articles/constituency/' + id + '" class="quote-constituency-highlight">' + quote_html[s-offset:]
+
+        quote_doc['html'] = quote_html.strip()
 
     possible_party_matches = {}
     for match_type, match_id, _ in matches:
@@ -351,9 +367,9 @@ def resolve_constituencies(doc):
 
 def resolve_quotes(doc):
     for quote in doc['quotes']:
-        quote['candidates'] = [get_candidate(candidate_id) for candidate_id in quote['candidate_ids']]
-        quote['constituencies'] = [constituencies_index[constituency_id] for constituency_id in quote['constituency_ids']]
-        quote['parties'] = [parties[party_id] for party_id in quote['party_ids']]
+        quote['candidates'] = [get_candidate(candidate_id[0]) for candidate_id in quote['candidate_ids']]
+        quote['constituencies'] = [constituencies_index[constituency_id[0]] for constituency_id in quote['constituency_ids']]
+        quote['parties'] = [parties[party_id[0]] for party_id in quote['party_ids']]
 
 
 def resolve_matches(doc):

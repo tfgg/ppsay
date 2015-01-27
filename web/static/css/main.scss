@@ -156,6 +156,18 @@ ul.article-list {
                 background: #F0F0F0;
                 padding: 10px;
                 margin: 10px;
+
+                a.quote-candidate-highlight {
+                    background: #FFC;
+                    color: #333;
+                    padding: 5px;
+                }
+                
+                a.quote-constituency-highlight {
+                    background: #E8E8FF;
+                    color: #333;
+                    padding: 5px;
+                }
             }
 
             ul.quote-mentions {

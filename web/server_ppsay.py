@@ -59,14 +59,23 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
+  candidate_docs = list(db_candidates.find({"candidacies.2010.constituency.id": str(constituency_id)})) + \
+                   list(db_candidates.find({"candidacies.2015.constituency.id": str(constituency_id)}))
+
+  candidate_ids = [x['id'] for x in candidate_docs]
+
   article_docs = db_articles.find({'state': 'approved',
-                                   'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}}) \
-                            .sort([('time_added', -1)])
+                                   '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
+                                           {'candidates': {'$elemMatch': {'id': {'$in': candidate_ids}, 'state': {'$ne': 'removed'}}}}]}) \
+                            .sort([["time_added", -1]])
+
+  #article_docs = sorted(article_docs, key=lambda x: x['time_added'], reverse=True)
 
   area_doc = get_mapit_area(constituency_id)
 
   return render_template('constituency.html',
                          articles=article_docs,
+                         candidates=candidate_docs,
                          area=area_doc)
 
 @app.route('/article', methods=['POST'])

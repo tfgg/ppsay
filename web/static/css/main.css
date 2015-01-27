@@ -102,6 +102,14 @@ ul.article-list {
         background: #F0F0F0;
         padding: 10px;
         margin: 10px; }
+        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-candidate-highlight {
+          background: #FFC;
+          color: #333;
+          padding: 5px; }
+        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-constituency-highlight {
+          background: #E8E8FF;
+          color: #333;
+          padding: 5px; }
       ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions {
         font-size: 0.8em;
         list-style: none;

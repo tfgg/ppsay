@@ -39,7 +39,7 @@
             <li class='quote-mention-constituency'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
           {% endfor %}
           </ul>-->
-          <p class='quote-text'>{{ quote.text }}</p>
+          <p class='quote-text'>{{ quote.html|safe }}</p>
         </li>
       {% endfor %}
       </ul>
