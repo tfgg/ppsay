@@ -37,7 +37,8 @@ def get_mapit_area(area_id):
 @app.route('/')
 def index():
   article_docs = db_articles.find({'state': 'approved'}) \
-                            .sort([('time_added', -1)])
+                            .sort([('time_added', -1)]) \
+                            .limit(50)
 
   article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] != 'removed']) > 0 
                                           or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
