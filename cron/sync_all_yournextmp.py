@@ -25,13 +25,15 @@ def save_person(person):
             if person['standing_in'][year] is None:
                 print person['id']
 
-        candidacies = {year: {'party': {'name': x['name'],
-                                        'id': x['id'].split(':')[1],},
+        candidacies = {year: {'party': {'name': person['party_memberships'][year]['name'],
+                                        'id': person['party_memberships'][year]['id'].split(':')[1],},
                               'constituency': {'name': person['standing_in'][year]['name'], 
                                                'id': person['standing_in'][year]['post_id'],},
                               'year': year,
                              } 
-                       for year, x in person['party_memberships'].items() if x is not None}
+                       for year in person['party_memberships'] if
+                         person['party_memberships'][year] is not None
+                           and person['standing_in'][year] is not None}
     else:
         candidacies = {}
 

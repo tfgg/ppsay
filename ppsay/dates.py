@@ -61,6 +61,11 @@ def find_dates(html):
         parsed_time = datetime.strptime(div.text, 'Published %d/%m/%Y %H:%M').replace(tzinfo=UTC)
         dates.append(parsed_time)
 
+    # Conservative Home
+    for t in tree.xpath('//time/@datetime')[:1]:
+        parsed_time = parse_date(t)
+        dates.append(parsed_time)
+
     # Fri 24th October 2014 - 8:49 am 
     # Lib dem voice
     for div in tree.xpath('//div[@class="entry-meta"]'):
