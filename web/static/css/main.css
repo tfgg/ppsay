@@ -103,13 +103,15 @@ ul.article-list {
         padding: 10px;
         margin: 10px; }
         ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-candidate-highlight {
-          background: #FFC;
+          background: rgba(255, 255, 128, 0.25);
           color: #333;
           padding: 5px; }
         ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-constituency-highlight {
           background: #E8E8FF;
           color: #333;
           padding: 5px; }
+        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.highlight {
+          background: rgba(255, 255, 128, 0.75); }
       ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions {
         font-size: 0.8em;
         list-style: none;

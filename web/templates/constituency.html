@@ -16,7 +16,7 @@
         {% for candidate in candidates %}
           {% if "2015" in candidate.candidacies %}
           <p>
-            <strong>{{ candidate.name }}</strong>
+            <strong>{{ candidate.name }}</strong><br/>
             <em>{{ candidate.candidacies['2015'].party.name }}</em>
           </p>
           {% endif %}
@@ -30,9 +30,11 @@
         {% include "article_list.html" %} 
         <script>
             $('.quote-constituency-{{ area.id }}').show();
+            $('.quote-constituency-{{ area.id }}-highlight').addClass("highlight");
 
             {% for candidate in candidates %}
             $('.quote-candidate-{{ candidate.id }}').show();
+            $('.quote-candidate-{{ candidate.id }}-highlight').addClass("highlight");
             {% endfor %}
         </script>
     </div>

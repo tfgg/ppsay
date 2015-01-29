@@ -68,7 +68,7 @@ def resolve_overlaps(matches):
             for i2, match2 in enumerate(matches):
                 # Make sure we're not lookig at the same match object
                 # Also only look for matches in same text (e.g. title<->title)
-                if match1 != match2 and match1[1][0] == match2[1][0]:
+                if i1 != i2 and match1[2][0] == match2[2][0]:
                     if range_overlap(match1[2][1], match2[2][1]):
                         print "Overlap", match1, match2
                         size1 = match1[2][1][1] - match1[2][1][0]
@@ -76,27 +76,24 @@ def resolve_overlaps(matches):
 
                         if size1 > size2:
                             del matches[i2]
+                            overlap_found = True
+                            break
                         elif size2 > size1:
                             del matches[i1]
+                            overlap_found = True
+                            break
                         else:
-                            #raise Exception("Overlaps of equal length")
-                            # LA LA LA. DIDN'T HAPPEN.
-                            continue
+                            print "Overlaps of equal length"
 
-                        overlap_found = True
-                        break
+                            #if i1 > i2:
+                            #    del matches[i1]
+                            #    del matches[i2]
+                            #else:
+                            #    del matches[i2]
+                            #    del matches[i1]
 
             if overlap_found:
                 break
-
-
-def make_quote(text, spans, sub):
-  match_start = spans[max(sub[0]-10, 0)]
-  match_end = spans[min(sub[1]+10, len(spans)-1)]
-
-  quote = text[match_start[0]:match_end[1]]
-
-  return quote
 
 
 def munge_names(names):
@@ -114,21 +111,36 @@ def munge_names(names):
             names.append(name.replace('Mac', 'Mc'))
 
 
+def add_tags(s, tags):
+    tags = sorted(tags, key=lambda x: x[0])
+    
+    last = 0
+    html = ""
+    for (tag_start, tag_end), tag_begin, tag_fin in tags:
+        if tag_start < last:
+            print "Overlap"
+            continue
+
+        html += s[last:tag_start]
+        html += tag_begin
+        html += s[tag_start:tag_end]
+        html += tag_fin
+        last = tag_end
+    html += s[last:]
+    
+    return html
+
+
 def add_matches(doc):
     texts = [doc['page']['text'],
              doc['page']['title']]
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
-    parsed_texts = [Text(text) for text in texts]
-
-    for parsed_text in parsed_texts:
-        parsed_text.end_of_sentences.append(len(parsed_text.sample))
-
     matches = []
 
     for party_id, party in parties.items():
-        names = [party['name']] + parties[party_id]['other_names']
+        names = set([party['name']] + parties[party_id]['other_names'])
 
         for match in find_matches(names, *texts_tokens):
             if match is not None:
@@ -136,7 +148,7 @@ def add_matches(doc):
 
 
     for constituency in constituencies:
-        names = [constituency['name']] + constituencies_names[constituency['id']]
+        names = set([constituency['name']] + constituencies_names[constituency['id']])
 
         for match in find_matches(names, *texts_tokens):
             if match is not None:
@@ -146,103 +158,14 @@ def add_matches(doc):
     for candidate in get_candidates():
         names = [candidate['name']] + candidate['other_names']
         munge_names(names)
+        names = set(names)
 
         for match in find_matches(names, *texts_tokens):
             if match is not None:
                 matches.append(('candidate', candidate['id'], match))
 
     resolve_overlaps(matches)
-
-    quotes = []
-    for match_type, match_id, match in matches:
-        sub = match[1]
-        spans = texts_tokens[match[0]][1]
-
-        wmatch_start = spans[max(sub[0], 0)][0]
-        wmatch_end = spans[min(sub[1], len(spans)-1)-1][1]
-
-        for i, eos in enumerate(parsed_texts[0].end_of_sentences):
-            if eos >= wmatch_start:
-                if i != 0:
-                    match_start = parsed_texts[0].end_of_sentences[i-1] + 1
-                    match_end = eos
-                else:
-                    match_start = 0
-                    match_end = parsed_texts[0].end_of_sentences[0] + 1
-                break
-        else:
-            print "Fallthrough"
-            match_start = 0
-            match_end = len(texts[match[0]])
-
-        quote_doc = {'constituency_ids': [],
-                     'party_ids': [],
-                     'candidate_ids': [],
-                     'quote_span': (match_start, match_end),
-                     'match_text': match[0]}
-
-        if match_type == 'candidate':
-            quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
-        elif match_type == 'party':
-            quote_doc['party_ids'].append((match_id, wmatch_start, wmatch_end))
-        elif match_type == 'constituency':
-            quote_doc['constituency_ids'].append((match_id, wmatch_start, wmatch_end))
-
-        quotes.append(quote_doc)
-
-        print quote_doc
-
-    similar_pairs = []
-    for i, quote1 in enumerate(quotes):
-        for j, quote2 in enumerate(quotes):
-            if quote1['match_text'] == quote2['match_text'] and \
-               range_overlap(quote1['quote_span'], quote2['quote_span']):
-                similar_pairs.append((i,j))
-
-    groups = []
-    for similar_pair in similar_pairs:
-        for group in groups:
-            if similar_pair[0] in group or similar_pair[1] in group:
-                group.add(similar_pair[0])
-                group.add(similar_pair[1])
-                break
-        else:
-            groups.append(set(similar_pair))
-
-    merged_quotes = []
-    for group in groups:
-        quote = {'constituency_ids': list(set(sum([quotes[i]['constituency_ids'] for i in group], []))),
-                 'party_ids': list(set(sum([quotes[i]['party_ids'] for i in group], []))),
-                 'candidate_ids': list(set(sum([quotes[i]['candidate_ids'] for i in group], []))),
-                 'quote_span': (min(quotes[i]['quote_span'][0] for i in group),
-                                max(quotes[i]['quote_span'][1] for i in group),),
-                 'match_text': quotes[i]['match_text'],}
- 
-        merged_quotes.append(quote)
- 
-    quotes = merged_quotes 
-
-    for quote_doc in quotes:
-        quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
     
-        quote_doc['text'] = quote_text
-
-        quote_html = unicode(quote_text)
-        offset = quote_doc['quote_span'][0]
-       
-        to_highlight = [('candidate', x) for x in quote_doc['candidate_ids']] + \
-                       [('constituency', x) for x in quote_doc['constituency_ids']]
- 
-        for highlight_type, (id, s, e) in sorted(to_highlight, key=lambda x: x[1][1], reverse=True):
-            quote_html = quote_html[:e-offset] + '</a>' + quote_html[e-offset:]
-
-            if highlight_type == 'candidate':
-                quote_html = quote_html[:s-offset] + '<a href="/articles/person/' + id + '" class="quote-candidate-highlight">' + quote_html[s-offset:]
-            elif highlight_type == 'constituency':
-                quote_html = quote_html[:s-offset] + '<a href="/articles/constituency/' + id + '" class="quote-constituency-highlight">' + quote_html[s-offset:]
-
-        quote_doc['html'] = quote_html.strip()
-
     possible_party_matches = {}
     for match_type, match_id, _ in matches:
         if match_type == 'party':
@@ -289,11 +212,11 @@ def add_matches(doc):
 
             possible_candidate_matches[candidate['id']] = match_doc
 
+    doc['matches'] = matches
     doc['possible'] = {}
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
-    doc['possible']['parties'] = possible_party_matches.values()
-    doc['quotes'] = quotes
+    #doc['possible']['parties'] = possible_party_matches.values()
  
     if 'user' not in doc:
         doc['user'] = {}
@@ -305,6 +228,89 @@ def add_matches(doc):
         doc['user']['constituencies'] = {'confirm': [], 'remove': []}
 
     return doc
+
+
+def add_quotes(doc):
+    texts = [doc['page']['text'],
+             doc['page']['title']]
+
+    texts_tokens = [get_tokens(text.lower()) for text in texts]
+    parsed_texts = [Text(text) for text in texts]
+
+    for parsed_text in parsed_texts:
+        parsed_text.end_of_sentences.append(len(parsed_text.sample))
+
+    quotes = []
+
+    for match_type, match_id, match in doc['matches']:
+        sub = match[1]
+        spans = texts_tokens[match[0]][1]
+
+        wmatch_start = spans[max(sub[0], 0)][0]
+        wmatch_end = spans[min(sub[1], len(spans)-1)-1][1]
+
+        for i, eos in enumerate(parsed_texts[0].end_of_sentences):
+            if eos >= wmatch_start:
+                if i != 0:
+                    match_start = parsed_texts[0].end_of_sentences[i-1] + 1
+                    match_end = eos
+                else:
+                    match_start = 0
+                    match_end = parsed_texts[0].end_of_sentences[0] + 1
+                break
+        else:
+            print "Fallthrough"
+            match_start = 0
+            match_end = len(texts[match[0]])
+
+        quote_doc = {'constituency_ids': [],
+                     #'party_ids': [],
+                     'candidate_ids': [],
+                     'quote_span': (match_start, match_end),
+                     'match_text': match[0]}
+
+        if match_type == 'candidate':
+            quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
+        #elif match_type == 'party':
+        #    quote_doc['party_ids'].append((match_id, wmatch_start, wmatch_end))
+        elif match_type == 'constituency':
+            quote_doc['constituency_ids'].append((match_id, wmatch_start, wmatch_end))
+
+        quotes.append(quote_doc)
+
+        print quote_doc
+
+    similar_pairs = []
+    for i, quote1 in enumerate(quotes):
+        for j, quote2 in enumerate(quotes):
+            if quote1['match_text'] == quote2['match_text'] and \
+               range_overlap(quote1['quote_span'], quote2['quote_span']):
+                similar_pairs.append((i,j))
+
+    groups = []
+    for similar_pair in similar_pairs:
+        for group in groups:
+            if similar_pair[0] in group or similar_pair[1] in group:
+                group.add(similar_pair[0])
+                group.add(similar_pair[1])
+                break
+        else:
+            groups.append(set(similar_pair))
+
+    merged_quotes = []
+    for group in groups:
+        quote = {'constituency_ids': list(set(sum([quotes[i]['constituency_ids'] for i in group], []))),
+                 ##'party_ids': list(set(sum([quotes[i]['party_ids'] for i in group], []))),
+                 'candidate_ids': list(set(sum([quotes[i]['candidate_ids'] for i in group], []))),
+                 'quote_span': (min(quotes[i]['quote_span'][0] for i in group),
+                                max(quotes[i]['quote_span'][1] for i in group),),
+                 'match_text': quotes[i]['match_text'],}
+ 
+        merged_quotes.append(quote)
+ 
+    quotes = merged_quotes 
+    
+    doc['quotes'] = quotes
 
 def resolve_candidates(doc):
     resolved_candidates = []
@@ -366,11 +372,31 @@ def resolve_constituencies(doc):
 
 
 def resolve_quotes(doc):
-    for quote in doc['quotes']:
-        quote['candidates'] = [get_candidate(candidate_id[0]) for candidate_id in quote['candidate_ids']]
-        quote['constituencies'] = [constituencies_index[constituency_id[0]] for constituency_id in quote['constituency_ids']]
-        quote['parties'] = [parties[party_id[0]] for party_id in quote['party_ids']]
+    texts = [doc['page']['text'],
+             doc['page']['title']]
 
+    candidates = {candidate['id']: candidate for candidate in doc['candidates'] if candidate['state'] != 'removed'}
+    constituencies = {constituency['id']: constituency for constituency in doc['constituencies'] if constituency['state'] != 'removed'}
+
+    for quote_doc in doc['quotes']:
+        # Grab info, only include if they're in the final resolvesd constituencies/candidates 
+        quote_doc['candidates'] = [candidates[candidate_id[0]] for candidate_id in quote_doc['candidate_ids'] if candidate_id[0] in candidates]
+        quote_doc['constituencies'] = [constituencies[constituency_id[0]] for constituency_id in quote_doc['constituency_ids'] if constituency_id[0] in constituencies]
+        #quote['parties'] = [parties[party_id[0]] for party_id in quote['party_ids']]
+
+        quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
+    
+        quote_doc['text'] = quote_text
+
+        offset = quote_doc['quote_span'][0]
+       
+        tags = [((s-offset, e-offset), "<a href='/articles/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
+
+        tags += [((s-offset, e-offset), "<a href='/articles/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
+ 
+        quote_html = add_tags(quote_text, tags)
+        quote_doc['tags'] = tags
+        quote_doc['html'] = quote_html.strip()
 
 def resolve_matches(doc):
     """
@@ -407,6 +433,7 @@ if __name__ == "__main__":
 
         if doc['page'] is not None and doc['page']['text'] is not None:
             add_matches(doc)
+            add_quotes(doc)
 
         resolve_matches(doc)
         db.save(doc)

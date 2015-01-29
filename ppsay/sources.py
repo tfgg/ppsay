@@ -3,7 +3,7 @@ from urlparse import urlparse
 from domains import domain_whitelist, add_domain
 from tasks import task_get_page
 from dates import add_date
-from matches import add_matches, resolve_matches
+from matches import add_matches, resolve_matches, add_quotes
 
 client = MongoClient()
 
@@ -47,6 +47,7 @@ def get_source_if_matches(source_url, source, state):
 
         add_domain(doc)
         add_matches(doc)
+        add_quotes(doc)
 
         # Only save if it has matches
         if len(doc['possible']['candidates']) > 0:
@@ -80,6 +81,7 @@ def get_source(source_url, source, state):
 
         add_domain(doc)
         add_matches(doc)
+        add_quotes(doc)
 
         resolve_matches(doc)
 

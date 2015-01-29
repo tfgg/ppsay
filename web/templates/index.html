@@ -13,9 +13,17 @@
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-12'>
+    <div class='col-md-9'>
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
+    </div>
+    <div class='col-md-3'>
+        <h2>Constituencies</h2>
+        <ul>
+        {% for constituency in constituencies %}
+            <li><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+        {% endfor %}
+        </ul>
     </div>
   </div>
 </div>

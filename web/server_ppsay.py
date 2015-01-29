@@ -44,6 +44,7 @@ def index():
                                           or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
 
   return render_template('index.html',
+                         constituencies=constituencies,
                          articles=article_docs)
 
 @app.route('/person/<int:person_id>')
@@ -60,8 +61,11 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
-  candidate_docs = list(db_candidates.find({"candidacies.2010.constituency.id": str(constituency_id)})) + \
-                   list(db_candidates.find({"candidacies.2015.constituency.id": str(constituency_id)}))
+  candidate_docs = db_candidates.find({'deleted': {'$ne': True},
+                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
+                                               {"candidacies.2015.constituency.id": str(constituency_id)}]})
+
+  candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
 
   candidate_ids = [x['id'] for x in candidate_docs]
 
