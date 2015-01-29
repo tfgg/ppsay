@@ -79,6 +79,12 @@ ul.constituencies-tagged {
     background: #fdd;
     border: 0; }
 
+ul.constituencies {
+  list-style: none;
+  padding: 0; }
+  ul.constituencies li {
+    padding: 5px; }
+
 ul.article-list {
   list-style: none;
   margin: 0;

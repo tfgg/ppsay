@@ -18,8 +18,15 @@
         {% include "article_list.html" %}
     </div>
     <div class='col-md-3'>
+        <h2>Candidates</h2>
+        <input id="autocomplete-candidate">
+        <script>
+        $(function() {
+            $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}"});
+        });
+        </script>
         <h2>Constituencies</h2>
-        <ul>
+        <ul class='constituencies'>
         {% for constituency in constituencies %}
             <li><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
         {% endfor %}

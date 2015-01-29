@@ -16,8 +16,17 @@
         {% for candidate in candidates %}
           {% if "2015" in candidate.candidacies %}
           <p>
-            <strong>{{ candidate.name }}</strong><br/>
+            <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
             <em>{{ candidate.candidacies['2015'].party.name }}</em>
+          </p>
+          {% endif %}
+        {% endfor %}
+        <h3>2010 candidates</h3>
+        {% for candidate in candidates %}
+          {% if "2010" in candidate.candidacies %}
+          <p>
+            <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
+            <em>{{ candidate.candidacies['2010'].party.name }}</em>
           </p>
           {% endif %}
         {% endfor %}
