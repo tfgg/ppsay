@@ -20,15 +20,14 @@ sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+')
 def is_sublist(a, b):
     i = 0
     
-    if a == []: return (0,0)
+    if a == []: yield (0,0)
 
-    while True:
-        if i == len(b): return None
+    while i != len(b):
 
         if b[i:i + len(a)] == a:
-            return (i, i + len(a))
-        else:
-            i = i + 1
+            yield (i, i + len(a))
+
+        i = i + 1
 
 token_re = re.compile(u'([^ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+)')
             
@@ -47,10 +46,7 @@ def find_matches(ss, *tokenss):
     tokens, _ = get_tokens(s.lower())
 
     for i, (s_tokens, s_spans) in enumerate(tokenss):
-
-        sub = is_sublist(tokens, s_tokens)
-
-        if sub is not None:
+        for sub in is_sublist(tokens, s_tokens):
             yield (i, sub, s)
 
 def range_overlap(a, b):
@@ -164,6 +160,9 @@ def add_matches(doc):
             if match is not None:
                 matches.append(('candidate', candidate['id'], match))
 
+    for match in matches:
+        print match
+
     resolve_overlaps(matches)
     
     possible_party_matches = {}
@@ -235,6 +234,9 @@ def add_quotes(doc):
              doc['page']['title']]
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
+
+    print texts_tokens
+
     parsed_texts = [Text(text) for text in texts]
 
     for parsed_text in parsed_texts:
