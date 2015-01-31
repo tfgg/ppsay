@@ -9,7 +9,8 @@ from ppsay.data import (
     constituencies_names,
     parties,
     get_candidate,
-    get_candidates
+    get_candidates,
+    squish_phrases
 )
 from ss import Text
 
@@ -109,7 +110,7 @@ def munge_names(names):
 
 def add_tags(s, tags):
     tags = sorted(tags, key=lambda x: x[0])
-    
+   
     last = 0
     html = ""
     for (tag_start, tag_end), tag_begin, tag_fin in tags:
@@ -159,6 +160,11 @@ def add_matches(doc):
         for match in find_matches(names, *texts_tokens):
             if match is not None:
                 matches.append(('candidate', candidate['id'], match))
+
+    for phrase in squish_phrases:
+        for match in find_matches([phrase], *texts_tokens):
+            if match is not None:
+                matches.append(('squish', phrase, match))
 
     for match in matches:
         print match
@@ -235,8 +241,6 @@ def add_quotes(doc):
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
-    print texts_tokens
-
     parsed_texts = [Text(text) for text in texts]
 
     for parsed_text in parsed_texts:
@@ -249,7 +253,7 @@ def add_quotes(doc):
         spans = texts_tokens[match[0]][1]
 
         wmatch_start = spans[max(sub[0], 0)][0]
-        wmatch_end = spans[min(sub[1], len(spans)-1)-1][1]
+        wmatch_end = spans[min(sub[1], len(spans)-1)][1]
 
         for i, eos in enumerate(parsed_texts[0].end_of_sentences):
             if eos >= wmatch_start:

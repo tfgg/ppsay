@@ -16,6 +16,14 @@ constituencies_names = json.load(open(x('../parse_data/constituencies_other_name
 candidates_index = {candidate['id']: candidate for candidate in candidates}
 constituencies_index = {constituency['id']: constituency for constituency in constituencies}
 
+squish_phrases = ["Gordon Ramsay",
+                  "Cambridge University",
+                  "Bath University",
+                  "blood bath",
+                  "Bath-born",
+                  "Bath Rugby",
+                  "Dover House"]
+
 client = MongoClient()
 
 db_candidates = client.news.candidates
