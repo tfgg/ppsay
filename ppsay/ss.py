@@ -7,7 +7,7 @@ import sys
 quotes = [u'"', u'”', u"'", u'“']
 titles = [u'Dr', u'Mr', u'Mrs', u'Ms', u'h.D']
 end_marks = [u'.', u'?', u'!']
-whitespace = [u' ', u'\n', u'\r', u'\t', u'’']
+whitespace = [u' ', u'\n', u'\r', u'\t', u'’', u'\xa0']
 
 def is_end_of_sentence(s):
   if s[3] in end_marks and (s[1:3] in titles or s[0:3] in titles):
@@ -23,7 +23,7 @@ def samples(ss, l, r):
   for i in range(len(ss) + 1):
     extra_prefix = max(l-i, 0)
     extra_suffix = max(i + r - len(ss), 0)
-    s = " " * extra_prefix + ss[max(i-(l),0):min(i+(r),len(ss))] + " " * extra_suffix
+    s = u" " * extra_prefix + ss[max(i-(l),0):min(i+(r),len(ss))] + u" " * extra_suffix
     yield (i, s)
 
 class Text(object):
@@ -63,7 +63,7 @@ class Text(object):
         self.end_of_brackets.append(i)"""
 
   def print_debug(self):
-    for i, s in samples(sample, 4, 4):
+    for i, s in samples(self.sample, 4, 4):
       print i, s,
       if i in self.end_of_sentences:
         print '*',
@@ -105,8 +105,7 @@ class Text(object):
 if __name__ == "__main__":
   sample = open(sys.argv[1]).read().decode('utf-8')
 
-  t = Text()
-  t.parse(sample)
+  t = Text(sample)
 
   words = t.get_words()
 
