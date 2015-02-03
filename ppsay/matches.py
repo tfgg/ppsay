@@ -263,10 +263,8 @@ def add_quotes(doc):
     parsed_texts = [Text(text) for text in texts]
 
     for parsed_text in parsed_texts:
-        #if len(parsed_text.sample) not in parsed_text.end_of_sentences:
-        #    parsed_text.end_of_sentences.append(len(parsed_text.sample))
-
-        print parsed_text.markup()
+        if len(parsed_text.sample) not in parsed_text.end_of_sentences:
+            parsed_text.end_of_sentences.append(len(parsed_text.sample))
 
     quotes = []
 
@@ -296,9 +294,6 @@ def add_quotes(doc):
                      'candidate_ids': [],
                      'quote_span': (match_start, match_end),
                      'match_text': match[0]}
-
-        print match
-        print quote_doc
 
         if match_type == 'candidate':
             quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
@@ -340,9 +335,6 @@ def add_quotes(doc):
         merged_quotes.append(quote)
     
     quotes = merged_quotes 
-
-    for quote in quotes:
-        print quote
 
     print "  Total {} quotes".format(len(quotes))
     
