@@ -10,7 +10,7 @@ from ppsay.data import (
     parties,
     get_candidate,
     get_candidates,
-    squish_phrases
+    squish_constituencies
 )
 from ss import Text
 
@@ -161,15 +161,34 @@ def add_matches(doc):
             if match is not None:
                 matches.append(('candidate', candidate['id'], match))
 
-    for phrase in squish_phrases:
-        for match in find_matches([phrase], *texts_tokens):
-            if match is not None:
-                matches.append(('squish', phrase, match))
+    party_ids = {x[1] for x in matches if x[0] == 'party'}
+    candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
+    constituency_ids = {x[1] for x in matches if x[0] == 'constituency'}
+
+    print "  Found {} parties".format(len(party_ids))
+    print "  Found {} candidates".format(len(candidate_ids))
+    print "  Found {} constituencies".format(len(constituency_ids))
+    
+    # Load in squish phrases for matched constituencies, e.g. Gordon Ramsay for Gordon.
+
+    num_squish = 0
+    for constituency_id in constituency_ids:
+        if constituency_id in squish_constituencies:
+            phrases = squish_constituencies[constituency_id]
+            for match in find_matches(phrases, *texts_tokens):
+                if match is not None:
+                    matches.append(('squish', None, match))
+                    num_squish += 1
+
+    print "  Found {} squishes".format(num_squish)
+    print "  Total {} matches".format(len(matches))
 
     for match in matches:
-        print match
+        print "   ", match[0], match[1], match[2]
 
     resolve_overlaps(matches)
+
+    print "  Total {} matches remaining".format(len(matches))
     
     possible_party_matches = {}
     for match_type, match_id, _ in matches:
@@ -244,7 +263,10 @@ def add_quotes(doc):
     parsed_texts = [Text(text) for text in texts]
 
     for parsed_text in parsed_texts:
-        parsed_text.end_of_sentences.append(len(parsed_text.sample))
+        #if len(parsed_text.sample) not in parsed_text.end_of_sentences:
+        #    parsed_text.end_of_sentences.append(len(parsed_text.sample))
+
+        print parsed_text.markup()
 
     quotes = []
 
@@ -253,7 +275,7 @@ def add_quotes(doc):
         spans = texts_tokens[match[0]][1]
 
         wmatch_start = spans[max(sub[0], 0)][0]
-        wmatch_end = spans[min(sub[1], len(spans)-1)][1]
+        wmatch_end = spans[min(sub[1]-1, len(spans)-1)][1]
 
         for i, eos in enumerate(parsed_texts[0].end_of_sentences):
             if eos >= wmatch_start:
@@ -275,6 +297,9 @@ def add_quotes(doc):
                      'quote_span': (match_start, match_end),
                      'match_text': match[0]}
 
+        print match
+        print quote_doc
+
         if match_type == 'candidate':
             quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
         #elif match_type == 'party':
@@ -284,7 +309,7 @@ def add_quotes(doc):
 
         quotes.append(quote_doc)
 
-        print quote_doc
+        #print quote_doc
 
     similar_pairs = []
     for i, quote1 in enumerate(quotes):
@@ -313,8 +338,13 @@ def add_quotes(doc):
                  'match_text': quotes[i]['match_text'],}
  
         merged_quotes.append(quote)
- 
+    
     quotes = merged_quotes 
+
+    for quote in quotes:
+        print quote
+
+    print "  Total {} quotes".format(len(quotes))
     
     doc['quotes'] = quotes
 
