@@ -103,5 +103,9 @@ for source in sources:
   
     for match in matches:
         source_url = "{}://{}".format(*match)
-        get_source_whitelist(source_url, 'ynmp-all')
+
+        doc = get_source_whitelist(source_url, 'ynmp-all')
+
+        if doc is None:
+            print "Not in whitelist:", source_url
  

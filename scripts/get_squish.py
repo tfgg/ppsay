@@ -37,7 +37,7 @@ def search_wikipedia(search):
     found = 0
     while offset < 10000:
         url_ = url.format(search, limit, offset)
-        print url_
+        print offset, " ",
         resp = requests.get(url_)
 
         data = resp.json()
@@ -46,9 +46,6 @@ def search_wikipedia(search):
             title = obj['title']
             title = re.sub('\(.*?\)', '', title).strip()
             title_tokens = get_tokens(title.lower())[0]
-
-            if 'Queens' in title:
-                print title, title_tokens, is_inside(search_tokens, title_tokens)
 
             if is_inside(search_tokens, title_tokens):
                 yield title
@@ -68,11 +65,18 @@ def search_wikipedia(search):
 
 squish = squish_constituencies
 
-constituency = constituencies_index[sys.argv[1]]
+constituencies = []
 
-titles = set(search_wikipedia(constituency['name']))
+if len(sys.argv) > 1:
+    constituencies.append(constituencies_index[sys.argv[1]])
+else:
+    constituencies = [constituency_id, x for constituency_id, x in constituencies_index.items() if constituency_id not in squish]
 
-squish[constituency['id']] = list(titles)
+for constituency in constituencies:
+    print constituency['name']
+    titles = set(search_wikipedia(constituency['name']))
 
-json.dump(squish, open('parse_data/squish_constituencies.json', 'w+'), indent=4)
+    squish[constituency['id']] = list(titles)
+
+    json.dump(squish, open('parse_data/squish_constituencies.json', 'w+'), indent=4)
 
