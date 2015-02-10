@@ -37,7 +37,7 @@ def search_wikipedia(search):
     found = 0
     while offset < 10000:
         url_ = url.format(search, limit, offset)
-        print offset, " ",
+        print >>sys.stderr, offset, " ",
         resp = requests.get(url_)
 
         data = resp.json()
@@ -47,11 +47,11 @@ def search_wikipedia(search):
             title = re.sub('\(.*?\)', '', title).strip()
             title_tokens = get_tokens(title.lower())[0]
 
-            if is_inside(search_tokens, title_tokens):
+            if is_inside(search_tokens, title_tokens) and search_tokens != title_tokens:
                 yield title
                 found += 1
 
-        print >>sys.stderr, found
+        #print >>sys.stderr, found
 
         if 'query-continue' in data:
             offset = data['query-continue']['search']['sroffset']
@@ -70,9 +70,10 @@ constituencies = []
 if len(sys.argv) > 1:
     constituencies.append(constituencies_index[sys.argv[1]])
 else:
-    constituencies = [constituency_id, x for constituency_id, x in constituencies_index.items() if constituency_id not in squish]
+    constituencies = [x for constituency_id, x in constituencies_index.items() if constituency_id not in squish]
 
 for constituency in constituencies:
+    print
     print constituency['name']
     titles = set(search_wikipedia(constituency['name']))
 
