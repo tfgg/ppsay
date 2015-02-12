@@ -1,8 +1,15 @@
+import sys
 from datetime import datetime
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 from flask import request
 
-db_client = MongoClient()
+try:
+    db_client = MongoClient()
+except ConnectionFailure:
+    print "Can't connect to MongoDB"
+    sys.exit(0)
+
 db_log = db_client.news.action_log
 
 def log(action, url, extra_data):
