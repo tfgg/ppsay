@@ -6,3 +6,7 @@ pip
 pymongo
 pytz
 uwsgi
+requests
+feedparser
+goose-extractor
+
