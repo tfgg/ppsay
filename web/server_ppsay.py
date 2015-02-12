@@ -5,6 +5,7 @@ from urlparse import urlparse
 from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 from flask import Blueprint, url_for, render_template, request, jsonify, abort, redirect
 
 from ppsay.log import log
@@ -19,7 +20,11 @@ from ppsay.data import (
     get_candidates,
 )
 
-db_client = MongoClient()
+try:
+    db_client = MongoClient()
+except ConnectionFailure:
+    print "Can't connect to MongoDB"
+    sys.exit(0)
 
 db_articles = db_client.news.articles
 db_candidates = db_client.news.candidates

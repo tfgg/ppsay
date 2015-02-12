@@ -1,0 +1,12 @@
+Flask
+BeautifulSoup
+iso8601
+lxml
+pip
+pymongo
+pytz
+uwsgi
+requests
+feedparser
+goose-extractor
+

@@ -10,5 +10,5 @@ def add_domain(doc):
 
     return doc
 
-with open(os.path.join(BASE_PATH, '../parse_data/domains_news.dat'), 'r') as f:
+with open(os.path.join(BASE_PATH, 'data/domains_news.dat'), 'r') as f:
     domain_whitelist = {line.split()[0] for line in f}
