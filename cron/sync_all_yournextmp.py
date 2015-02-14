@@ -2,6 +2,7 @@ import re
 import sys
 import requests
 import json
+from collections import Counter
 from pymongo import MongoClient
 from urlparse import urlparse
 
@@ -21,10 +22,6 @@ resp = requests.get(url).json()
 
 def save_person(person):
     if person['party_memberships']:
-        for year, x in person['party_memberships'].items():
-            if person['standing_in'][year] is None:
-                print person['id']
-
         candidacies = {year: {'party': {'name': person['party_memberships'][year]['name'],
                                         'id': person['party_memberships'][year]['id'].split(':')[1],},
                               'constituency': {'name': person['standing_in'][year]['name'], 
@@ -60,6 +57,7 @@ sources = []
 all_ids = {candidate['id'] for candidate in db_candidates.find()}
 found_ids = set()
 
+print "Updating candidates"
 while True:
     if 'page' in resp:
         print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
@@ -91,12 +89,14 @@ missing_ids = all_ids - found_ids
 for missing_id in missing_ids:
     candidate_doc = db_candidates.find_one({'id': missing_id})
 
-    print "{name:} ({id:}) deleted".format(**candidate_doc)
+    print "  {name:} ({id:}) deleted".format(**candidate_doc)
     candidate_doc['deleted'] = True
 
     db_candidates.save(candidate_doc)
 
 print "Processing sources"
+
+blocked_domains = Counter()
 
 for source in sources:
     matches = url_regex.findall(source)
@@ -107,5 +107,10 @@ for source in sources:
         doc = get_source_whitelist(source_url, 'ynmp-all')
 
         if doc is None:
-            print "Not in whitelist:", source_url
- 
+            url_parsed = urlparse(source_url)
+            blocked_domains[url_parsed.netloc] += 1
+
+print "Statistics of blocked domains"
+for domain, count in blocked_domains.items():
+    print "  ", domain, count
+

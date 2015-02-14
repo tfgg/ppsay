@@ -28,7 +28,7 @@ def is_inside(l1, l2):
     return False
 
 def search_wikipedia(search):
-    url = "http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&srlimit={}&sroffset={}&format=json"
+    url = u"http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&srlimit={}&sroffset={}&format=json"
     limit = 50
     offset = 0
 
@@ -44,7 +44,7 @@ def search_wikipedia(search):
 
         for obj in data['query']['search']:
             title = obj['title']
-            title = re.sub('\(.*?\)', '', title).strip()
+            title = re.sub(u'\(.*?\)', '', title).strip()
             title_tokens = get_tokens(title.lower())[0]
 
             if is_inside(search_tokens, title_tokens) and search_tokens != title_tokens:
@@ -65,6 +65,8 @@ def search_wikipedia(search):
 
 squish = squish_constituencies
 
+print "{}/{} constituencies done".format(len(squish.keys()), len(constituencies_index.keys()))
+
 constituencies = []
 
 if len(sys.argv) > 1:
@@ -79,5 +81,5 @@ for constituency in constituencies:
 
     squish[constituency['id']] = list(titles)
 
-    json.dump(squish, open('parse_data/squish_constituencies.json', 'w+'), indent=4)
+    json.dump(squish, open('ppsay/data/squish_constituencies.json', 'w+'), indent=4)
 
