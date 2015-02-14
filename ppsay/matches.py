@@ -24,6 +24,10 @@ from text import (
     add_tags,
 )
 
+from itertools import chain
+
+from ppsay.match_lookup import ngrams, index, munge_names
+
 def resolve_overlaps(matches):
     overlap_found = True
     while overlap_found:
@@ -60,37 +64,47 @@ def resolve_overlaps(matches):
             if overlap_found:
                 break
 
-def munge_names(names):
-    for name in list(names):
-        name_tokens = name.split()
-
-        # If we have more than forename-surname, try middlename + surname
-        # Catches, e.g. Máirtín Ó Muilleoir
-        if len(name_tokens) > 2:
-            names.append(" ".join(name_tokens[1:]))
-            names.append(name_tokens[0] + " " + name_tokens[-1])
-
-        # Macdonald -> Mcdonald
-        if ' Mac' in name:
-            names.append(name.replace('Mac', 'Mc'))
-
 def add_matches(doc):
     texts = [doc['page']['text'],
              doc['page']['title']]
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
+    # Pre-screen with an n-gram match
+    ngs = chain(ngrams(texts_tokens[0][0], 1), ngrams(texts_tokens[0][0], 2), ngrams(texts_tokens[0][0], 3))
+
+    poss_matches = set()
+    for ng in ngs:
+        if ng in index:
+            poss_matches |= set(index[ng])
+
     matches = []
 
-    for party_id, party in parties.items():
-        names = set([party['name']] + parties[party_id]['other_names'])
+    print poss_matches
+
+    # Take candidate matches and refine match
+    for obj_type, obj_index in poss_matches:
+        if obj_type == 'party':
+            party = parties[obj_index]
+            names = set([party['name']] + parties[obj_index]['other_names'])
+
+        elif obj_type == 'constituency':
+            constituency = constituencies_index[obj_index]
+            names = set([constituency['name']] + constituencies_names[constituency['id']])
+
+        elif obj_type == 'candidate':
+            candidate = get_candidate(obj_index)
+            names = [candidate['name']] + candidate['other_names']
+            munge_names(names)
+            names = set(names)
+
 
         for match in find_matches(names, *texts_tokens):
             if match is not None:
-                matches.append(('party', party_id, match))
+                matches.append((obj_type, obj_index, match))
 
 
-    for constituency in constituencies:
+    """for constituency in constituencies:
         names = set([constituency['name']] + constituencies_names[constituency['id']])
 
         for match in find_matches(names, *texts_tokens):
@@ -105,7 +119,7 @@ def add_matches(doc):
 
         for match in find_matches(names, *texts_tokens):
             if match is not None:
-                matches.append(('candidate', candidate['id'], match))
+                matches.append(('candidate', candidate['id'], match))"""
 
     party_ids = {x[1] for x in matches if x[0] == 'party'}
     candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
