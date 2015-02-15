@@ -41,6 +41,13 @@ class ArticleGeneric(object):
       req = requests.get(url,headers=headers,timeout=10)
     except requests.exceptions.ReadTimeout:
       req = None
+
+    if req:
+        # Sometimes the encoding isn't guessed correctly, update from HTML
+        tree = lxml.html.fromstring(req.content)
+
+        for charset in tree.xpath('//meta/@charset'):
+            req.encoding = charset  
     
     return req
 

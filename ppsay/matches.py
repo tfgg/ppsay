@@ -417,7 +417,8 @@ if __name__ == "__main__":
         #if 'quotes' in doc:
         #    continue
 
-        print doc['key'], doc['_id']
+        print >>sys.stderr, doc['key'], doc['_id']
+        print >>sys.stdout, doc['key'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
             add_matches(doc)
