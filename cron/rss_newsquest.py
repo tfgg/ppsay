@@ -1,15 +1,8 @@
 from ppsay.sources import get_source_if_matches
+import socket
 import feedparser
 
-feed = feedparser.parse('http://www.oxfordmail.co.uk/news/rss/')
-
-def clean_link(x):
-    return x.split('#')[0].split('?')[0]
-
-for item in feed['items']:
-    url = clean_link(item['link'])
-    print url
-    get_source_if_matches(url, 'rss', 'approved')
+socket.setdefaulttimeout(10.0)
 
 weeklies = ['http://www.tewkesburyadmag.co.uk',
  'http://www.suttonguardian.co.uk',
@@ -153,4 +146,17 @@ daylies = ['http://www.echo-news.co.uk',
  'http://www.lancashiretelegraph.co.uk']
 
 sundays = ['http://www.sundayherald.com']
+
+for url in weeklies:
+    print url
+    feed = feedparser.parse(url + '/news/rss/')
+
+    def clean_link(x):
+        return x.split('#')[0].split('?')[0]
+
+    for item in feed['items']:
+        url = clean_link(item['link'])
+        print url
+        get_source_if_matches(url, 'rss', 'approved', min_candidates=1, min_parties=1, min_constituencies=0)
+
 

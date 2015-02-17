@@ -48,7 +48,14 @@ class ArticleGeneric(object):
 
         for charset in tree.xpath('//meta/@charset'):
             req.encoding = charset  
-    
+
+        #{'content': 'text/html; charset=utf-8', 'http-equiv': 'Content-Type'}   
+        for content_type in tree.xpath('//meta'):
+            if content_type.attrib.get('http-equiv', None) == 'Content-Type':
+                charset = content_type.split(';')[-1].split('=')[1].strip()
+                req.encoding = charset
+
+ 
     return req
 
   def as_dict(self):

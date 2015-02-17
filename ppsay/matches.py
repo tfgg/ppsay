@@ -200,7 +200,7 @@ def add_matches(doc):
     doc['possible'] = {}
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
-    #doc['possible']['parties'] = possible_party_matches.values()
+    doc['possible']['parties'] = possible_party_matches.values()
  
     if 'user' not in doc:
         doc['user'] = {}
@@ -250,7 +250,7 @@ def add_quotes(doc):
             match_end = len(texts[match[0]])
 
         quote_doc = {'constituency_ids': [],
-                     #'party_ids': [],
+                     'party_ids': [],
                      'candidate_ids': [],
                      'quote_span': (match_start, match_end),
                      'match_text': match[0]}

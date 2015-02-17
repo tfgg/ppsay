@@ -15,7 +15,8 @@ def cache_get(url, callback):
              'headers_server': dict(resp.headers),
              'url_final': resp.url,
              'time_fetched': datetime.now(),
-             'url': url,}
+             'url': url,
+             'charset': resp.encoding}
 
       db.save(doc)
     else:
