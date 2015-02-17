@@ -71,7 +71,8 @@ def add_matches(doc):
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
     # Pre-screen with an n-gram match
-    ngs = chain(ngrams(texts_tokens[0][0], 1), ngrams(texts_tokens[0][0], 2), ngrams(texts_tokens[0][0], 3))
+    ngs = chain(ngrams(texts_tokens[0][0], 1), ngrams(texts_tokens[0][0], 2), ngrams(texts_tokens[0][0], 3),
+                ngrams(texts_tokens[1][0], 1), ngrams(texts_tokens[1][0], 2), ngrams(texts_tokens[1][0], 3))
 
     poss_matches = set()
     for ng in ngs:

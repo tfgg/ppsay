@@ -9,7 +9,7 @@
       {% else %}
         {{ article.page.url }}
       {% endif %}
-      </a> <small>{{ article.domain }}</small> <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small></h2>
+      </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small> <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small></h2>
  
       <ul class='article-mentions-people'>
       {% for candidate in article.candidates %}

@@ -151,9 +151,15 @@ ul.article-list {
       margin-top: 0;
       margin-bottom: 10px;
       font-size:1.4em;
+
       a.article-link {
         color: $highlight;
       }
+
+      small a {
+        color: #999;
+        text-decoration: underline;
+      } 
     }
 
     ul.quotes {

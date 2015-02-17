@@ -101,6 +101,9 @@ ul.article-list {
       font-size: 1.4em; }
       ul.article-list li.article-item h2 a.article-link {
         color: #3333cc; }
+      ul.article-list li.article-item h2 small a {
+        color: #999;
+        text-decoration: underline; }
     ul.article-list li.article-item ul.quotes {
       list-style: none;
       padding: 0; }
