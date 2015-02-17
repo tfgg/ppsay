@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.register_blueprint(ppsay_app, url_prefix=url_prefix)
 
 @app.route('/robots.txt')
+@app.route('/google894643c5489ee5cd.html')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 

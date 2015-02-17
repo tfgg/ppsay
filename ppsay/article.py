@@ -52,7 +52,8 @@ class ArticleGeneric(object):
         #{'content': 'text/html; charset=utf-8', 'http-equiv': 'Content-Type'}   
         for content_type in tree.xpath('//meta'):
             if content_type.attrib.get('http-equiv', None) == 'Content-Type':
-                charset = content_type.split(';')[-1].split('=')[1].strip()
+                charset = content_type.attrib['content'].split(';')[-1].split('=')[1].strip()
+                print "Fixing charset", charset
                 req.encoding = charset
 
  
