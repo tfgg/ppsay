@@ -22,7 +22,7 @@
       <p class='person-candidacy'>
           <span class='year'>{{ year }}</span>
           <span class='party'>{{ candidacy.party.name }}</span>
-          <span class='constituency'>{{ candidacy.constituency.name }}</span>
+          <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
       </p>
       {% endfor %}
       <a href='http://yournextmp.com/person/{{ person.id }}'>View on YourNextMP</a>
@@ -35,7 +35,7 @@
         {% include "article_list.html" %}
         <script>
             $('.quote-candidate-{{ person.id }}').show();
-            $('.quote-candidate-{{ person.id }}-highlight').addClass("highlight");
+            $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
         </script>
     </div>
   </div>

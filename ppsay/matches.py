@@ -35,7 +35,7 @@ def resolve_overlaps(matches):
 
         for i1, match1 in enumerate(matches):
             for i2, match2 in enumerate(matches):
-                # Make sure we're not lookig at the same match object
+                # Make sure we're not looking at the same match object
                 # Also only look for matches in same text (e.g. title<->title)
                 if i1 != i2 and match1[2][0] == match2[2][0]:
                     if range_overlap(match1[2][1], match2[2][1]):
@@ -54,13 +54,6 @@ def resolve_overlaps(matches):
                         else:
                             print "Overlaps of equal length"
 
-                            #if i1 > i2:
-                            #    del matches[i1]
-                            #    del matches[i2]
-                            #else:
-                            #    del matches[i2]
-                            #    del matches[i1]
-
             if overlap_found:
                 break
 
@@ -71,8 +64,7 @@ def add_matches(doc):
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
     # Pre-screen with an n-gram match
-    ngs = chain(ngrams(texts_tokens[0][0], 1), ngrams(texts_tokens[0][0], 2), ngrams(texts_tokens[0][0], 3),
-                ngrams(texts_tokens[1][0], 1), ngrams(texts_tokens[1][0], 2), ngrams(texts_tokens[1][0], 3))
+    ngs = chain(*[ngrams(text_tokens[0], n) for n in range(1,4) for text_tokens in texts_tokens])
 
     poss_matches = set()
     for ng in ngs:
@@ -80,8 +72,6 @@ def add_matches(doc):
             poss_matches |= set(index[ng])
 
     matches = []
-
-    print poss_matches
 
     # Take candidate matches and refine match
     for obj_type, obj_index in poss_matches:
@@ -103,24 +93,6 @@ def add_matches(doc):
         for match in find_matches(names, *texts_tokens):
             if match is not None:
                 matches.append((obj_type, obj_index, match))
-
-
-    """for constituency in constituencies:
-        names = set([constituency['name']] + constituencies_names[constituency['id']])
-
-        for match in find_matches(names, *texts_tokens):
-            if match is not None:
-                matches.append(('constituency', constituency['id'], match))
-
-
-    for candidate in get_candidates():
-        names = [candidate['name']] + candidate['other_names']
-        munge_names(names)
-        names = set(names)
-
-        for match in find_matches(names, *texts_tokens):
-            if match is not None:
-                matches.append(('candidate', candidate['id'], match))"""
 
     party_ids = {x[1] for x in matches if x[0] == 'party'}
     candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
@@ -301,12 +273,12 @@ def add_quotes(doc):
     
     doc['quotes'] = quotes
 
-def resolve_candidates(doc):
+def resolve_candidates(doc_user, doc_possible):
     resolved_candidates = []
 
     # Add candidates that users have added that the machine didn't find.
-    for candidate_id in doc['user']['candidates']['confirm']:
-        if not any([candidate_id == candidate['id'] for candidate in doc['possible']['candidates']]):
+    for candidate_id in doc_user['candidates']['confirm']:
+        if not any([candidate_id == candidate['id'] for candidate in doc_possible['candidates']]):
             candidate = get_candidate(candidate_id)
 
             if 'deleted' not in candidate or not candidate['deleted']:
@@ -314,12 +286,12 @@ def resolve_candidates(doc):
                 resolved_candidates.append(candidate)
 
     # Add candidates that the machine found.
-    for candidate in doc['possible']['candidates']:
+    for candidate in doc_possible['candidates']:
         candidate_state = 'unknown'
 
-        if candidate['id'] in doc['user']['candidates']['confirm']:
+        if candidate['id'] in doc_user['candidates']['confirm']:
             candidate_state = 'confirmed'
-        elif candidate['id'] in doc['user']['candidates']['remove']:
+        elif candidate['id'] in doc_user['candidates']['remove']:
             candidate_state = 'removed'
 
         candidate_ = get_candidate(candidate['id'])
@@ -329,25 +301,24 @@ def resolve_candidates(doc):
 
     return resolved_candidates
 
-def resolve_constituencies(doc):
+def resolve_constituencies(doc_user, doc_possible):
     resolved_constituencies = []
-    
  
     # Add constituencies that users have added that the machine didn't find.
-    for constituency_id in doc['user']['constituencies']['confirm']:
-        if not any([constituency_id == constituency['id'] for constituency in doc['possible']['constituencies']]):
+    for constituency_id in doc_user['constituencies']['confirm']:
+        if not any([constituency_id == constituency['id'] for constituency in doc_possible['constituencies']]):
             constituency = constituencies_index[constituency_id]
             constituency['state'] = 'confirmed'
             constituency['score'] = 1.5
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
-    for constituency in doc['possible']['constituencies']:
+    for constituency in doc_possible['constituencies']:
         constituency_state = 'unknown'
 
-        if constituency['id'] in doc['user']['constituencies']['confirm']:
+        if constituency['id'] in doc_user['constituencies']['confirm']:
             constituency_state = 'confirmed'
-        elif constituency['id'] in doc['user']['constituencies']['remove']:
+        elif constituency['id'] in doc_user['constituencies']['remove']:
             constituency_state = 'removed'
 
         constituency_ = constituencies_index[constituency['id']]
@@ -371,6 +342,8 @@ def resolve_quotes(doc):
         # Grab info, only include if they're in the final resolvesd constituencies/candidates 
         quote_doc['candidates'] = [candidates[candidate_id[0]] for candidate_id in quote_doc['candidate_ids'] if candidate_id[0] in candidates]
         quote_doc['constituencies'] = [constituencies[constituency_id[0]] for constituency_id in quote_doc['constituency_ids'] if constituency_id[0] in constituencies]
+
+        # Don't bother pulling out quotes mentioning parties
         #quote['parties'] = [parties[party_id[0]] for party_id in quote['party_ids']]
 
         quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
@@ -380,7 +353,6 @@ def resolve_quotes(doc):
         offset = quote_doc['quote_span'][0]
        
         tags = [((s-offset, e-offset), "<a href='/articles/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
-
         tags += [((s-offset, e-offset), "<a href='/articles/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
  
         quote_html = add_tags(quote_text, tags)
@@ -394,8 +366,8 @@ def resolve_matches(doc):
     """
 
     if 'possible' in doc:
-        doc['candidates'] = resolve_candidates(doc)
-        doc['constituencies'] = resolve_constituencies(doc) 
+        doc['candidates'] = resolve_candidates(doc['user'], doc['possible'])
+        doc['constituencies'] = resolve_constituencies(doc['user'], doc['possible']) 
 
     if 'quotes' in doc:
         resolve_quotes(doc)
@@ -404,20 +376,31 @@ def resolve_matches(doc):
 
 if __name__ == "__main__":
     from pymongo import MongoClient
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Perform matching engine against set of documents')
+
+    parser.add_argument('-d', '--doc', action="store", help="Just this document (MongoDB ObjectID).", default=None) 
+    parser.add_argument('-p', '--person', action="store", help="All documents with this person (ID).", default=None) 
+    parser.add_argument('-c', '--constituency', action="store", help="All documents with this constituency (ID).", default=None)
+    parser.add_argument('-v', '--verbose', action="store_const", help="Be more verbose, explain the matching process.", default=False, const=True)
+
+    a = parser.parse_args(sys.argv[1:])
 
     client = MongoClient()
     db = client.news.articles
 
-    if len(sys.argv) == 1:
+    if a.doc is not None:
+        docs = db.find({'_id': ObjectId(a.doc)})
+    elif a.person is not None:
+        pass
+    elif a.constituency is not None:
+        pass
+    else:
         docs = db.find() \
                  .sort([('time_added', -1)])
-    else:
-        docs = db.find({'_id': ObjectId(sys.argv[1])})
 
     for doc in docs:
-        #if 'quotes' in doc:
-        #    continue
-
         print >>sys.stderr, doc['key'], doc['_id']
         print >>sys.stdout, doc['key'], doc['_id']
 

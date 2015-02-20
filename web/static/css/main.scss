@@ -26,6 +26,16 @@ form.add-article-form {
     }
 }
 
+.intro {
+    p {
+        padding: 10px;
+        font-size: 1.1em;
+        line-height: 1.5em;
+        font-family: "Droid Serif";
+        border: 1px solid rgba(70, 101, 255, 0.24);
+    }
+}
+
 p.person-candidacy {
   font-size: 1.0em;
   color: #666;
@@ -179,13 +189,17 @@ ul.article-list {
                 }
                 
                 a.quote-constituency-highlight {
-                    background: #E8E8FF;
+                    background: rgba(200,200,255,0.25);
                     color: #333;
                     padding: 5px;
                 }
 
-                a.highlight {
+                a.candidate-highlight {
                     background: rgba(255,255,128,0.75);
+                }
+                
+                a.constituency-highlight {
+                    background: rgba(200,200,255,0.75);
                 }
             }
 

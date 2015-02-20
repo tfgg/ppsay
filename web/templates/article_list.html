@@ -3,6 +3,7 @@
     {% if article.page %}
     <li class='article-item'>
       {% if article.page.date_published %}<small>{{ article.page.date_published.date() }}</small>{% endif %}
+      <small>added {{ article.time_added.date() }}</small>
       <h2><a class='article-link'href='{{ article.page.url }}'>
       {% if article.page.title %}
         {{ article.page.title }}
@@ -13,7 +14,7 @@
  
       <ul class='article-mentions-people'>
       {% for candidate in article.candidates %}
-        <li class='candidate-score-{{ candidate.state }}'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a><a onclick='$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}").show();$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}-highlight").addClass("highlight");' class='candidate-mention-expand'>+</a></li>
+        <li class='candidate-score-{{ candidate.state }}'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a><a onclick='$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}").show();$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}-highlight").addClass("candidate-highlight");' class='candidate-mention-expand'>+</a></li>
       {% endfor %}
       </ul>
       <ul class='article-mentions-constituencies'>
