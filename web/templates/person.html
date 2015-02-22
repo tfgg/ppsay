@@ -18,7 +18,7 @@
   <div class='row'>
     <div class='col-md-2'>
       {% if person.image %}
-        <img width='100%' src='{{ person.image }}'/>
+        <img width='100%' src='{{ person.image|replace("http://","https://") }}'/>
       {% endif %}
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
