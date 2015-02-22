@@ -14,8 +14,8 @@ def is_sublist(a, b):
 
         i = i + 1
 
-sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+')
-token_re = re.compile(u'([^ ,‘’“”.!;:\'"?\-=+_\r\n\t()]+)')
+sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()\xa0]+')
+token_re = re.compile(u'([^ ,‘’“”.!;:\'"?\-=+_\r\n\t()\xa0]+)')
 
 def get_tokens(s):
     tokens = []

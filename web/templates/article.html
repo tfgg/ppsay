@@ -1,5 +1,7 @@
 {% extends 'page.html' %}
 
+{% block canonical_link %}{{ url_for('.article', doc_id=article._id) }}{% endblock %}
+
 {% block content %}
 <script>
 function confirm_person(person_id) {

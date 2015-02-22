@@ -129,25 +129,9 @@ weeklies = ['http://www.tewkesburyadmag.co.uk',
  'http://www.prestwichandwhitefieldguide.co.uk',
  'http://www.winsfordguardian.co.uk']
 
-daylies = ['http://www.echo-news.co.uk',
- 'http://www.oxfordmail.co.uk',
- 'http://www.thepress.co.uk',
- 'http://www.thenorthernecho.co.uk',
- 'http://www.swindonadvertiser.co.uk',
- 'http://www.theargus.co.uk',
- 'http://www.bournemouthecho.co.uk',
- 'http://www.dorsetecho.co.uk',
- 'http://www.thetelegraphandargus.co.uk',
- 'http://www.theboltonnews.co.uk',
- 'http://www.heraldscotland.com',
- 'http://www.eveningtimes.co.uk',
- 'http://www.southwalesargus.co.uk',
- 'http://www.dailyecho.co.uk',
- 'http://www.lancashiretelegraph.co.uk']
-
 sundays = ['http://www.sundayherald.com']
 
-for url in weeklies:
+for url in weeklies + sundays:
     print url
     feed = feedparser.parse(url + '/news/rss/')
 

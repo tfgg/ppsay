@@ -2,8 +2,10 @@
 {% for article in articles %}
     {% if article.page %}
     <li class='article-item'>
-      {% if article.page.date_published %}<small>{{ article.page.date_published.date() }}</small>{% endif %}
-      <small>added {{ article.time_added.date() }}</small>
+      <small>
+        {% if article.page.date_published %}published {{ article.page.date_published.date() }}{% endif %}
+        added {{ article.time_added.date() }}
+      </small>
       <h2><a class='article-link'href='{{ article.page.url }}'>
       {% if article.page.title %}
         {{ article.page.title }}

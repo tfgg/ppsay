@@ -1,5 +1,7 @@
 {% extends 'page.html' %}
 
+{% block canonical_link %}{{ url_for('.person', person_id=person.id) }}{% endblock %}
+
 {% block title %}{{ person.name }} mentions - #ge2015 mentions{% endblock %}
 
 {% block content %}

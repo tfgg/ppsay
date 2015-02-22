@@ -17,6 +17,8 @@ def try_parse_date(x):
   except:
     return x
 
+re_title = re.compile("(\(From.*?\))")
+
 class ArticleGeneric(object):
   class FetchError(Exception):
     pass
@@ -60,9 +62,12 @@ class ArticleGeneric(object):
     return req
 
   def as_dict(self):
+    def fix_title(s):
+        return re_title.sub("", s).strip()
+
     return {'url': self.url,
             'url_canonical': self.article.canonical_link,
-            'title': self.article.title,
+            'title': fix_title(self.article.title),
             'text': self.article.cleaned_text,
             'date_published': try_parse_date(self.article.publish_date),
             'parser': 'ArticleGeneric'}

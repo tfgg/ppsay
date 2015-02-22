@@ -208,14 +208,14 @@ def add_quotes(doc):
         wmatch_start = spans[max(sub[0], 0)][0]
         wmatch_end = spans[min(sub[1]-1, len(spans)-1)][1]
 
-        for i, eos in enumerate(parsed_texts[0].end_of_sentences):
+        for i, eos in enumerate(parsed_texts[match[0]].end_of_sentences):
             if eos >= wmatch_start:
                 if i != 0:
-                    match_start = parsed_texts[0].end_of_sentences[i-1] + 1
+                    match_start = parsed_texts[match[0]].end_of_sentences[i-1] + 1
                     match_end = eos
                 else:
                     match_start = 0
-                    match_end = parsed_texts[0].end_of_sentences[0] + 1
+                    match_end = parsed_texts[match[0]].end_of_sentences[0] + 1
                 break
         else:
             print "Fallthrough"
@@ -352,8 +352,8 @@ def resolve_quotes(doc):
 
         offset = quote_doc['quote_span'][0]
        
-        tags = [((s-offset, e-offset), "<a href='/articles/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
-        tags += [((s-offset, e-offset), "<a href='/articles/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
+        tags = [((s-offset, e-offset), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
+        tags += [((s-offset, e-offset), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
  
         quote_html = add_tags(quote_text, tags)
         quote_doc['tags'] = tags
