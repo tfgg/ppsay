@@ -1,11 +1,13 @@
 from flask import Flask
 from server_ppsay import app as ppsay_app
+from server_postcode import app as postcode_app
 from flask import Flask, request, send_from_directory
 
 #url_prefix = "/articles"
 
 app = Flask(__name__)
 app.register_blueprint(ppsay_app)#, url_prefix=url_prefix)
+app.register_blueprint(postcode_app)
 
 @app.route('/robots.txt')
 @app.route('/google894643c5489ee5cd.html')

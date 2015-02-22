@@ -4,17 +4,13 @@
 
 {% block content %}
 <div class='container'>
-  <div class='row'>
-    <div class='col-md-12'>
-      <h1><img src='/static/images/icon.png' style='height:1.1em;margin-right:5px;top: -0.1em; position: relative;'/>#ge2015 mentions</h1>
-    </div>
-  </div>
+  {% include "header.html" %}
   <div class='row'>
     <div class='col-md-6 intro'>
         <p><em>Election Mentions</em> is a site for finding out information about your <a href='https://twitter.com/search?q=%23ge2015'>#ge2015</a> candidates and constituency in the news, local and national. Discover articles, both recent ones and those buried in the archives, that help you understand who it is that you might actually vote for.</p>
-        <form class='form-inline'>
+        <form class='form-inline' method='post' action='{{ url_for("postcode.postcode") }}'>
             <div class='form-group'>
-                <input type='text' placeholder='Postcode, e.g. OX1 3DR' class='form-control'/> <input type='submit' value='find my constituency' class='btn btn-default'/>
+                <input type='text' name='postcode' placeholder='Postcode, e.g. OX1 3DR' class='form-control'/> <input type='submit' value='find my constituency' class='btn btn-default'/>
             </div>
         </form>
     </div>

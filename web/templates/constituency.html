@@ -6,9 +6,10 @@
 
 {% block content %}
 <div class='container'>
+  {% include "header.html" %}
   <div class='row'>
-    <div class='col-md-12'>
-      <a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>
+    <div class='col-md-12 top-banner'>
+      {#<a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>#}
       <h1>{{ area.name }}</h1>
     </div>
   </div>
@@ -33,9 +34,9 @@
           {% endif %}
         {% endfor %}
     </div>
-    <div class='col-md-10'>
+    {#<div class='col-md-10'>
         {% include "article_add_form.html" %}
-    </div>
+    </div>#}
     <div class='col-md-10'>
         {% set quotes_closed=True %}
         {% include "article_list.html" %} 
@@ -50,5 +51,8 @@
         </script>
     </div>
   </div>
+</div>
+<div class='container-fluid'>
+  {% include "footer.html" %}
 </div>
 {% endblock content %}

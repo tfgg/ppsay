@@ -4,6 +4,20 @@ body {
 h1, h2, h3, h4, h5 {
   font-family: 'Droid Serif'; }
 
+div.footer {
+  padding: 20px;
+  background: #f0f0f0; }
+
+div.header h1 a:link, div.header h1 a:visited, div.header h1 a:hover {
+  color: black;
+  text-decoration: none; }
+
+div.top-banner h1 {
+  background: #4564fd;
+  color: white;
+  padding: 15px;
+  margin: 0; }
+
 a.link-back {
   padding: 10px;
   display: block; }
