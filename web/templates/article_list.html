@@ -6,7 +6,7 @@
         {% if article.page.date_published %}published {{ article.page.date_published.date() }}{% endif %}
         added {{ article.time_added.date() }}
       </small>
-      <h2><a class='article-link'href='{{ article.page.url }}'>
+      <h2><a class='article-link'href='{{ article.page.urls.0 }}'>
       {% if article.page.title %}
         {{ article.page.title }}
       {% else %}

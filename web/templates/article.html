@@ -74,7 +74,7 @@ function add_constituency() {
     <div class='col-md-12'>
       <a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>
       <h1>{{ article.page.title }}</h1>
-      <p><a href='{{ article.page.url }}'>{{ article.domain }}</a></p>
+      <p><a href='{{ article.page.urls.0 }}'>{{ article.domain }}</a></p>
       {% if article.state == 'moderated' %}
         <p style='background:#FCC;padding:10px;color:black;'>This article is being moderated and won't appear in listings yet.</p>
       {% elif article.state == 'removed' %}
