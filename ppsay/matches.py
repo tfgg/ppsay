@@ -57,6 +57,28 @@ def resolve_overlaps(matches):
             if overlap_found:
                 break
 
+def generate_extra_names(names):
+    extra_names = []
+
+    # We could be smarter here and only return geneder-appropriate potential titles.
+    titles = {'Mr', 'Dr', 'Mrs', 'Miss', 'Ms', 'Cllr', 'Sir', 'Prof'}
+
+    for name in names:
+        name_bits = name.split()
+
+        extra_names.append(name_bits[0])
+        extra_names.append(name_bits[-1])
+        extra_names.append(" ".join(name_bits[-2:-1]))
+
+        for title in titles:
+            extra_names.append(u"{} {}".format(title, name))
+            extra_names.append(u"{} {}".format(title, name_bits[-1]))
+
+        extra_names.append(u"Sir {}".format(name_bits[0]))
+    
+    return set(extra_names)
+
+
 def add_matches(doc):
     texts = [doc['page']['text'],
              doc['page']['title']]
@@ -75,6 +97,8 @@ def add_matches(doc):
 
     # Take candidate matches and refine match
     for obj_type, obj_index in poss_matches:
+        extra_names = []
+
         if obj_type == 'party':
             party = parties[obj_index]
             names = set([party['name']] + parties[obj_index]['other_names'])
@@ -86,13 +110,24 @@ def add_matches(doc):
         elif obj_type == 'candidate':
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
+            extra_names = generate_extra_names(names)
             munge_names(names)
             names = set(names)
 
-
+        have_matches = False
         for match in find_matches(names, *texts_tokens):
             if match is not None:
                 matches.append((obj_type, obj_index, match))
+                have_matches = True
+
+        # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
+        if have_matches:
+            print extra_names
+
+            for match in find_matches(extra_names, *texts_tokens):
+                if match is not None:
+                    matches.append((obj_type, obj_index, match))
+            
 
     party_ids = {x[1] for x in matches if x[0] == 'party'}
     candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
