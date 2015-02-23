@@ -5,7 +5,7 @@ from urlparse import urlparse
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 def add_domain(doc):
-    parsed_url = urlparse(doc['key'])
+    parsed_url = urlparse(doc['keys'][0])
     doc['domain'] =  parsed_url.netloc
 
     return doc

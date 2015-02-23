@@ -31,7 +31,7 @@ client = MongoClient()
 db_web_cache = client.news.web_cache
 
 def add_date(doc):
-    url = doc['page']['url']
+    url = doc['page']['urls'][0]
     web_cache_doc = db_web_cache.find_one({'url': url})
     
     if web_cache_doc['html']:
