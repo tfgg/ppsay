@@ -82,6 +82,7 @@ def constituency(constituency_id):
   #article_docs = sorted(article_docs, key=lambda x: x['time_added'], reverse=True)
 
   area_doc = get_mapit_area(constituency_id)
+  area_doc['id'] = str(area_doc['id'])
 
   return render_template('constituency.html',
                          articles=article_docs,

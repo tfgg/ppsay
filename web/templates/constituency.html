@@ -17,7 +17,7 @@
     <div class='col-md-2'>
         <h3>2015 candidates</h3>
         {% for candidate in candidates %}
-          {% if "2015" in candidate.candidacies %}
+          {% if "2015" in candidate.candidacies and candidate.candidacies['2015'].constituency.id == area.id %}
           <p>
             <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
             <em>{{ candidate.candidacies['2015'].party.name }}</em>
@@ -26,7 +26,7 @@
         {% endfor %}
         <h3>2010 candidates</h3>
         {% for candidate in candidates %}
-          {% if "2010" in candidate.candidacies %}
+          {% if "2010" in candidate.candidacies and candidate.candidacies['2010'].constituency.id == area.id %}
           <p>
             <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
             <em>{{ candidate.candidacies['2010'].party.name }}</em>
