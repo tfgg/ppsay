@@ -12,8 +12,16 @@ def munge_names(names):
         # If we have more than forename-surname, try middlename + surname
         # Catches, e.g. Máirtín Ó Muilleoir
         if len(name_tokens) > 2:
-            names.append(" ".join(name_tokens[1:]))
-            names.append(name_tokens[0] + " " + name_tokens[-1])
+            s = " ".join(name_tokens[1:])
+
+            # Screw you Al Murray
+            if s != "Pub Landlord":
+                names.append(s)
+
+            s = name_tokens[0] + " " + name_tokens[-1]
+
+            if s != "The Landlord":
+                names.append(s)
 
         # Macdonald -> Mcdonald
         if ' Mac' in name:

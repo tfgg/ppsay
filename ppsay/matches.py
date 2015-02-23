@@ -62,21 +62,22 @@ def generate_extra_names(names):
 
     # We could be smarter here and only return geneder-appropriate potential titles.
     titles = {'Mr', 'Dr', 'Mrs', 'Miss', 'Ms', 'Cllr', 'Sir', 'Prof'}
+    blacklist = {'pub', 'the', 'landlord', 'pub landlord', 'will'}
 
     for name in names:
         name_bits = name.split()
 
-        extra_names.append(name_bits[0])
-        extra_names.append(name_bits[-1])
-        extra_names.append(" ".join(name_bits[-2:-1]))
+        extra_names.append(name_bits[0].lower())
+        extra_names.append(name_bits[-1].lower())
+        extra_names.append(" ".join(name_bits[-2:-1]).lower())
 
         for title in titles:
-            extra_names.append(u"{} {}".format(title, name))
-            extra_names.append(u"{} {}".format(title, name_bits[-1]))
+            extra_names.append(u"{} {}".format(title, name).lower())
+            extra_names.append(u"{} {}".format(title, name_bits[-1]).lower())
 
-        extra_names.append(u"Sir {}".format(name_bits[0]))
+        extra_names.append(u"Sir {}".format(name_bits[0]).lower())
     
-    return set(extra_names)
+    return set(extra_names) - blacklist
 
 
 def add_matches(doc):
