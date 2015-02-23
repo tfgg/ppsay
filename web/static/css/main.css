@@ -12,11 +12,13 @@ div.header h1 a:link, div.header h1 a:visited, div.header h1 a:hover {
   color: black;
   text-decoration: none; }
 
-div.top-banner h1 {
-  background: #4564fd;
-  color: white;
-  padding: 15px;
-  margin: 0; }
+div.top-banner {
+  margin-bottom: 20px; }
+  div.top-banner h1 {
+    background: #4564fd;
+    color: white;
+    padding: 15px;
+    margin: 0; }
 
 a.link-back {
   padding: 10px;
@@ -106,6 +108,15 @@ ul.constituencies {
   ul.constituencies li {
     padding: 5px; }
 
+div.article-text a.quote-candidate-highlight {
+  background: rgba(255, 255, 128, 0.75);
+  color: #333;
+  padding: 5px; }
+div.article-text a.quote-constituency-highlight {
+  background: rgba(200, 200, 255, 0.75);
+  color: #333;
+  padding: 5px; }
+
 ul.article-list {
   list-style: none;
   margin: 0;
@@ -116,6 +127,10 @@ ul.article-list {
     padding: 10px;
     background: #FFFFFF;
     border-bottom: 1px solid #eee; }
+    ul.article-list li.article-item:nth-of-type(1) {
+      padding-top: 0px; }
+    ul.article-list li.article-item:nth-last-of-type(1) {
+      border-bottom: 0; }
     ul.article-list li.article-item h2 {
       margin-top: 0;
       margin-bottom: 10px;
