@@ -453,8 +453,8 @@ if __name__ == "__main__":
                  .sort([('time_added', -1)])
 
     for doc in docs:
-        print >>sys.stderr, doc['key'], doc['_id']
-        print >>sys.stdout, doc['key'], doc['_id']
+        print >>sys.stderr, doc['keys'], doc['_id']
+        print >>sys.stdout, doc['keys'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
             add_matches(doc)
