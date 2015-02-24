@@ -1,3 +1,4 @@
+{% if articles %}
 <ul class='article-list'>
 {% for article in articles %}
     {% if article.page %}
@@ -50,3 +51,7 @@
     {% endif %}
 {% endfor %}
 </ul>
+{% else %}
+<p>We can't find any articles. Why not find and add one?</p>
+{% include "article_add_form.html" %}
+{% endif %}
