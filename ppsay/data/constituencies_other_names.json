@@ -447,7 +447,8 @@
         "South Leicester"
     ], 
     "65605": [
-        "North Thanet"
+        "North Thanet",
+        "Thanet North"
     ], 
     "65606": [
         "Stockport"
@@ -634,7 +635,8 @@
     ], 
     "65659": [
         "Truro and Falmouth", 
-        "Truro & Falmouth"
+        "Truro & Falmouth",
+        "Truro-Falmouth"
     ], 
     "65660": [
         "Tunbridge Wells"
@@ -1225,7 +1227,8 @@
     ], 
     "65826": [
         "Camborne and Redruth", 
-        "Camborne & Redruth"
+        "Camborne & Redruth",
+        "Camborne-Redruth"
     ], 
     "65827": [
         "Wimbledon"
@@ -1234,7 +1237,8 @@
         "Newton Abbot"
     ], 
     "65829": [
-        "South Thanet"
+        "South Thanet",
+        "Thanet South"
     ], 
     "65830": [
         "Wellingborough"

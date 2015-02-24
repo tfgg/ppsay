@@ -63,9 +63,20 @@ form.add-article-form {
     }
 }
 
+p.warning {
+    padding: 10px;
+    color: #6977B8;
+    background: rgba(69, 100, 253, 0.06);
+}
+
+img.person-image {
+    margin-bottom: 20px;
+}
+
 p.person-candidacy {
   font-size: 1.0em;
   color: #666;
+  margin-bottom: 20px;
 
   .year {
     display: block;

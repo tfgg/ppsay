@@ -38,7 +38,7 @@
         {% include "article_add_form.html" %}
     </div>#}
     <div class='col-md-10'>
-        <p>These are articles we think are talking about {{ area.name }} constituency. There may be errors.</p>
+        <p class='warning'>These are articles that we think are talking about {{ area.name }} constituency. There may be errors.</p>
         {% set quotes_closed=True %}
         {% include "article_list.html" %} 
         <script>

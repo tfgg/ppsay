@@ -21,6 +21,10 @@ if len(sys.argv) > 1:
 resp = requests.get(url).json()
 
 def save_person(person):
+    if 'party_memberships' not in person:
+        print person
+        return
+
     if person['party_memberships']:
         candidacies = {year: {'party': {'name': person['party_memberships'][year]['name'],
                                         'id': person['party_memberships'][year]['id'].split(':')[1],},
@@ -73,8 +77,9 @@ while True:
         found_ids.add(person['id'])
 
         # Look for any new sources
-        for version in person['versions']:
-            sources.append(version['information_source'])
+        if 'versions' in person:
+            for version in person['versions']:
+                sources.append(version['information_source'])
 
     print '\n',
 
