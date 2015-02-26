@@ -1,8 +1,10 @@
   <div class='row header'>
     <div class='col-md-12'>
+       <div class='header-title' style=''>
        {% if current_user.is_authenticated() %}
-       <p style='float:right;'>Logged in as <strong>{{ current_user.user_name }}</strong></p>
+       <div style='float:right;'>Logged in as <strong>{{ current_user.user_name }}</strong></div>
        {% endif %}
-       <h1><a href='{{ url_for("ppsay.index") }}'><img src='/static/images/icon.png' style='height:1.1em;margin-right:5px;top: -0.1em; position: relative;'/>#ge2015 mentions</a></h1>
+         <a href='{{ url_for("ppsay.index") }}' class='header-title-text'><img src='/static/images/icon.png' style='height:1.1em;margin-right:5px;top: -0.1em; position: relative;'/>#ge2015 mentions</a>
+       </div>
     </div>
   </div>

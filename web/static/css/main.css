@@ -6,11 +6,19 @@ h1, h2, h3, h4, h5 {
 
 div.footer {
   padding: 20px;
-  background: #f0f0f0; }
+  background: #f0f0f0;
+  margin-top: 40px; }
 
-div.header h1 a:link, div.header h1 a:visited, div.header h1 a:hover {
-  color: black;
-  text-decoration: none; }
+div.header .header-title {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+  div.header .header-title a.header-title-text:link, div.header .header-title a.header-title-text:visited, div.header .header-title a.header-title-text:hover {
+    color: black;
+    text-decoration: none;
+    font-size: 36px;
+    font-family: "Droid Serif", serif;
+    color: black;
+    text-rendering: optimizeLegibility; }
 
 div.top-banner {
   margin-bottom: 20px; }
@@ -18,7 +26,8 @@ div.top-banner {
     background: #4564fd;
     color: white;
     padding: 15px;
-    margin: 0; }
+    margin: 0;
+    text-rendering: optimizeLegibility; }
 
 a.link-back {
   padding: 10px;

@@ -1,9 +1,36 @@
+SHELL=/bin/bash
+PYTHONPATH=/home/ppsay/site/ppsay/
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
 */15 * * * * ~/venv/bin/python ~/site/ppsay/cron/sync_recent_yournextmp.py &> ~/ynmp_sync_recent.out
 5 */12 * * * ~/venv/bin/python ~/site/ppsay/cron/sync_all_yournextmp.py &> ~/ynmp_sync_all.out
-15 0,6,12,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_bbc.py &> ~/rss_bbc.out
-15 1,7,13,19 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_conservative_home.py &> ~/rss_conservative_home.out
-15 2,8,14,20 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_guardian.py &> ~/rss_guardian.out
-15 3,9,15,21 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_labour_list.py &> ~/rss_labour_list.out
-15 4,10,16,22 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_libdem_voice.py &> ~/rss_libdem_voice.out
-15 5,11,17,23* * * * ~/venv/bin/python ~/site/ppsay/cron/rss_telegraph.py &> ~/rss_telegraph.out
+15 0,6,12,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_bbc.py &> ~/rss_logs/rss_bbc.out
+15 1,7,13,19 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_conservative_home.py &> ~/rss_logs/rss_conservative_home.out
+15 2,8,14,20 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_guardian.py &> ~/rss_logs/rss_guardian.out
+15 3,9,15,21 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_labour_list.py &> ~/rss_logs/rss_labour_list.out
+15 4,10,16,22 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_libdem_voice.py &> ~/rss_logs/rss_libdem_voice.out
+15 5,11,17,23 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_telegraph.py &> ~/rss_logs/rss_telegraph.out
+15 9,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_newsquest_weeklies.py &> ~/rss_logs/rss_newsquest_weeklies.out
+15 */3 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_newsquest_daylies.py &> ~/rss_logs/rss_newsquest_daylies.out
+*/30 * * * * ~/venv/bin/python ~/site/ppsay/scripts/find_dupes.py &> ~/find_dupes.out
 

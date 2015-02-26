@@ -26,10 +26,21 @@
     </div>
     <div class='col-md-3'>
         <h2>Candidates</h2>
-        <input id="autocomplete-candidate">
+        <input id="autocomplete-candidate" class='form-control' placeholder='Find candidate...'>
         <script>
         $(function() {
-            $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}"});
+            $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}",
+                                                       select: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                            window.location.href = "/person/" + ui.item.value;
+                                                        },
+                                                       focus: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                        },
+                                                       change: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                        }
+                                                      });
         });
         </script>
         <h2>Constituencies</h2>

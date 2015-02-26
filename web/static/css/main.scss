@@ -14,14 +14,22 @@ h1, h2, h3, h4, h5 {
 div.footer {
     padding: 20px;
     background: #f0f0f0;
+    margin-top: 40px;
 }
 
 div.header {
-    h1 {
-        a {
+    .header-title {
+        margin-top:20px;
+        margin-bottom:20px;
+
+        a.header-title-text {
             &:link, &:visited, &:hover {
                 color: black;
                 text-decoration: none;
+                font-size:36px;
+                font-family:"Droid Serif", serif;
+                color:black;
+                text-rendering: optimizeLegibility;
             }
         }
     }
@@ -33,6 +41,7 @@ div.top-banner {
         color: white;
         padding: 15px;
         margin: 0;
+        text-rendering: optimizeLegibility;
     }
 
     margin-bottom: 20px;
