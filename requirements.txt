@@ -10,4 +10,4 @@ requests
 feedparser
 goose-extractor
 pyyaml
-
+flask-login

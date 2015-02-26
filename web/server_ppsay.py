@@ -103,13 +103,15 @@ def article_add():
         user_name = "anonymous"
 
     article_doc = get_source(url, 'user/' + user_name, 'moderated')
+    
+    log('article_add', url_for('.article', doc_id=str(article_doc['_id'])), {'url': url,})
 
     url_parsed = urlparse(url)
 
     if url_parsed.netloc in domain_whitelist:
         article_doc['state'] = 'approved'
         db_articles.save(article_doc)
-        
+    
     return redirect(url_for(".article", doc_id=str(article_doc['_id'])))
 
 
