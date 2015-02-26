@@ -40,7 +40,12 @@
       {% else %}
         {{ article.page.urls.0 }}
       {% endif %}
-      </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small> <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small></h2>
+      </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
+     
+      {% if current_user.is_authenticated() %}
+      <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small>
+      {% endif %}
+      </h2>
  
       <ul class='article-mentions-people'>
       {% for candidate in article.candidates %}

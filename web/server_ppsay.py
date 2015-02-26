@@ -7,6 +7,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from flask import Blueprint, url_for, render_template, request, jsonify, abort, redirect
+from flask.ext.login import login_required, current_user
 
 from ppsay.log import log
 from ppsay.domains import domain_whitelist
@@ -96,7 +97,12 @@ def article_add():
     if url is None:
         return abort(500, "URL of article not supplied")
 
-    article_doc = get_source(url, 'user/tim', 'moderated')
+    if current_user.is_authenticated():
+        user_name = current_user.user_name
+    else:
+        user_name = "anonymous"
+
+    article_doc = get_source(url, 'user/' + user_name, 'moderated')
 
     url_parsed = urlparse(url)
 
@@ -108,6 +114,7 @@ def article_add():
 
 
 @app.route('/article/<doc_id>')
+@login_required
 def article(doc_id):
     doc_id = ObjectId(doc_id)
 
@@ -117,6 +124,7 @@ def article(doc_id):
                            article=doc)
 
 @app.route('/article/<doc_id>/people', methods=['PUT'])
+@login_required
 def article_person_confirm(doc_id):
     doc_id = ObjectId(doc_id)
     doc = db_articles.find_one({'_id': doc_id})
@@ -142,6 +150,7 @@ def article_person_confirm(doc_id):
                            article=doc)
  
 @app.route('/article/<doc_id>/people', methods=['DELETE'])
+@login_required
 def article_person_remove(doc_id):
     doc_id = ObjectId(doc_id)
     doc = db_articles.find_one({'_id': doc_id})
@@ -167,6 +176,7 @@ def article_person_remove(doc_id):
                            article=doc)
 
 @app.route('/article/<doc_id>/constituencies', methods=['PUT'])
+@login_required
 def article_constituency_confirm(doc_id):
     doc_id = ObjectId(doc_id)
     doc = db_articles.find_one({'_id': doc_id})
@@ -192,6 +202,7 @@ def article_constituency_confirm(doc_id):
                            article=doc)
  
 @app.route('/article/<doc_id>/constituencies', methods=['DELETE'])
+@login_required
 def article_constituency_remove(doc_id):
     doc_id = ObjectId(doc_id)
     doc = db_articles.find_one({'_id': doc_id})
@@ -219,6 +230,7 @@ def article_constituency_remove(doc_id):
 permitted_states = {'approved', 'removed', 'moderated'}
 
 @app.route('/article/state', methods=['PUT'])
+@login_required
 def article_update_state():
     doc_id = ObjectId(request.form.get('doc_id'))
     doc = db_articles.find_one({'_id': doc_id})
@@ -286,6 +298,7 @@ dashboard_queries = [{'query': {},
 dashboard_query_index = {q['id']: q for q in dashboard_queries}
           
 @app.route('/dashboard')
+@login_required
 def dashboard():
     stats = {query['id']: db_articles.find(query['query']).count() for query in dashboard_queries}
 
@@ -294,6 +307,7 @@ def dashboard():
                            stats=stats)
 
 @app.route('/dashboard/articles/<query_id>')
+@login_required
 def dashboard_article(query_id):
     query = dashboard_query_index[query_id]
     docs = db_articles.find(query['query'])
@@ -311,6 +325,7 @@ def action_log():
                            log=log)
 
 @app.route('/queue')
+@login_required
 def moderation_queue():
     articles = db_articles.find({'state': 'moderated'}) \
                           .sort([('time_added', -1)])[:50]

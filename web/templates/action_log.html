@@ -15,7 +15,7 @@
             <tr>
                 <td>{{ item.time_now.date() }}</td>
                 <td>{{ item.time_now.time() }}</td>
-                <td>{{ item.client_ip }}</td>
+                <td>{% if item.user %}{{ item.user }}{% else %}{{ item.client_ip }}{% endif %}</td>
                 <td><a href='{{ item.url }}' target="_blank">{{ item.url }}</a></td>
                 <td>{{ item.action }}</td>
                 <td>
