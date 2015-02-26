@@ -1,4 +1,31 @@
 {% if articles %}
+<script>
+    function recalculate_extra_quotes() {
+        $('ul.quotes').each(function(index) {
+            var len = $("ul#" + this.id + " li.quote-closed").length;
+            console.log(len);
+            if(len > 1) {
+                $("#" + this.id + "-more p").text("and " + len + " other quotes.");
+            } else if(len == 1) {
+                $("#" + this.id + "-more p").text("and " + len + " other quote.");
+            } else {
+                $("#" + this.id + "-more p").text("");
+            }
+        });
+    }
+
+    function show_candidate(article_id, candidate_id) {
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id).removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id +  "-highlight").addClass("candidate-highlight");
+        recalculate_extra_quotes();
+    }
+
+    function show_constituency(article_id, constituency_id) {
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id).removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id +  "-highlight").addClass("constituency-highlight");
+        recalculate_extra_quotes();
+    }
+</script>
 <ul class='article-list'>
 {% for article in articles %}
     {% if article.page %}
@@ -7,22 +34,27 @@
         {% if article.page.date_published %}published {{ article.page.date_published.date() }}{% endif %}
         added {{ article.time_added.date() }}
       </small>
-      <h2><a class='article-link'href='{{ article.page.urls.0 }}'>
+      <h2><a class='article-link' target="_blank" href='{{ article.page.urls.0 }}'>
       {% if article.page.title %}
         {{ article.page.title }}
       {% else %}
-        {{ article.page.url }}
+        {{ article.page.urls.0 }}
       {% endif %}
       </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small> <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small></h2>
  
       <ul class='article-mentions-people'>
       {% for candidate in article.candidates %}
-        <li class='candidate-score-{{ candidate.state }}'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a><a onclick='$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}").show();$("#quotes-{{ article._id }} .quote-candidate-{{ candidate.id }}-highlight").addClass("candidate-highlight");' class='candidate-mention-expand'>+</a></li>
+        <li class='candidate-score-{{ candidate.state }}'>
+            <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
+            <a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a></li>
       {% endfor %}
       </ul>
       <ul class='article-mentions-constituencies'>
       {% for constituency in article.constituencies %}
-        <li class='constituency-score-{{ constituency.state }}'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+        <li class='constituency-score-{{ constituency.state }}'>
+            <a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
+            <a onclick='show_constituency("{{ article._id }}", "{{ constituency.id }}");' class='constituency-mention-expand'>+</a>
+        </li>
       {% endfor %}
       </ul>
 
@@ -32,20 +64,10 @@
                   {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
                   {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
                   {% if quotes_closed %} quote-closed{% endif %}'>
-          <!--<ul class='quote-mentions'>
-          {% for candidate in quote.candidates %}
-            <li class='quote-mention-candidate'><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></li>
-          {% endfor %}
-          {% for party in quote.parties %}
-            <li class='quote-mention-party'><a href=''>{{ party.name }}</a></li>
-          {% endfor %}
-          {% for constituency in quote.constituencies %}
-            <li class='quote-mention-constituency'><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
-          {% endfor %}
-          </ul>-->
           <p class='quote-text'>{{ quote.html|safe }}</p>
         </li>
       {% endfor %}
+      <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>
       </ul>
     </li>
     {% endif %}

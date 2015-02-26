@@ -42,13 +42,15 @@
         {% set quotes_closed=True %}
         {% include "article_list.html" %} 
         <script>
-            $('.quote-constituency-{{ area.id }}').show();
+            $('.quote-constituency-{{ area.id }}').removeClass('quote-closed').show();
             $('.quote-constituency-{{ area.id }}-highlight').addClass("constituency-highlight");
 
             {% for candidate in candidates %}
-            $('.quote-candidate-{{ candidate.id }}').show();
+            $('.quote-candidate-{{ candidate.id }}').removeClass('quote-closed').show();
             $('.quote-candidate-{{ candidate.id }}-highlight').addClass("candidate-highlight");
             {% endfor %}
+        
+            recalculate_extra_quotes();
         </script>
     </div>
   </div>

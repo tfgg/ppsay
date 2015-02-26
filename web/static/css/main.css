@@ -152,6 +152,13 @@ ul.article-list {
     ul.article-list li.article-item ul.quotes {
       list-style: none;
       padding: 0; }
+      ul.article-list li.article-item ul.quotes li.quote-more p {
+        background: #FFFFFF;
+        padding: 0;
+        margin: 10px;
+        font-size: 0.9em;
+        font-style: italic;
+        text-align: right; }
       ul.article-list li.article-item ul.quotes li.quote p.quote-text {
         background: #F0F0F0;
         padding: 10px;
@@ -202,6 +209,10 @@ ul.article-list {
         ul.article-list li.article-item ul.article-mentions-people li a.candidate-mention-expand, ul.article-list li.article-item ul.article-mentions-constituencies li a.candidate-mention-expand {
           font-size: 1.2em; }
           ul.article-list li.article-item ul.article-mentions-people li a.candidate-mention-expand:hover, ul.article-list li.article-item ul.article-mentions-constituencies li a.candidate-mention-expand:hover {
+            text-decoration: none; }
+        ul.article-list li.article-item ul.article-mentions-people li a.constituency-mention-expand, ul.article-list li.article-item ul.article-mentions-constituencies li a.constituency-mention-expand {
+          font-size: 1.2em; }
+          ul.article-list li.article-item ul.article-mentions-people li a.constituency-mention-expand:hover, ul.article-list li.article-item ul.article-mentions-constituencies li a.constituency-mention-expand:hover {
             text-decoration: none; }
     ul.article-list li.article-item ul.article-mentions-constituencies li {
       background: #ebebfa; }

@@ -123,8 +123,6 @@ def add_matches(doc):
 
         # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
         if have_matches:
-            print extra_names
-
             for match in find_matches(extra_names, *texts_tokens):
                 if match is not None:
                     matches.append((obj_type, obj_index, match))
@@ -239,6 +237,10 @@ def add_quotes(doc):
     tags = []
 
     for match_type, match_id, match in doc['matches']:
+        # Don't bother making quotes out of party matches
+        if match_type == 'party':
+            continue
+
         sub = match[1]
         spans = texts_tokens[match[0]][1]
 

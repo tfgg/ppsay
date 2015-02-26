@@ -236,6 +236,17 @@ ul.article-list {
         list-style: none;
         padding: 0;
 
+        li.quote-more {
+            p {
+                background: #FFFFFF;
+                padding: 0;
+                margin: 10px;
+                font-size: 0.9em;
+                font-style: italic;
+                text-align: right;
+            }
+        }
+
         li.quote {
             p.quote-text {
                 background: #F0F0F0;
@@ -315,6 +326,14 @@ ul.article-list {
         }
 
         a.candidate-mention-expand {
+          font-size: 1.2em;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        a.constituency-mention-expand {
           font-size: 1.2em;
 
           &:hover {
