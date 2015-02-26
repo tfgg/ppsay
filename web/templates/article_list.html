@@ -1,4 +1,3 @@
-{% if articles %}
 <script>
     function recalculate_extra_quotes() {
         $('ul.quotes').each(function(index) {
@@ -26,6 +25,11 @@
         recalculate_extra_quotes();
     }
 </script>
+{% set num_articles=articles|length %}
+{% if num_articles == 0 %}
+<p>We don't know of any articles. Why not try to find one and add it?</p>
+{% include "article_add_form.html" %}
+{% else %}
 <ul class='article-list'>
 {% for article in articles %}
     {% if article.page %}
@@ -78,7 +82,4 @@
     {% endif %}
 {% endfor %}
 </ul>
-{% else %}
-<p>We can't find any articles. Why not find and add one?</p>
-{% include "article_add_form.html" %}
 {% endif %}

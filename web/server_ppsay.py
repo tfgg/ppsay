@@ -62,7 +62,7 @@ def person(person_id):
   person_doc = db_candidates.find_one({'id': str(person_id)})
 
   return render_template('person.html',
-                         articles=article_docs,
+                         articles=list(article_docs),
                          person=person_doc)
 
 @app.route('/constituency/<int:constituency_id>')
@@ -86,7 +86,7 @@ def constituency(constituency_id):
   area_doc['id'] = str(area_doc['id'])
 
   return render_template('constituency.html',
-                         articles=article_docs,
+                         articles=list(article_docs),
                          candidates=candidate_docs,
                          area=area_doc)
 
