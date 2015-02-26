@@ -37,8 +37,10 @@
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
         <script>
-            $('.quote-candidate-{{ person.id }}').show();
+            $('.quote-candidate-{{ person.id }}').removeClass('quote-closed').show();
             $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
+
+            recalculate_extra_quotes();
         </script>
     </div>
   </div>
