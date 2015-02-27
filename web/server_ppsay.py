@@ -98,7 +98,7 @@ def article_add():
         return abort(500, "URL of article not supplied")
 
     if current_user.is_authenticated():
-        user_name = current_user.user_name
+        user_name = current_user['user_name']
     else:
         user_name = "anonymous"
 

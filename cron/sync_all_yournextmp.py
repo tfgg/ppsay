@@ -116,6 +116,6 @@ for source in sources:
             blocked_domains[url_parsed.netloc] += 1
 
 print "Statistics of blocked domains"
-for domain, count in blocked_domains.items():
+for domain, count in blocked_domains.most_common():
     print "  ", domain, count
 

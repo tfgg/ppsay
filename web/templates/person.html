@@ -37,6 +37,11 @@
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
         <script>
+            {% for year, candidacy in person.candidacies.items() %}
+            $('.quote-constituency-{{ candidacy.constituency.id }}').removeClass('quote-closed').show();
+            $('.quote-constituency-{{ candidacy.constituency.id }}-highlight').addClass("constituency-highlight");
+            {% endfor %}
+
             $('.quote-candidate-{{ person.id }}').removeClass('quote-closed').show();
             $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
 
