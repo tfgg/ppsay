@@ -28,7 +28,7 @@ def is_inside(l1, l2):
     return False
 
 def search_wikipedia(search):
-    url = "http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&srlimit={}&sroffset={}&format=json"
+    url = u"http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&srlimit={}&sroffset={}&format=json"
     limit = 50
     offset = 0
 
@@ -37,24 +37,21 @@ def search_wikipedia(search):
     found = 0
     while offset < 10000:
         url_ = url.format(search, limit, offset)
-        print url_
+        print >>sys.stderr, offset, " ",
         resp = requests.get(url_)
 
         data = resp.json()
 
         for obj in data['query']['search']:
             title = obj['title']
-            title = re.sub('\(.*?\)', '', title).strip()
+            title = re.sub(u'\(.*?\)', '', title).strip()
             title_tokens = get_tokens(title.lower())[0]
 
-            if 'Queens' in title:
-                print title, title_tokens, is_inside(search_tokens, title_tokens)
-
-            if is_inside(search_tokens, title_tokens):
+            if is_inside(search_tokens, title_tokens) and search_tokens != title_tokens:
                 yield title
                 found += 1
 
-        print >>sys.stderr, found
+        #print >>sys.stderr, found
 
         if 'query-continue' in data:
             offset = data['query-continue']['search']['sroffset']
@@ -68,11 +65,21 @@ def search_wikipedia(search):
 
 squish = squish_constituencies
 
-constituency = constituencies_index[sys.argv[1]]
+print "{}/{} constituencies done".format(len(squish.keys()), len(constituencies_index.keys()))
 
-titles = set(search_wikipedia(constituency['name']))
+constituencies = []
 
-squish[constituency['id']] = list(titles)
+if len(sys.argv) > 1:
+    constituencies.append(constituencies_index[sys.argv[1]])
+else:
+    constituencies = [x for constituency_id, x in constituencies_index.items() if constituency_id not in squish]
 
-json.dump(squish, open('parse_data/squish_constituencies.json', 'w+'), indent=4)
+for constituency in constituencies:
+    print
+    print constituency['name']
+    titles = set(search_wikipedia(constituency['name']))
+
+    squish[constituency['id']] = list(titles)
+
+    json.dump(squish, open('ppsay/data/squish_constituencies.json', 'w+'), indent=4)
 

@@ -17,6 +17,8 @@ def try_parse_date(x):
   except:
     return x
 
+re_title = re.compile("(\(From.*?\))")
+
 class ArticleGeneric(object):
   class FetchError(Exception):
     pass
@@ -41,13 +43,31 @@ class ArticleGeneric(object):
       req = requests.get(url,headers=headers,timeout=10)
     except requests.exceptions.ReadTimeout:
       req = None
-    
+
+    if req:
+        # Sometimes the encoding isn't guessed correctly, update from HTML
+        tree = lxml.html.fromstring(req.content)
+
+        for charset in tree.xpath('//meta/@charset'):
+            req.encoding = charset  
+
+        #{'content': 'text/html; charset=utf-8', 'http-equiv': 'Content-Type'}   
+        for content_type in tree.xpath('//meta'):
+            if content_type.attrib.get('http-equiv', None) == 'Content-Type':
+                charset = content_type.attrib['content'].split(';')[-1].split('=')[1].strip()
+                print "Fixing charset", charset
+                req.encoding = charset
+
+ 
     return req
 
   def as_dict(self):
-    return {'url': self.url,
+    def fix_title(s):
+        return re_title.sub("", s).strip()
+
+    return {'urls': [self.url],
             'url_canonical': self.article.canonical_link,
-            'title': self.article.title,
+            'title': fix_title(self.article.title),
             'text': self.article.cleaned_text,
             'date_published': try_parse_date(self.article.publish_date),
             'parser': 'ArticleGeneric'}

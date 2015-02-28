@@ -433,7 +433,8 @@
         "Sheffield, Brightside and Hillsborough", 
         "Sheffield, Brightside & Hillsborough", 
         "Sheffield Brightside and Hillsborough", 
-        "Sheffield Brightside and Hillsborough"
+        "Sheffield Brightside and Hillsborough",
+        "Sheffield Brightside"
     ], 
     "65602": [
         "North Cornwall"
@@ -446,7 +447,8 @@
         "South Leicester"
     ], 
     "65605": [
-        "North Thanet"
+        "North Thanet",
+        "Thanet North"
     ], 
     "65606": [
         "Stockport"
@@ -624,14 +626,17 @@
     ], 
     "65657": [
         "Middlesbrough South and East Cleveland", 
-        "Middlesbrough South & East Cleveland"
+        "Middlesbrough South & East Cleveland",
+        "South Middlesbrough and East Cleveland",
+        "South Middlesbrough & East Cleveland"
     ], 
     "65658": [
         "North Devon"
     ], 
     "65659": [
         "Truro and Falmouth", 
-        "Truro & Falmouth"
+        "Truro & Falmouth",
+        "Truro-Falmouth"
     ], 
     "65660": [
         "Tunbridge Wells"
@@ -901,7 +906,8 @@
         "Plymouth, Sutton and Devonport", 
         "Plymouth, Sutton & Devonport", 
         "Plymouth Sutton and Devonport", 
-        "Plymouth Sutton and Devonport"
+        "Plymouth Sutton and Devonport",
+        "Sutton and Devonport"
     ], 
     "65738": [
         "Bolton West", 
@@ -1221,7 +1227,8 @@
     ], 
     "65826": [
         "Camborne and Redruth", 
-        "Camborne & Redruth"
+        "Camborne & Redruth",
+        "Camborne-Redruth"
     ], 
     "65827": [
         "Wimbledon"
@@ -1230,7 +1237,8 @@
         "Newton Abbot"
     ], 
     "65829": [
-        "South Thanet"
+        "South Thanet",
+        "Thanet South"
     ], 
     "65830": [
         "Wellingborough"

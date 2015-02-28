@@ -5,7 +5,7 @@ import sys
 
 
 quotes = [u'"', u'”', u"'", u'“']
-titles = [u'Dr', u'Mr', u'Mrs', u'Ms', u'h.D']
+titles = [u'Dr', u'Mr', u'Mrs', u'Ms', u'h.D', 'St']
 end_marks = [u'.', u'?', u'!']
 whitespace = [u' ', u'\n', u'\r', u'\t', u'’', u'\xa0']
 

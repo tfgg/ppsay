@@ -28,7 +28,7 @@ def get_page(page_url):
     raise UnrecognisedPageType(page_url)
 
 def task_get_page(page_url, source, save=True):
-    page_doc = db_articles.find_one({'key': page_url})
+    page_doc = db_articles.find_one({'keys': page_url})
 
     new = False
 
@@ -43,7 +43,7 @@ def task_get_page(page_url, source, save=True):
         page_doc = {'page': page,
                     'source': source,
                     'time_added': datetime.now(),
-                    'key': page_url,}
+                    'keys': [page_url],}
        
         if save: 
             page_doc['_id'] = db_articles.save(page_doc)

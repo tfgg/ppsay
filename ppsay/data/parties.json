@@ -22,7 +22,7 @@
     "110": {
         "id": "110", 
         "name": "The Socialist Party of Great Britain", 
-        "other_names": []
+        "other_names": ["SPGB"]
     }, 
     "117": {
         "id": "117", 
@@ -222,7 +222,7 @@
     "51": {
         "id": "51", 
         "name": "Conservative and Unionist Party", 
-        "other_names": []
+        "other_names": ["CUP"]
     }, 
     "513": {
         "id": "513", 
@@ -267,7 +267,7 @@
     "55": {
         "id": "55", 
         "name": "SDLP (Social Democratic & Labour Party)", 
-        "other_names": []
+        "other_names": ["SDLP"]
     }, 
     "556": {
         "id": "556", 
@@ -287,7 +287,7 @@
     "58": {
         "id": "58", 
         "name": "Mebyon Kernow - The Party for Cornwall", 
-        "other_names": []
+        "other_names": ["Mebyon Kernow"]
     }, 
     "601": {
         "id": "601", 
@@ -367,7 +367,7 @@
     "680": {
         "id": "680", 
         "name": "Traditional Unionist Voice - TUV", 
-        "other_names": []
+        "other_names": ["TUV"]
     }, 
     "683": {
         "id": "683", 
@@ -382,7 +382,7 @@
     "70": {
         "id": "70", 
         "name": "Democratic Unionist Party - D.U.P.", 
-        "other_names": []
+        "other_names": ["DUP"]
     }, 
     "706": {
         "id": "706", 
@@ -547,7 +547,7 @@
     "83": {
         "id": "83", 
         "name": "Ulster Unionist Party", 
-        "other_names": []
+        "other_names": ["UUP"]
     }, 
     "830": {
         "id": "830", 
@@ -596,7 +596,7 @@
     }, 
     "849": {
         "id": "849", 
-        "name": "Trust", 
+        "name": "[TFGG REMOVED] Trust", 
         "other_names": []
     }, 
     "85": {

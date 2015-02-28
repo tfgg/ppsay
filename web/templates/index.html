@@ -1,28 +1,46 @@
 {% extends 'page.html' %}
 
+{% block canonical_link %}{{ url_for('.index') }}{% endblock %}
+
 {% block content %}
 <div class='container'>
+  {% include "header.html" %}
   <div class='row'>
-    <div class='col-md-12'>
-      <h1><img src='/static/images/icon.png' style='height:1.1em;margin-right:5px;'/>#ge2015 candidate mentions</h1>
+    <div class='col-md-6 intro'>
+        <p><em>Election Mentions</em> is a site for finding out information about your <a href='https://twitter.com/search?q=%23ge2015'>#ge2015</a> candidates and constituency in the news, local and national. Discover articles, both recent ones and those buried in the archives, that help you understand who it is that you might actually vote for.</p>
+        <form class='form-inline' method='post' action='{{ url_for("postcode.postcode") }}'>
+            <div class='form-group'>
+                <input type='text' name='postcode' placeholder='Postcode, e.g. OX1 3DR' class='form-control'/> <input type='submit' value='find my constituency' class='btn btn-default'/>
+            </div>
+        </form>
     </div>
-  </div>
-  <div class='row'>
-    <div class='col-md-12'>
+    <div class='col-md-6'>
         {% include "article_add_form.html" %}
     </div>
   </div>
   <div class='row'>
     <div class='col-md-9'>
+        <h2>Recently added</h2>
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
     </div>
     <div class='col-md-3'>
         <h2>Candidates</h2>
-        <input id="autocomplete-candidate">
+        <input id="autocomplete-candidate" class='form-control' placeholder='Find candidate...'>
         <script>
         $(function() {
-            $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}"});
+            $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}",
+                                                       select: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                            window.location.href = "/person/" + ui.item.value;
+                                                        },
+                                                       focus: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                        },
+                                                       change: function( event, ui ) {
+                                                            $("#autocomplete-candidate").val(ui.item.label);
+                                                        }
+                                                      });
         });
         </script>
         <h2>Constituencies</h2>

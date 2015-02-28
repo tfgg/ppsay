@@ -4,6 +4,31 @@ body {
 h1, h2, h3, h4, h5 {
   font-family: 'Droid Serif'; }
 
+div.footer {
+  padding: 20px;
+  background: #f0f0f0;
+  margin-top: 40px; }
+
+div.header .header-title {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+  div.header .header-title a.header-title-text:link, div.header .header-title a.header-title-text:visited, div.header .header-title a.header-title-text:hover {
+    color: black;
+    text-decoration: none;
+    font-size: 36px;
+    font-family: "Droid Serif", serif;
+    color: black;
+    text-rendering: optimizeLegibility; }
+
+div.top-banner {
+  margin-bottom: 20px; }
+  div.top-banner h1 {
+    background: #4564fd;
+    color: white;
+    padding: 15px;
+    margin: 0;
+    text-rendering: optimizeLegibility; }
+
 a.link-back {
   padding: 10px;
   display: block; }
@@ -15,9 +40,25 @@ form.add-article-form {
   form.add-article-form h3 {
     margin-top: 0; }
 
+.intro p {
+  padding: 10px;
+  font-size: 1.1em;
+  line-height: 1.5em;
+  font-family: "Droid Serif";
+  border: 1px solid rgba(70, 101, 255, 0.24); }
+
+p.warning {
+  padding: 10px;
+  color: #6977B8;
+  background: rgba(69, 100, 253, 0.06); }
+
+img.person-image {
+  margin-bottom: 20px; }
+
 p.person-candidacy {
   font-size: 1.0em;
-  color: #666; }
+  color: #666;
+  margin-bottom: 20px; }
   p.person-candidacy .year {
     display: block;
     font-size: 1.1em; }
@@ -85,6 +126,15 @@ ul.constituencies {
   ul.constituencies li {
     padding: 5px; }
 
+div.article-text a.quote-candidate-highlight {
+  background: rgba(255, 255, 128, 0.75);
+  color: #333;
+  padding: 5px; }
+div.article-text a.quote-constituency-highlight {
+  background: rgba(200, 200, 255, 0.75);
+  color: #333;
+  padding: 5px; }
+
 ul.article-list {
   list-style: none;
   margin: 0;
@@ -95,15 +145,29 @@ ul.article-list {
     padding: 10px;
     background: #FFFFFF;
     border-bottom: 1px solid #eee; }
+    ul.article-list li.article-item:nth-of-type(1) {
+      padding-top: 0px; }
+    ul.article-list li.article-item:nth-last-of-type(1) {
+      border-bottom: 0; }
     ul.article-list li.article-item h2 {
       margin-top: 0;
       margin-bottom: 10px;
       font-size: 1.4em; }
       ul.article-list li.article-item h2 a.article-link {
         color: #3333cc; }
+      ul.article-list li.article-item h2 small a {
+        color: #999;
+        text-decoration: underline; }
     ul.article-list li.article-item ul.quotes {
       list-style: none;
       padding: 0; }
+      ul.article-list li.article-item ul.quotes li.quote-more p {
+        background: #FFFFFF;
+        padding: 0;
+        margin: 10px;
+        font-size: 0.9em;
+        font-style: italic;
+        text-align: right; }
       ul.article-list li.article-item ul.quotes li.quote p.quote-text {
         background: #F0F0F0;
         padding: 10px;
@@ -113,11 +177,13 @@ ul.article-list {
           color: #333;
           padding: 5px; }
         ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-constituency-highlight {
-          background: #E8E8FF;
+          background: rgba(200, 200, 255, 0.25);
           color: #333;
           padding: 5px; }
-        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.highlight {
+        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.candidate-highlight {
           background: rgba(255, 255, 128, 0.75); }
+        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.constituency-highlight {
+          background: rgba(200, 200, 255, 0.75); }
       ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions {
         font-size: 0.8em;
         list-style: none;
@@ -152,6 +218,10 @@ ul.article-list {
         ul.article-list li.article-item ul.article-mentions-people li a.candidate-mention-expand, ul.article-list li.article-item ul.article-mentions-constituencies li a.candidate-mention-expand {
           font-size: 1.2em; }
           ul.article-list li.article-item ul.article-mentions-people li a.candidate-mention-expand:hover, ul.article-list li.article-item ul.article-mentions-constituencies li a.candidate-mention-expand:hover {
+            text-decoration: none; }
+        ul.article-list li.article-item ul.article-mentions-people li a.constituency-mention-expand, ul.article-list li.article-item ul.article-mentions-constituencies li a.constituency-mention-expand {
+          font-size: 1.2em; }
+          ul.article-list li.article-item ul.article-mentions-people li a.constituency-mention-expand:hover, ul.article-list li.article-item ul.article-mentions-constituencies li a.constituency-mention-expand:hover {
             text-decoration: none; }
     ul.article-list li.article-item ul.article-mentions-constituencies li {
       background: #ebebfa; }

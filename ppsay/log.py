@@ -3,6 +3,7 @@ from datetime import datetime
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from flask import request
+from flask.ext.login import current_user
 
 try:
     db_client = MongoClient()
@@ -18,6 +19,9 @@ def log(action, url, extra_data):
            'action': action,
            'url': url,
            'extra': extra_data}
+
+    if current_user.is_authenticated():
+        doc['user'] = current_user['user_name']
 
     doc_id = db_log.save(doc)
 

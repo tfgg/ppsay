@@ -24,6 +24,10 @@ from text import (
     add_tags,
 )
 
+from itertools import chain
+
+from ppsay.match_lookup import ngrams, index, munge_names
+
 def resolve_overlaps(matches):
     overlap_found = True
     while overlap_found:
@@ -31,7 +35,7 @@ def resolve_overlaps(matches):
 
         for i1, match1 in enumerate(matches):
             for i2, match2 in enumerate(matches):
-                # Make sure we're not lookig at the same match object
+                # Make sure we're not looking at the same match object
                 # Also only look for matches in same text (e.g. title<->title)
                 if i1 != i2 and match1[2][0] == match2[2][0]:
                     if range_overlap(match1[2][1], match2[2][1]):
@@ -50,29 +54,31 @@ def resolve_overlaps(matches):
                         else:
                             print "Overlaps of equal length"
 
-                            #if i1 > i2:
-                            #    del matches[i1]
-                            #    del matches[i2]
-                            #else:
-                            #    del matches[i2]
-                            #    del matches[i1]
-
             if overlap_found:
                 break
 
-def munge_names(names):
-    for name in list(names):
-        name_tokens = name.split()
+def generate_extra_names(names):
+    extra_names = []
 
-        # If we have more than forename-surname, try middlename + surname
-        # Catches, e.g. Máirtín Ó Muilleoir
-        if len(name_tokens) > 2:
-            names.append(" ".join(name_tokens[1:]))
-            names.append(name_tokens[0] + " " + name_tokens[-1])
+    # We could be smarter here and only return geneder-appropriate potential titles.
+    titles = {'Mr', 'Dr', 'Mrs', 'Miss', 'Ms', 'Cllr', 'Sir', 'Prof'}
+    blacklist = {'pub', 'the', 'landlord', 'pub landlord', 'will'}
 
-        # Macdonald -> Mcdonald
-        if ' Mac' in name:
-            names.append(name.replace('Mac', 'Mc'))
+    for name in names:
+        name_bits = name.split()
+
+        extra_names.append(name_bits[0].lower())
+        extra_names.append(name_bits[-1].lower())
+        extra_names.append(" ".join(name_bits[-2:-1]).lower())
+
+        for title in titles:
+            extra_names.append(u"{} {}".format(title, name).lower())
+            extra_names.append(u"{} {}".format(title, name_bits[-1]).lower())
+
+        extra_names.append(u"Sir {}".format(name_bits[0]).lower())
+    
+    return set(extra_names) - blacklist
+
 
 def add_matches(doc):
     texts = [doc['page']['text'],
@@ -80,32 +86,47 @@ def add_matches(doc):
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
+    # Pre-screen with an n-gram match
+    ngs = chain(*[ngrams(text_tokens[0], n) for n in range(1,4) for text_tokens in texts_tokens])
+
+    poss_matches = set()
+    for ng in ngs:
+        if ng in index:
+            poss_matches |= set(index[ng])
+
     matches = []
 
-    for party_id, party in parties.items():
-        names = set([party['name']] + parties[party_id]['other_names'])
+    # Take candidate matches and refine match
+    for obj_type, obj_index in poss_matches:
+        extra_names = []
 
+        if obj_type == 'party':
+            party = parties[obj_index]
+            names = set([party['name']] + parties[obj_index]['other_names'])
+
+        elif obj_type == 'constituency':
+            constituency = constituencies_index[obj_index]
+            names = set([constituency['name']] + constituencies_names[constituency['id']])
+
+        elif obj_type == 'candidate':
+            candidate = get_candidate(obj_index)
+            names = [candidate['name']] + candidate['other_names']
+            extra_names = generate_extra_names(names)
+            munge_names(names)
+            names = set(names)
+
+        have_matches = False
         for match in find_matches(names, *texts_tokens):
             if match is not None:
-                matches.append(('party', party_id, match))
+                matches.append((obj_type, obj_index, match))
+                have_matches = True
 
-
-    for constituency in constituencies:
-        names = set([constituency['name']] + constituencies_names[constituency['id']])
-
-        for match in find_matches(names, *texts_tokens):
-            if match is not None:
-                matches.append(('constituency', constituency['id'], match))
-
-
-    for candidate in get_candidates():
-        names = [candidate['name']] + candidate['other_names']
-        munge_names(names)
-        names = set(names)
-
-        for match in find_matches(names, *texts_tokens):
-            if match is not None:
-                matches.append(('candidate', candidate['id'], match))
+        # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
+        if have_matches:
+            for match in find_matches(extra_names, *texts_tokens):
+                if match is not None:
+                    matches.append((obj_type, obj_index, match))
+            
 
     party_ids = {x[1] for x in matches if x[0] == 'party'}
     candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
@@ -186,7 +207,7 @@ def add_matches(doc):
     doc['possible'] = {}
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
-    #doc['possible']['parties'] = possible_party_matches.values()
+    doc['possible']['parties'] = possible_party_matches.values()
  
     if 'user' not in doc:
         doc['user'] = {}
@@ -213,22 +234,29 @@ def add_quotes(doc):
             parsed_text.end_of_sentences.append(len(parsed_text.sample))
 
     quotes = []
+    tags = []
 
     for match_type, match_id, match in doc['matches']:
+        # Don't bother making quotes out of party matches
+        if match_type == 'party':
+            continue
+
         sub = match[1]
         spans = texts_tokens[match[0]][1]
 
         wmatch_start = spans[max(sub[0], 0)][0]
         wmatch_end = spans[min(sub[1]-1, len(spans)-1)][1]
 
-        for i, eos in enumerate(parsed_texts[0].end_of_sentences):
+        tags.append((wmatch_start, wmatch_end, match_type, match_id, match[0]))
+
+        for i, eos in enumerate(parsed_texts[match[0]].end_of_sentences):
             if eos >= wmatch_start:
                 if i != 0:
-                    match_start = parsed_texts[0].end_of_sentences[i-1] + 1
+                    match_start = parsed_texts[match[0]].end_of_sentences[i-1] + 1
                     match_end = eos
                 else:
                     match_start = 0
-                    match_end = parsed_texts[0].end_of_sentences[0] + 1
+                    match_end = parsed_texts[match[0]].end_of_sentences[0] + 1
                 break
         else:
             print "Fallthrough"
@@ -236,7 +264,7 @@ def add_quotes(doc):
             match_end = len(texts[match[0]])
 
         quote_doc = {'constituency_ids': [],
-                     #'party_ids': [],
+                     'party_ids': [],
                      'candidate_ids': [],
                      'quote_span': (match_start, match_end),
                      'match_text': match[0]}
@@ -285,13 +313,14 @@ def add_quotes(doc):
     print "  Total {} quotes".format(len(quotes))
     
     doc['quotes'] = quotes
+    doc['tags'] = tags
 
-def resolve_candidates(doc):
+def resolve_candidates(doc_user, doc_possible):
     resolved_candidates = []
 
     # Add candidates that users have added that the machine didn't find.
-    for candidate_id in doc['user']['candidates']['confirm']:
-        if not any([candidate_id == candidate['id'] for candidate in doc['possible']['candidates']]):
+    for candidate_id in doc_user['candidates']['confirm']:
+        if not any([candidate_id == candidate['id'] for candidate in doc_possible['candidates']]):
             candidate = get_candidate(candidate_id)
 
             if 'deleted' not in candidate or not candidate['deleted']:
@@ -299,12 +328,12 @@ def resolve_candidates(doc):
                 resolved_candidates.append(candidate)
 
     # Add candidates that the machine found.
-    for candidate in doc['possible']['candidates']:
+    for candidate in doc_possible['candidates']:
         candidate_state = 'unknown'
 
-        if candidate['id'] in doc['user']['candidates']['confirm']:
+        if candidate['id'] in doc_user['candidates']['confirm']:
             candidate_state = 'confirmed'
-        elif candidate['id'] in doc['user']['candidates']['remove']:
+        elif candidate['id'] in doc_user['candidates']['remove']:
             candidate_state = 'removed'
 
         candidate_ = get_candidate(candidate['id'])
@@ -314,25 +343,24 @@ def resolve_candidates(doc):
 
     return resolved_candidates
 
-def resolve_constituencies(doc):
+def resolve_constituencies(doc_user, doc_possible):
     resolved_constituencies = []
-    
  
     # Add constituencies that users have added that the machine didn't find.
-    for constituency_id in doc['user']['constituencies']['confirm']:
-        if not any([constituency_id == constituency['id'] for constituency in doc['possible']['constituencies']]):
+    for constituency_id in doc_user['constituencies']['confirm']:
+        if not any([constituency_id == constituency['id'] for constituency in doc_possible['constituencies']]):
             constituency = constituencies_index[constituency_id]
             constituency['state'] = 'confirmed'
             constituency['score'] = 1.5
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
-    for constituency in doc['possible']['constituencies']:
+    for constituency in doc_possible['constituencies']:
         constituency_state = 'unknown'
 
-        if constituency['id'] in doc['user']['constituencies']['confirm']:
+        if constituency['id'] in doc_user['constituencies']['confirm']:
             constituency_state = 'confirmed'
-        elif constituency['id'] in doc['user']['constituencies']['remove']:
+        elif constituency['id'] in doc_user['constituencies']['remove']:
             constituency_state = 'removed'
 
         constituency_ = constituencies_index[constituency['id']]
@@ -356,6 +384,8 @@ def resolve_quotes(doc):
         # Grab info, only include if they're in the final resolvesd constituencies/candidates 
         quote_doc['candidates'] = [candidates[candidate_id[0]] for candidate_id in quote_doc['candidate_ids'] if candidate_id[0] in candidates]
         quote_doc['constituencies'] = [constituencies[constituency_id[0]] for constituency_id in quote_doc['constituency_ids'] if constituency_id[0] in constituencies]
+
+        # Don't bother pulling out quotes mentioning parties
         #quote['parties'] = [parties[party_id[0]] for party_id in quote['party_ids']]
 
         quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
@@ -364,13 +394,24 @@ def resolve_quotes(doc):
 
         offset = quote_doc['quote_span'][0]
        
-        tags = [((s-offset, e-offset), "<a href='/articles/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
-
-        tags += [((s-offset, e-offset), "<a href='/articles/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
+        tags = [((s-offset, e-offset), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]
+        tags += [((s-offset, e-offset), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['constituency_ids'] if id in constituencies]
  
         quote_html = add_tags(quote_text, tags)
         quote_doc['tags'] = tags
         quote_doc['html'] = quote_html.strip()
+
+    tags = []
+
+    for tag in doc['tags']:
+        if tag[4] == 0:
+            if tag[2] == "constituency":
+                tags.append(((tag[0], tag[1]), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(tag[3]), "</a>"))
+            elif tag[2] == "candidate":
+                tags.append(((tag[0], tag[1]), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(tag[3]), "</a>"))
+
+    doc['tagged_html'] = add_tags(doc['page']['text'], tags)
+        
 
 def resolve_matches(doc):
     """
@@ -379,8 +420,8 @@ def resolve_matches(doc):
     """
 
     if 'possible' in doc:
-        doc['candidates'] = resolve_candidates(doc)
-        doc['constituencies'] = resolve_constituencies(doc) 
+        doc['candidates'] = resolve_candidates(doc['user'], doc['possible'])
+        doc['constituencies'] = resolve_constituencies(doc['user'], doc['possible']) 
 
     if 'quotes' in doc:
         resolve_quotes(doc)
@@ -389,21 +430,33 @@ def resolve_matches(doc):
 
 if __name__ == "__main__":
     from pymongo import MongoClient
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Perform matching engine against set of documents')
+
+    parser.add_argument('-d', '--doc', action="store", help="Just this document (MongoDB ObjectID).", default=None) 
+    parser.add_argument('-p', '--person', action="store", help="All documents with this person (ID).", default=None) 
+    parser.add_argument('-c', '--constituency', action="store", help="All documents with this constituency (ID).", default=None)
+    parser.add_argument('-v', '--verbose', action="store_const", help="Be more verbose, explain the matching process.", default=False, const=True)
+
+    a = parser.parse_args(sys.argv[1:])
 
     client = MongoClient()
     db = client.news.articles
 
-    if len(sys.argv) == 1:
+    if a.doc is not None:
+        docs = db.find({'_id': ObjectId(a.doc)})
+    elif a.person is not None:
+        pass
+    elif a.constituency is not None:
+        pass
+    else:
         docs = db.find() \
                  .sort([('time_added', -1)])
-    else:
-        docs = db.find({'_id': ObjectId(sys.argv[1])})
 
     for doc in docs:
-        #if 'quotes' in doc:
-        #    continue
-
-        print doc['key'], doc['_id']
+        print >>sys.stderr, doc['keys'], doc['_id']
+        print >>sys.stdout, doc['keys'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
             add_matches(doc)

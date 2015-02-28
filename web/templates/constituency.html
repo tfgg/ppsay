@@ -2,11 +2,14 @@
 
 {% block title %}{{ area.name }} mentions - #ge2015 mentions{% endblock %}
 
+{% block canonical_link %}{{ url_for('.constituency', constituency_id=area.id) }}{% endblock %}
+
 {% block content %}
 <div class='container'>
+  {% include "header.html" %}
   <div class='row'>
-    <div class='col-md-12'>
-      <a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>
+    <div class='col-md-12 top-banner'>
+      {#<a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>#}
       <h1>{{ area.name }}</h1>
     </div>
   </div>
@@ -14,7 +17,7 @@
     <div class='col-md-2'>
         <h3>2015 candidates</h3>
         {% for candidate in candidates %}
-          {% if "2015" in candidate.candidacies %}
+          {% if "2015" in candidate.candidacies and candidate.candidacies['2015'].constituency.id == area.id %}
           <p>
             <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
             <em>{{ candidate.candidacies['2015'].party.name }}</em>
@@ -23,7 +26,7 @@
         {% endfor %}
         <h3>2010 candidates</h3>
         {% for candidate in candidates %}
-          {% if "2010" in candidate.candidacies %}
+          {% if "2010" in candidate.candidacies and candidate.candidacies['2010'].constituency.id == area.id %}
           <p>
             <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
             <em>{{ candidate.candidacies['2010'].party.name }}</em>
@@ -31,22 +34,28 @@
           {% endif %}
         {% endfor %}
     </div>
-    <div class='col-md-10'>
+    {#<div class='col-md-10'>
         {% include "article_add_form.html" %}
-    </div>
+    </div>#}
     <div class='col-md-10'>
+        <p class='warning'>These are articles that we think are talking about {{ area.name }} constituency. There may be errors.</p>
         {% set quotes_closed=True %}
         {% include "article_list.html" %} 
         <script>
-            $('.quote-constituency-{{ area.id }}').show();
-            $('.quote-constituency-{{ area.id }}-highlight').addClass("highlight");
+            $('.quote-constituency-{{ area.id }}').removeClass('quote-closed').show();
+            $('.quote-constituency-{{ area.id }}-highlight').addClass("constituency-highlight");
 
             {% for candidate in candidates %}
-            $('.quote-candidate-{{ candidate.id }}').show();
-            $('.quote-candidate-{{ candidate.id }}-highlight').addClass("highlight");
+            $('.quote-candidate-{{ candidate.id }}').removeClass('quote-closed').show();
+            $('.quote-candidate-{{ candidate.id }}-highlight').addClass("candidate-highlight");
             {% endfor %}
+        
+            recalculate_extra_quotes();
         </script>
     </div>
   </div>
+</div>
+<div class='container-fluid'>
+  {% include "footer.html" %}
 </div>
 {% endblock content %}

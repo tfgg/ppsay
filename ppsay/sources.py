@@ -24,7 +24,7 @@ def get_source_whitelist(source_url, source):
     else:
         return None
 
-def get_source_if_matches(source_url, source, state):
+def get_source_if_matches(source_url, source, state, min_candidates=1, min_parties=0, min_constituencies=0):
     """
         Get a source and save it if there are matches.
     """
@@ -50,8 +50,9 @@ def get_source_if_matches(source_url, source, state):
         add_quotes(doc)
 
         # Only save if it has matches
-        if len(doc['possible']['candidates']) > 0:
-           #len(doc['possible']['constituencies']) > 0:
+        if len(doc['possible']['candidates']) >= min_candidates and \
+           len(doc['possible']['constituencies']) >= min_constituencies and \
+           len(doc['possible']['parties']) >= min_parties:
 
             print "    Matches"
 
