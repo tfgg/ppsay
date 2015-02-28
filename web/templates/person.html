@@ -38,12 +38,12 @@
         {% include "article_list.html" %}
         <script>
             {% for year, candidacy in person.candidacies.items() %}
-            $('.quote-constituency-{{ candidacy.constituency.id }}').removeClass('quote-closed').show();
-            $('.quote-constituency-{{ candidacy.constituency.id }}-highlight').addClass("constituency-highlight");
+            $('.quote-constituency-{{ candidacy.constituency.id }}:first').removeClass('quote-closed').show();
+            $('.quote-constituency-{{ candidacy.constituency.id }}-highlight:first').addClass("constituency-highlight");
             {% endfor %}
 
-            $('.quote-candidate-{{ person.id }}').removeClass('quote-closed').show();
-            $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
+            $('.quote-candidate-{{ person.id }}:first').removeClass('quote-closed').show();
+            $('.quote-candidate-{{ person.id }}-highlight:first').addClass("candidate-highlight");
 
             recalculate_extra_quotes();
         </script>

@@ -2,10 +2,17 @@ import lxml.html
 import re
 
 from pymongo import MongoClient
+import iso8601.iso8601
 from iso8601.iso8601 import parse_date, UTC
 from datetime import datetime
 
-time_names = {'DC.date.issued': lambda s: datetime(*map(int, s.split('-')),tzinfo=UTC), 
+def try_date_issued(s):
+    try:
+        return parse_date(s)
+    except iso8601.iso8601.ParseError:
+        return datetime(*map(int, s.split('-')),tzinfo=UTC)
+
+time_names = {'DC.date.issued': try_date_issued,
               'DCTERMS.created': parse_date,
               'OriginalPublicationDate': lambda s: parse_date(s.replace('/', '-')),
               'DCTERMS.modified': parse_date,
@@ -48,13 +55,30 @@ def find_dates(html):
     tree = lxml.html.fromstring(html)
     for meta in tree.xpath('//meta'):
         if 'name' in meta.attrib and meta.attrib['name'] in time_names:
-            parsed_time = time_names[meta.attrib['name']](meta.attrib['content'])
+            try:
+                parsed_time = time_names[meta.attrib['name']](meta.attrib['content'])
+            except iso8601.iso8601.ParseError:
+                print "No clue."
+                continue
+
             dates.append(parsed_time)
         
         if 'property' in meta.attrib and meta.attrib['property'] in time_names:
-            parsed_time = time_names[meta.attrib['property']](meta.attrib['content'])
+            try:
+                parsed_time = time_names[meta.attrib['property']](meta.attrib['content'])
+            except iso8601.iso8601.ParseError:
+                try:
+                    parsed_time = time_names[meta.attrib['property']](meta.attrib['content'].split('+')[0].split('.')[0].replace('Z','T'))
+                except iso8601.iso8601.ParseError:
+                    print "No clue."
+                    continue
+
             dates.append(parsed_time)
 
+    # Northern echo etc
+    for el in tree.xpath('//span[@itemprop="datePublished"]/@data-timestamp'):
+        parsed_time = datetime.fromtimestamp(int(el)).replace(tzinfo=UTC)
+        dates.append(parsed_time)
 
     # Particular newspaper CMS with lots of domains
     for div in tree.xpath('//div[@class="updated  Published"]/p'):
@@ -63,7 +87,14 @@ def find_dates(html):
 
     # Conservative Home
     for t in tree.xpath('//time/@datetime')[:1]:
-        parsed_time = parse_date(t)
+        try:
+            parsed_time = parse_date(t)
+        except iso8601.iso8601.ParseError:
+            try:
+                parsed_time = parse_date(t.replace('GMT', '').replace('BST',''))
+            except iso8601.iso8601.ParseError:
+                print "No clue."
+                continue
         dates.append(parsed_time)
 
     # Fri 24th October 2014 - 8:49 am 
@@ -82,12 +113,19 @@ def find_dates(html):
             if cols[7] == 'pm':
                 hours += 12
 
+            if hours > 23:
+                hours -= 24
+
             parsed_time = datetime(year, month, day, hours, minutes, tzinfo=UTC)
             dates.append(parsed_time)
         else:
             s = """Isle of Wight News"""
             text = text[len(s):].strip()
-            parsed_time = datetime.strptime(text, "%B %d, %Y").replace(tzinfo=UTC)
+            try:
+                parsed_time = datetime.strptime(text, "%B %d, %Y").replace(tzinfo=UTC)
+            except ValueError:
+                print "No clue."
+                continue
             dates.append(parsed_time)
 
     return dates

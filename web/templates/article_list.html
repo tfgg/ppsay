@@ -2,8 +2,13 @@
     function recalculate_extra_quotes() {
         $('ul.quotes').each(function(index) {
             var len = $("ul#" + this.id + " li.quote-closed").length;
+            var all_len = $("ul#" + this.id + " li.quote").length;
+
             console.log(len);
-            if(len > 1) {
+
+            if(len === all_len) {
+                $("#" + this.id + "-more p").text("");
+            } else if(len > 1) {
                 $("#" + this.id + "-more p").text("and " + len + " other quotes.");
             } else if(len == 1) {
                 $("#" + this.id + "-more p").text("and " + len + " other quote.");
@@ -14,14 +19,14 @@
     }
 
     function show_candidate(article_id, candidate_id) {
-        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id).removeClass("quote-closed").show();
-        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id +  "-highlight").addClass("candidate-highlight");
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id + ":first").removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id +  "-highlight" + ":first").addClass("candidate-highlight");
         recalculate_extra_quotes();
     }
 
     function show_constituency(article_id, constituency_id) {
-        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id).removeClass("quote-closed").show();
-        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id +  "-highlight").addClass("constituency-highlight");
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id + ":first").removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id +  "-highlight" + ":first").addClass("constituency-highlight");
         recalculate_extra_quotes();
     }
 </script>
@@ -34,10 +39,15 @@
 {% for article in articles %}
     {% if article.page %}
     <li class='article-item'>
-      <small>
-        {% if article.page.date_published %}published {{ article.page.date_published.date() }}{% endif %}
-        added {{ article.time_added.date() }}
-      </small>
+      {% if article.page.date_published %}
+      <div class='article-date'>
+        {{ article.page.date_published.strftime("%-d %b %Y") }}
+        {#added {{ article.time_added.strftime("%-d %b, %Y") }}#}
+      </div>
+      {% endif %}
+      <div class='article-num-quotes'>
+        {{ article.quotes|length }}
+      </div>
       <h2><a class='article-link' target="_blank" href='{{ article.page.urls.0 }}'>
       {% if article.page.title %}
         {{ article.page.title }}

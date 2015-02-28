@@ -1,3 +1,4 @@
+from ppsay.dates import find_dates
 import re
 from pymongo import MongoClient
 import lxml.html
@@ -10,10 +11,15 @@ db_web_cache = client.news.web_cache
 docs = db_articles.find()
 
 for doc in docs:
+    print doc['_id']
+
     if not doc['page']:
         continue
 
-    url = doc['page']['url']
+    if doc['page']['date_published']:
+        continue
+
+    url = doc['page']['urls'][0]
     web_cache_doc = db_web_cache.find_one({'url': url})
     
     if web_cache_doc['html']:
