@@ -56,9 +56,11 @@ def index():
 @app.route('/statistics')
 def statistics():
     total_candidate_mentions = db_candidates.find().sort([("mentions.total_count", -1)]).limit(50)
+    last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(50)
 
     return render_template('statistics.html',
-                           total_candidate_mentions=total_candidate_mentions)
+                           total_candidate_mentions=total_candidate_mentions,
+                           last_week_candidate_mentions=last_week_candidate_mentions)
 
 @app.route('/person/<int:person_id>')
 def person(person_id):

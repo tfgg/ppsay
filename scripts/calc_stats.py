@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from collections import Counter
+from datetime import datetime, timedelta
 
 client = MongoClient()
 
@@ -8,8 +9,11 @@ db_candidates = client.news.candidates
 
 docs = db_articles.find()
 
-candidates = Counter()
-constituencies = Counter()
+total_candidates = Counter()
+last_week_candidates = Counter()
+total_constituencies = Counter()
+
+one_week_ago = datetime.now() - timedelta(days=7)
 
 for doc in docs:
     print doc['keys'][0]
@@ -24,18 +28,27 @@ for doc in docs:
         continue
 
     for candidate in doc['candidates']:
-        candidates[candidate['id']] += 1
+        total_candidates[candidate['id']] += 1
     
     for constituency in doc['constituencies']:
-        constituencies[constituency['id']] += 1
+        total_constituencies[constituency['id']] += 1
 
-for candidate_id, mention_count in candidates.items():
-    candidate = db_candidates.find_one({'id': candidate_id})
+    if doc['page']['date_published'] is not None and doc['page']['date_published'] >= one_week_ago:
+        for candidate in doc['candidates']:
+            last_week_candidates[candidate['id']] += 1
 
-    candidate['mentions'] = {'total_count': mention_count}
+for candidate in db_candidates.find():
+    candidate_id = candidate['id']
+
+    candidate['mentions'] = {'total_count': 0,
+                             'last_week_count': 0,}
+
+    if candidate_id in total_candidates:
+        candidate['mentions']['total_count'] = total_candidates[candidate_id]
+    
+    if candidate_id in last_week_candidates:
+        candidate['mentions']['last_week_count'] = last_week_candidates[candidate_id]
 
     db_candidates.save(candidate)
 
-#print candidates
-#print constituencies
 
