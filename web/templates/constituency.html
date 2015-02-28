@@ -19,7 +19,7 @@
         {% for candidate in candidates %}
           {% if "2015" in candidate.candidacies and candidate.candidacies['2015'].constituency.id == area.id %}
           <p>
-            <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
+            <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong> {% if candidate.mentions %}{{ candidate.mentions.total_count }}{% endif %}<br/>
             <em>{{ candidate.candidacies['2015'].party.name }}</em>
           </p>
           {% endif %}
