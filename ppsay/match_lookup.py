@@ -70,7 +70,7 @@ for party_id, party in parties.items():
 
 for candidate in get_candidates():
     names = [candidate['name']] + candidate['other_names']
-    munge_names(names, candidate['incumbent'], candidate['name_prefix'])
+    munge_names(names, candidate.get("incumbent", False), candidate.get("name_prefix", ''))
     names = set(names)
 
     for name in names:
