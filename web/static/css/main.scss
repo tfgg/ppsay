@@ -12,9 +12,22 @@ h1, h2, h3, h4, h5 {
 }
 
 div.footer {
-    padding: 20px;
     background: #f0f0f0;
     margin-top: 40px;
+    
+    div.row {
+        padding: 20px;
+
+        p {
+            margin: 20px;
+        }
+
+        .dc-logo {
+            width: 100px;
+            float: left;
+            margin: 20px;
+        }
+    }
 }
 
 div.header {

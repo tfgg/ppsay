@@ -5,7 +5,7 @@ from ppsay.data import constituencies, constituencies_names, parties, get_candid
 
 index = {}
 
-def munge_names(names, incumbent):
+def munge_names(names, incumbent, prefix):
     for name in list(names):
         name_tokens = name.split()
 
@@ -30,6 +30,9 @@ def munge_names(names, incumbent):
         if incumbent:    
             names.append(u"MP {}".format(name))
             names.append(u"{} MP".format(name))
+
+        if prefix is not None:
+            names.append(u"{} {}".format(prefix, name))
 
 def ngrams(tokens, n):
     n = min(len(tokens), n)
@@ -67,7 +70,7 @@ for party_id, party in parties.items():
 
 for candidate in get_candidates():
     names = [candidate['name']] + candidate['other_names']
-    munge_names(names, candidate['incumbent'])
+    munge_names(names, candidate['incumbent'], candidate['name_prefix'])
     names = set(names)
 
     for name in names:
