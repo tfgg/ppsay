@@ -112,7 +112,7 @@ def add_matches(doc):
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
             extra_names = generate_extra_names(names)
-            munge_names(names)
+            munge_names(names, candidate['incumbent'])
             names = set(names)
 
         have_matches = False
@@ -125,7 +125,7 @@ def add_matches(doc):
         if have_matches:
             for match in find_matches(extra_names, *texts_tokens):
                 if match is not None:
-                    matches.append((obj_type, obj_index, match))
+                    matches.append((obj_type + "_extra", obj_index, match))
             
 
     party_ids = {x[1] for x in matches if x[0] == 'party'}
@@ -203,7 +203,14 @@ def add_matches(doc):
 
             possible_candidate_matches[candidate['id']] = match_doc
 
-    doc['matches'] = matches
+    # Remove extra matches which not longer have a parent match
+    def filter_extra(match):
+        if match[0] == 'candidate_extra':
+            if match[1] not in possible_candidate_matches:
+                return False
+        return True
+
+    doc['matches'] = filter(filter_extra, matches)
     doc['possible'] = {}
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()

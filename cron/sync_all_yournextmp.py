@@ -25,6 +25,11 @@ def save_person(person):
         print person
         return
 
+    id_schemes = {ident['scheme'] for ident in person['identifiers']}
+
+    # Not entirely true, might have been in parliament previously but been turfed out?
+    incumbent = 'uk.org.publicwhip' in id_schemes
+
     if person['party_memberships']:
         candidacies = {year: {'party': {'name': person['party_memberships'][year]['name'],
                                         'id': person['party_memberships'][year]['id'].split(':')[1],},
@@ -39,11 +44,14 @@ def save_person(person):
         candidacies = {}
 
     candidate = {'name': person['name'].strip(),
+                 'name_prefix': person.get('honorific_prefix', None),
+                 'name_suffix': person.get('honorific_suffix', None),
                  'other_names': [x['name'] for x in person['other_names']],
                  'url': person['url'],
                  'id': person['id'],
                  'image': person.get('image', None),
-                 'candidacies': candidacies,}
+                 'candidacies': candidacies,
+                 'incumbent': incumbent}
 
     candidate_doc = db_candidates.find_one({'id': person['id']})
 
