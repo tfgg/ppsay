@@ -14,7 +14,8 @@ div.footer {
     div.footer div.row .dc-logo {
       width: 100px;
       float: left;
-      margin: 20px; }
+      margin: 20px;
+      border: 5px solid white; }
 
 div.header .header-title {
   margin-top: 20px;
