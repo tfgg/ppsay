@@ -38,6 +38,11 @@
         {% include "article_add_form.html" %}
     </div>#}
     <div class='col-md-10'>
+        {% set num_articles=articles|length %}
+        {% if num_articles == 0 %}
+        <p class='warning'>We don't know of any articles. Why not try to find one and add it?</p>
+        {% include "article_add_form.html" %}
+        {% else %}
         <p class='warning'>These are articles that we think are talking about {{ area.name }} constituency. There may be errors.</p>
         {% set quotes_closed=True %}
         {% include "article_list.html" %} 
@@ -52,6 +57,7 @@
         
             recalculate_extra_quotes();
         </script>
+        {% endif %}
     </div>
   </div>
 </div>
