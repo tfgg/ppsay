@@ -449,7 +449,7 @@ if __name__ == "__main__":
     elif a.person is not None:
         pass
     elif a.constituency is not None:
-        pass
+        docs = db.find({'constituencies.id': a.constituency})
     else:
         docs = db.find() \
                  .sort([('time_added', -1)])

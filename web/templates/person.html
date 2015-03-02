@@ -27,7 +27,7 @@
           <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
       </p>
       {% endfor %}
-      <a href='http://yournextmp.com/person/{{ person.id }}'>View on YourNextMP</a>
+      <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
     </div>
     {#<div class='col-md-10'>
       {% include "article_add_form.html" %}

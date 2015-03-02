@@ -32,6 +32,17 @@ div.header {
                 text-rendering: optimizeLegibility;
             }
         }
+
+        a#nav-statistics {
+            color: rgba(0, 0, 0, 0.76);
+            margin-left: 1em;
+            font-size: 1.2em;
+            position: relative;
+            padding: 5px;
+            border: 1px solid rgba(69, 100, 254, 0.16);
+            top: -0.2em;
+            display: inline-block;
+        }
     }
 }
 

@@ -9,8 +9,14 @@
         </div>
     </div>
     <div class='row'>
+        <div class='col-md-12'>
+            <h2>Most mentioned candidates</h2>
+            <p>This statistics is how many articles that we know about mention a given candidate at least once.</p>
+        </div>
+    </div>
+    <div class='row'>
         <div class='col-md-6'>
-            <h2>Most mentioned candidates in last week</h2>
+            <h3>&hellip; in the last week</h2>
 
             <table class="table table-striped">
                 <thead>
@@ -23,7 +29,7 @@
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
-                    <td>{{ candidate.mentions.total_count }}</td>
+                    <td>{{ candidate.mentions.last_week_count }}</td>
                 </tr>
             {% endfor %}
                 </tbody>
@@ -31,7 +37,7 @@
         </div>
 
         <div class='col-md-6'>
-            <h2>Most mentioned candidates</h2>
+            <h3>&hellip; since the start</h2>
 
             <table class="table table-striped">
                 <thead>
