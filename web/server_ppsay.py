@@ -109,29 +109,54 @@ def person(person_id):
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
-  candidate_docs = db_candidates.find({'deleted': {'$ne': True},
+    candidate_docs = db_candidates.find({'deleted': {'$ne': True},
                                        '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
                                                {"candidacies.2015.constituency.id": str(constituency_id)}]})
 
-  candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
+    candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
 
-  candidate_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
+    candidate_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
                                                        or x['incumbent']]
 
-  article_docs = db_articles.find({'state': 'approved',
+    article_docs = db_articles.find({'state': 'approved',
                                    '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
                                            {'candidates': {'$elemMatch': {'id': {'$in': candidate_ids}, 'state': {'$ne': 'removed'}}}}]}) \
                             .sort([["time_added", -1]])
 
-  #article_docs = sorted(article_docs, key=lambda x: x['time_added'], reverse=True)
+    article_docs = list(article_docs)
+    for article_doc in article_docs:
+        for quote_doc in article_doc['quotes']:
+            score = 0.0
 
-  area_doc = get_mapit_area(constituency_id)
-  area_doc['id'] = str(area_doc['id'])
+            for candidate_id in candidate_ids:
+                if candidate_id in [x[0] for x in quote_doc['candidate_ids']]:
+                    score += 0.5
 
-  return render_template('constituency.html',
-                         articles=list(article_docs),
-                         candidates=candidate_docs,
-                         area=area_doc)
+            if str(constituency_id) in [x[0] for x in quote_doc['constituency_ids']]:
+                score += 1.0
+           
+            score += len(quote_doc['candidate_ids']) * 0.1
+            score += len(quote_doc['constituency_ids']) * 0.1
+ 
+            print score
+            quote_doc['score'] = score
+
+        article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
+
+        if article_doc['page']['date_published']:
+            article_doc['order_date'] = article_doc['page']['date_published']
+        else:
+            article_doc['order_date'] = article_doc['time_added']
+
+    article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
+
+    area_doc = get_mapit_area(constituency_id)
+    area_doc['id'] = str(area_doc['id'])
+
+    return render_template('constituency.html',
+                           articles=article_docs,
+                           candidates=candidate_docs,
+                           area=area_doc)
 
 @app.route('/article', methods=['POST'])
 def article_add():
