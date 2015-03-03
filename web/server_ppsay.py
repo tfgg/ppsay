@@ -81,12 +81,13 @@ def person(person_id):
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
   candidate_docs = db_candidates.find({'deleted': {'$ne': True},
-                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id), "incumbent": True},
+                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
                                                {"candidacies.2015.constituency.id": str(constituency_id)}]})
 
   candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
 
-  candidate_ids = [x['id'] for x in candidate_docs]
+  candidate_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
+                                                       or x['incumbent']]
 
   article_docs = db_articles.find({'state': 'approved',
                                    '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
