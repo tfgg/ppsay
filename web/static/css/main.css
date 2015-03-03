@@ -37,6 +37,12 @@ div.header .header-title {
     top: -0.2em;
     display: inline-block; }
 
+span.stats-red {
+  color: #CC0000; }
+
+span.stats-green {
+  color: #00CC00; }
+
 div.top-banner {
   margin-bottom: 20px; }
   div.top-banner h1 {
