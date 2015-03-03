@@ -43,11 +43,26 @@ def resolve_overlaps(matches):
                         size1 = match1[2][1][1] - match1[2][1][0]
                         size2 = match2[2][1][1] - match2[2][1][0]
 
+                        # extra matches always lose against non-extra, this stops e.g. Sir David Amess squishing David Amess, leaving itself parentless!
+                        if match1[0].endswith("_extra") and not match2[0].endswith("_extra"):
+                            print "1 loses"
+                            del matches[i1]
+                            overlap_found = True
+                            break
+                        
+                        if match2[0].endswith("_extra") and not match1[0].endswith("_extra"):
+                            print "2 loses"
+                            del matches[i2]
+                            overlap_found = True
+                            break
+
                         if size1 > size2:
+                            print "2 loses"
                             del matches[i2]
                             overlap_found = True
                             break
                         elif size2 > size1:
+                            print "1 loses"
                             del matches[i1]
                             overlap_found = True
                             break
@@ -112,7 +127,7 @@ def add_matches(doc):
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
             extra_names = generate_extra_names(names)
-            munge_names(names, candidate['incumbent'])
+            munge_names(names, candidate['incumbent'], candidate['name_prefix'])
             names = set(names)
 
         have_matches = False
@@ -203,10 +218,11 @@ def add_matches(doc):
 
             possible_candidate_matches[candidate['id']] = match_doc
 
-    # Remove extra matches which not longer have a parent match
+    # Remove extra matches which no longer have a parent match
     def filter_extra(match):
         if match[0] == 'candidate_extra':
             if match[1] not in possible_candidate_matches:
+                print match, "not got parent"
                 return False
         return True
 
@@ -215,7 +231,7 @@ def add_matches(doc):
     doc['possible']['candidates'] = possible_candidate_matches.values()
     doc['possible']['constituencies'] = possible_constituency_matches.values()
     doc['possible']['parties'] = possible_party_matches.values()
- 
+
     if 'user' not in doc:
         doc['user'] = {}
 
@@ -247,6 +263,10 @@ def add_quotes(doc):
         # Don't bother making quotes out of party matches
         if match_type == 'party':
             continue
+
+        # Convert extra matches to full citizens
+        if match_type == 'candidate_extra':
+            match_type = 'candidate'
 
         sub = match[1]
         spans = texts_tokens[match[0]][1]
@@ -398,6 +418,8 @@ def resolve_quotes(doc):
         quote_text = texts[quote_doc['match_text']][quote_doc['quote_span'][0]:quote_doc['quote_span'][1]]
     
         quote_doc['text'] = quote_text
+
+        print "QLEN", float(len(quote_text)) / len(texts[0])
 
         offset = quote_doc['quote_span'][0]
        

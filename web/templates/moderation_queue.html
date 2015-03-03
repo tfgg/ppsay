@@ -29,7 +29,7 @@ function article_approve(state, doc_id) {
                 <td>{{ item.time_added.date() }}</td>
                 <td>{{ item.time_added.time() }}</td>
                 <td>{{ item.source }}</td>
-                <td><a href='{{ item.key }}'>{{ item.domain }}</a></td>
+                <td><a href='{{ url_for('.article', doc_id=item._id) }}'>{{ item.domain }}</a></td>
                 <td>{{ item.page.title }}</td>
                 <td>
                     <button onclick='article_approve("approved","{{ item._id }}")'>approve</button>

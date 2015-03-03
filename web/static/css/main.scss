@@ -12,9 +12,23 @@ h1, h2, h3, h4, h5 {
 }
 
 div.footer {
-    padding: 20px;
     background: #f0f0f0;
     margin-top: 40px;
+    
+    div.row {
+        padding: 20px;
+
+        p {
+            margin: 20px;
+        }
+
+        .dc-logo {
+            width: 100px;
+            float: left;
+            margin: 20px;
+            border: 5px solid white;
+        }
+    }
 }
 
 div.header {
@@ -44,6 +58,14 @@ div.header {
             display: inline-block;
         }
     }
+}
+
+span.stats-red {
+    color: #CC0000;
+}
+
+span.stats-green {
+    color: #00CC00;
 }
 
 div.top-banner {
@@ -239,20 +261,20 @@ ul.article-list {
     }
 
     div.article-date {
-        color: white;
+        color: rgb(105, 122, 205);
         float: left;
         margin-left: -70px;
         width: 60px;
-        background: #4564FD;
         padding: 5px;
         text-align: right;
+        border: 1px solid rgba(69, 100, 253, 0.18);
     }
 
     div.article-num-quotes {
         background:url("/static/images/quotes.png") no-repeat #e8e8e8;
         background-size: contain;
         background-position: left;
-        color: #999;
+        color: #333;
         float: left;
         clear: left;
         margin-left: -70px;

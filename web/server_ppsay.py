@@ -53,6 +53,10 @@ def index():
                          constituencies=constituencies,
                          articles=article_docs)
 
+@app.route('/articles')
+def articles():
+    return redirect(url_for('.index'))
+
 @app.route('/statistics')
 def statistics():
     total_candidate_mentions = db_candidates.find().sort([("mentions.total_count", -1)]).limit(50)

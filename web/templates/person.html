@@ -4,6 +4,17 @@
 
 {% block title %}{{ person.name }} mentions - #ge2015 mentions{% endblock %}
 
+{% if '2015' in person.candidacies %}
+    {% set person_party=person.candidacies['2015'].party.name %}
+    {% set person_constituency=person.candidacies['2015'].constituency.name %}
+{% elif '2010' in person.candidacies %}
+    {% set person_party=person.candidacies['2010'].party.name %}
+    {% set person_constituency=person.candidacies['2010'].constituency.name %}
+{% else %}
+    {% set person_party="" %}
+    {% set person_constituency="" %}
+{% endif %}
+
 {% block content %}
 <div class='container'>
   {% include "header.html" %}
@@ -18,7 +29,7 @@
   <div class='row'>
     <div class='col-md-2'>
       {% if person.image %}
-        <img width='100%' class='person-image' src='{{ person.image|replace("http://","https://") }}'/>
+        <img width='100%' class='person-image' src='{{ person.image|replace("http://","https://") }}' alt='Photo of {{ person.name }}'/>
       {% endif %}
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
@@ -27,13 +38,19 @@
           <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
       </p>
       {% endfor %}
+
       <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
     </div>
     {#<div class='col-md-10'>
       {% include "article_add_form.html" %}
     </div>#}
     <div class='col-md-10'>
-        <p class='warning'>These are articles that we think are talking about {{ person.name }}. There may be errors.</p>
+        {% set num_articles=articles|length %}
+        {% if num_articles == 0 %}
+        <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
+        {% include "article_add_form.html" %}
+        {% else %}
+        <p class='warning'>These are news articles that we think are talking about {{ person.name }}. There may be errors.</p>
         {% set quotes_closed=True %}
         {% include "article_list.html" %}
         <script>
@@ -47,10 +64,13 @@
 
             recalculate_extra_quotes();
         </script>
+        {% endif %}
     </div>
   </div>
 </div>
-<div class='container-fluid'>
+<div class='footer'>
+<div class='container'>
   {% include "footer.html" %}
+</div>
 </div>
 {% endblock content %}

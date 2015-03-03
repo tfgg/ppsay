@@ -11,7 +11,7 @@
     <div class='row'>
         <div class='col-md-12'>
             <h2>Most mentioned candidates</h2>
-            <p>This statistics is how many articles that we know about mention a given candidate at least once.</p>
+            <p>This statistic is how many news articles that we know about mention a given candidate at least once.</p>
         </div>
     </div>
     <div class='row'>
@@ -23,6 +23,7 @@
                     <th>Rank</th>
                     <th>Name</th>
                     <th># mentions</th>
+                    <th>Change</th>
                 </thead>
                 <tbody>
             {% for candidate in last_week_candidate_mentions %}
@@ -30,6 +31,23 @@
                     <td>{{ loop.index }}</td>
                     <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
                     <td>{{ candidate.mentions.last_week_count }}</td>
+                    <td>
+                        {% if candidate.mentions.last_last_week_rank != None %}
+                            {% set rank_diff = candidate.mentions.last_last_week_rank - candidate.mentions.last_week_rank %}
+
+                            {% if rank_diff > 50 - candidate.mentions.last_week_rank %}
+                                <span class='stats-green'><strong>+{{ rank_diff }}</strong></span>
+                            {% elif rank_diff < 0 %}
+                                <span class='stats-red'>{{ rank_diff }}</span>
+                            {% elif rank_diff > 0 %}  
+                                <span class='stats-green'>+{{ rank_diff }}</span>
+                            {% else  %}
+                                --
+                            {% endif %}
+                        {% else %}
+                            new
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
                 </tbody>
@@ -58,7 +76,9 @@
         </div>
     </div>
 </div>
-<div class='container-fluid'>
+<div class='footer'>
+<div class='container'>
     {% include "footer.html" %}
+</div>
 </div>
 {% endblock %}
