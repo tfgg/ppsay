@@ -419,6 +419,8 @@ def resolve_quotes(doc):
     
         quote_doc['text'] = quote_text
 
+        print "QLEN", float(len(quote_text)) / len(texts[0])
+
         offset = quote_doc['quote_span'][0]
        
         tags = [((s-offset, e-offset), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(id), "</a>") for id, s, e in quote_doc['candidate_ids'] if id in candidates]

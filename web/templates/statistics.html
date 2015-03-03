@@ -32,11 +32,11 @@
                     <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
                     <td>{{ candidate.mentions.last_week_count }}</td>
                     <td>
-                        {% if candidate.mentions.last_last_week_rank %}
+                        {% if candidate.mentions.last_last_week_rank != None %}
                             {% set rank_diff = candidate.mentions.last_last_week_rank - candidate.mentions.last_week_rank %}
 
                             {% if rank_diff > 50 - candidate.mentions.last_week_rank %}
-                                new
+                                <span class='stats-green'><strong>+{{ rank_diff }}</strong></span>
                             {% elif rank_diff < 0 %}
                                 <span class='stats-red'>{{ rank_diff }}</span>
                             {% elif rank_diff > 0 %}  
@@ -44,6 +44,8 @@
                             {% else  %}
                                 --
                             {% endif %}
+                        {% else %}
+                            new
                         {% endif %}
                     </td>
                 </tr>

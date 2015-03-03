@@ -174,18 +174,18 @@ ul.article-list {
     ul.article-list li.article-item:nth-last-of-type(1) {
       border-bottom: 0; }
     ul.article-list li.article-item div.article-date {
-      color: white;
+      color: #697acd;
       float: left;
       margin-left: -70px;
       width: 60px;
-      background: #4564FD;
       padding: 5px;
-      text-align: right; }
+      text-align: right;
+      border: 1px solid rgba(69, 100, 253, 0.18); }
     ul.article-list li.article-item div.article-num-quotes {
       background: url("/static/images/quotes.png") no-repeat #e8e8e8;
       background-size: contain;
       background-position: left;
-      color: #999;
+      color: #333;
       float: left;
       clear: left;
       margin-left: -70px;
