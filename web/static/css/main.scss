@@ -260,29 +260,33 @@ ul.article-list {
         border-bottom: 0;
     }
 
-    div.article-date {
-        color: rgb(105, 122, 205);
+    div.article-left-float {
         float: left;
         margin-left: -70px;
-        width: 60px;
-        padding: 5px;
-        text-align: right;
-        border: 1px solid rgba(69, 100, 253, 0.18);
+
+        div.article-date {
+            background-color: #e8e8e8;
+            color: #333;
+            width: 60px;
+            padding: 5px;
+            text-align: right;
+        }
+
+        div.article-num-quotes {
+            background:url("/static/images/quotes.png") no-repeat #e8e8e8;
+            background-size: contain;
+            background-position: left;
+            color: #333;
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            vertical-align: center;
+            margin-top: 5px;
+        }
     }
 
-    div.article-num-quotes {
-        background:url("/static/images/quotes.png") no-repeat #e8e8e8;
-        background-size: contain;
-        background-position: left;
-        color: #333;
+    div.article-right-float {
         float: left;
-        clear: left;
-        margin-left: -70px;
-        width: 60px;
-        padding: 5px;
-        text-align: center;
-        vertical-align: center;
-        margin-top: 5px;
     }
 
     h2 {

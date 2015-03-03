@@ -19,5 +19,10 @@ for feed_url in feeds:
 
     for item in feed['items']:
         url = item['link']
-        get_source_if_matches(url, 'rss', 'approved')
+        get_source_if_matches(url,
+                              'rss',
+                              'approved',
+                              min_candidates=1,
+                              min_parties=1,
+                              min_constituencies=0)
 

@@ -19,14 +19,14 @@
     }
 
     function show_candidate(article_id, candidate_id) {
-        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id + ":first").removeClass("quote-closed").show();
-        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id +  "-highlight" + ":first").addClass("candidate-highlight");
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id).removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-candidate-" + candidate_id +  "-highlight").addClass("candidate-highlight");
         recalculate_extra_quotes();
     }
 
     function show_constituency(article_id, constituency_id) {
-        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id + ":first").removeClass("quote-closed").show();
-        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id +  "-highlight" + ":first").addClass("constituency-highlight");
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id).removeClass("quote-closed").show();
+        $("#quotes-" + article_id + " .quote-constituency-" + constituency_id +  "-highlight").addClass("constituency-highlight");
         recalculate_extra_quotes();
     }
 </script>
@@ -34,55 +34,60 @@
 {% for article in articles %}
     {% if article.page %}
     <li class='article-item'>
-      {% if article.page.date_published %}
-      <div class='article-date'>
-        {{ article.page.date_published.strftime("%-d %b %Y") }}
-        {#added {{ article.time_added.strftime("%-d %b, %Y") }}#}
+      <div class='article-left-float'>
+          {% if article.page.date_published %}
+          <div class='article-date'>
+            {{ article.page.date_published.strftime("%-d %b %Y") }}
+            {#added {{ article.time_added.strftime("%-d %b, %Y") }}#}
+          </div>
+          {% endif %}
+          <div class='article-num-quotes'>
+            {{ article.quotes|length }}
+          </div>
       </div>
-      {% endif %}
-      <div class='article-num-quotes'>
-        {{ article.quotes|length }}
-      </div>
-      <h2><a class='article-link' target="_blank" href='{{ article.page.urls.0 }}'>
-      {% if article.page.title %}
-        {{ article.page.title }}
-      {% else %}
-        {{ article.page.urls.0 }}
-      {% endif %}
-      </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
+      <div class='article-right-float'>
+          <h2><a class='article-link' target="_blank" href='{{ article.page.urls.0 }}'>
+          {% if article.page.title %}
+            {{ article.page.title }}
+          {% else %}
+            {{ article.page.urls.0 }}
+          {% endif %}
+          </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
+         
+          {% if current_user.is_authenticated() %}
+          <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small>
+          {% endif %}
+          </h2>
      
-      {% if current_user.is_authenticated() %}
-      <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small>
-      {% endif %}
-      </h2>
- 
-      <ul class='article-mentions-people'>
-      {% for candidate in article.candidates %}
-        <li class='candidate-score-{{ candidate.state }}'>
-            <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
-            <a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a></li>
-      {% endfor %}
-      </ul>
-      <ul class='article-mentions-constituencies'>
-      {% for constituency in article.constituencies %}
-        <li class='constituency-score-{{ constituency.state }}'>
-            <a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
-            <a onclick='show_constituency("{{ article._id }}", "{{ constituency.id }}");' class='constituency-mention-expand'>+</a>
-        </li>
-      {% endfor %}
-      </ul>
+          <ul class='article-mentions-people'>
+          {% for candidate in article.candidates %}
+            <li class='candidate-score-{{ candidate.state }}'>
+                <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
+                {#<a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a></li>#}
+          {% endfor %}
+          </ul>
+          <ul class='article-mentions-constituencies'>
+          {% for constituency in article.constituencies %}
+            <li class='constituency-score-{{ constituency.state }}'>
+                <a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
+                {#<a onclick='show_constituency("{{ article._id }}", "{{ constituency.id }}");' class='constituency-mention-expand'>+</a>#}
+            </li>
+          {% endfor %}
+          </ul>
 
-      <ul class='quotes' id='quotes-{{ article._id }}'>
-      {% for quote in article.quotes %}
-        <li class='quote
-                  {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
-                  {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
-                  {% if quotes_closed %} quote-closed{% endif %}'>
-          <p class='quote-text'>{{ quote.html|safe }}</p>
-        </li>
-      {% endfor %}
-      <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>
-      </ul>
+          <ul class='quotes' id='quotes-{{ article._id }}'>
+          {% for quote in article.quotes[:1] %}
+            <li class='quote
+                      {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
+                      {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
+                      {% if quotes_closed %} quote-closed{% endif %}'>
+              <p class='quote-text'>&hellip; {{ quote.html|safe }} &hellip; <a href='{{ article.page.urls.0 }}'>read more</a></p>
+            </li>
+          {% endfor %}
+          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>
+          </ul>
+      </div>
+      <div style='clear:both;'></div>
     </li>
     {% endif %}
 {% endfor %}

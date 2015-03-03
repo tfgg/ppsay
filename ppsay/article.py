@@ -30,7 +30,10 @@ class ArticleGeneric(object):
 
     if self.html is not None:
       try:
-        self.article = g.extract(raw_html=self.html)
+        try:
+            self.article = g.extract(raw_html=self.html)
+        except ValueError, e:
+            raise ArticleGeneric.FetchError("Stupid unicode error, probably: {}".format(str(e)))
       except IOError, e:
         raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
     else:

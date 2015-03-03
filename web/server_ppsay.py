@@ -68,15 +68,44 @@ def statistics():
 
 @app.route('/person/<int:person_id>')
 def person(person_id):
-  article_docs = db_articles.find({'state': 'approved',
-                                   'candidates': {'$elemMatch': {'id': str(person_id), 'state': {'$ne': 'removed'}}}}) \
+    person_id = str(person_id)
+    person_doc = db_candidates.find_one({'id': person_id})
+    
+    if '2010' in person_doc['candidacies']:
+        current_party_id = person_doc['candidacies']['2010']['party']['id']
+        current_constituency_id = person_doc['candidacies']['2010']['constituency']['id']
+
+    if '2015' in person_doc['candidacies']:
+        current_party_id = person_doc['candidacies']['2015']['party']['id']
+        current_constituency_id = person_doc['candidacies']['2015']['constituency']['id']
+
+    article_docs = db_articles.find({'state': 'approved',
+                                   'candidates': {'$elemMatch': {'id': person_id, 'state': {'$ne': 'removed'}}}}) \
                             .sort([('time_added', -1)])
 
-  person_doc = db_candidates.find_one({'id': str(person_id)})
+    article_docs = list(article_docs)
 
-  return render_template('person.html',
-                         articles=list(article_docs),
-                         person=person_doc)
+    for article_doc in article_docs:
+        for quote_doc in article_doc['quotes']:
+            score = 0.0
+
+            if person_id in [x[0] for x in quote_doc['candidate_ids']]:
+                score += 1.0
+            
+            if current_constituency_id in [x[0] for x in quote_doc['constituency_ids']]:
+                score += 0.5
+           
+            score += len(quote_doc['candidate_ids']) * 0.1
+            score += len(quote_doc['constituency_ids']) * 0.1
+ 
+            print score
+            quote_doc['score'] = score
+
+        article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
+
+    return render_template('person.html',
+                           articles=article_docs,
+                           person=person_doc)
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
