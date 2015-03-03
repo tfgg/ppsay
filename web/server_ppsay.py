@@ -77,7 +77,7 @@ def person(person_id):
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
   candidate_docs = db_candidates.find({'deleted': {'$ne': True},
-                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
+                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id), "incumbent": True},
                                                {"candidacies.2015.constituency.id": str(constituency_id)}]})
 
   candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
