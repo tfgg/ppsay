@@ -37,14 +37,18 @@ class ArticleGeneric(object):
       except IOError, e:
         raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
     else:
-      raise ArticleGeneric.FetchError("Could not fetch {}".format(article_url))
+      raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
 
   @classmethod
   def fetch(self, url):
-    print "Getting fresh: {}".format(url)
+    print u"Getting fresh: {}".format(url)
     try:
       req = requests.get(url,headers=headers,timeout=10)
-    except requests.exceptions.ReadTimeout:
+    except requests.exceptions.ConnectionError, e:
+      print e
+      req = None
+    except requests.exceptions.ReadTimeout, e:
+      print e
       req = None
 
     if req:
