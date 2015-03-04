@@ -71,6 +71,9 @@ def person(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
     
+    current_party_id = None
+    current_constituency_id = None
+
     if '2010' in person_doc['candidacies']:
         current_party_id = person_doc['candidacies']['2010']['party']['id']
         current_constituency_id = person_doc['candidacies']['2010']['constituency']['id']
