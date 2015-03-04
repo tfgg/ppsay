@@ -93,7 +93,7 @@ def person(person_id):
             score = 0.0
 
             if person_id in [x[0] for x in quote_doc['candidate_ids']]:
-                score += 1.0
+                score += 10.0
             
             if current_constituency_id in [x[0] for x in quote_doc['constituency_ids']]:
                 score += 0.5
@@ -101,7 +101,6 @@ def person(person_id):
             score += len(quote_doc['candidate_ids']) * 0.1
             score += len(quote_doc['constituency_ids']) * 0.1
  
-            print score
             quote_doc['score'] = score
 
         article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
@@ -109,6 +108,44 @@ def person(person_id):
     return render_template('person.html',
                            articles=article_docs,
                            person=person_doc)
+
+@app.route('/person/<int:person_id>/quotes')
+def person_quotes(person_id):
+    person_id = str(person_id)
+    person_doc = db_candidates.find_one({'id': person_id})
+    
+    article_docs = db_articles.find({'state': 'approved',
+                                   'candidates': {'$elemMatch': {'id': person_id, 'state': {'$ne': 'removed'}}}}) \
+                              .sort([('time_added', -1)])
+
+    article_docs = list(article_docs)
+
+    quote_docs = []
+
+    for article_doc in article_docs:
+        for quote_doc in article_doc['quotes']:
+            if person_id in [x[0] for x in quote_doc['candidate_ids']]:
+                quote_doc['article'] = article_doc
+
+                said_score = 0.0
+                for word in ['said', 'called', 'called on', 'says', 'promised']:
+                    if word in quote_doc['text'].lower():
+                        said_score += 1.0
+                
+                biog_score = 0.0
+                for word in ['MP', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hated', 'loved', 'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married']:
+                    if word in quote_doc['text'].lower():
+                        biog_score += 1.0
+
+                quote_doc['said_score'] = said_score
+                quote_doc['biog_score'] = biog_score
+                quote_docs.append(quote_doc)
+
+    quote_docs = sorted(quote_docs, key=lambda x: x['said_score'], reverse=True)
+
+    return render_template('person_quotes.html',
+                           person=person_doc,
+                           quotes=quote_docs)
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id):
@@ -136,7 +173,7 @@ def constituency(constituency_id):
                     score += 0.5
 
             if str(constituency_id) in [x[0] for x in quote_doc['constituency_ids']]:
-                score += 1.0
+                score += 10.0
            
             score += len(quote_doc['candidate_ids']) * 0.1
             score += len(quote_doc['constituency_ids']) * 0.1

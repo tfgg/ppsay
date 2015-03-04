@@ -419,7 +419,7 @@ def resolve_quotes(doc):
     
         quote_doc['text'] = quote_text
 
-        print "QLEN", float(len(quote_text)) / len(texts[0])
+        #print "QLEN", float(len(quote_text)) / len(texts[0])
 
         offset = quote_doc['quote_span'][0]
        

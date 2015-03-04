@@ -136,6 +136,36 @@ p.person-candidacy {
   }  
 }
 
+ul.candidates {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.candidate {
+        padding: 0;
+        margin: 0;
+
+        div.candidate-name {
+            font-weight: bold;
+            width: 90%;
+            float: left;
+        }
+
+        div.candidate-num-mentions {
+            width: 10%;
+            float: left;
+            border: 1px solid rgba(211, 219, 255, 0.99);
+            text-align: center;
+            color: rgb(69, 100, 253);
+        }
+
+        div.candidate-party {
+            font-style: italic;
+            clear: both;
+        }
+    }
+}
+
 ul.people-tagged {
     list-style: none;
     padding: 0;

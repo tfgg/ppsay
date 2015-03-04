@@ -31,7 +31,7 @@
     }
 </script>
 <ul class='article-list'>
-{% for article in articles %}
+{% for article in articles[:100] %}
     {% if article.page %}
     <li class='article-item'>
       <div class='article-left-float'>
@@ -52,7 +52,9 @@
           {% else %}
             {{ article.page.urls.0 }}
           {% endif %}
-          </a> <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
+          </a>
+        
+          <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
          
           {% if current_user.is_authenticated() %}
           <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small>
