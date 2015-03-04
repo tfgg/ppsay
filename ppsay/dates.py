@@ -85,6 +85,12 @@ def find_dates(html):
         parsed_time = datetime.strptime(div.text, 'Published %d/%m/%Y %H:%M').replace(tzinfo=UTC)
         dates.append(parsed_time)
 
+    # Networknorwich.co.uk
+    for el in tree.xpath("//table[@class='boxout_contents_type_ArticleDate_ascx boxout_contents']"):
+        for day, month, year in re.findall("Published\r\n(.*?)/(.*?)/(.*)", el.text_content()):
+            parsed_time = datetime(day=int(day), month=int(month), year=int(year))
+            dates.append(parsed_time)
+
     # Conservative Home
     for t in tree.xpath('//time/@datetime')[:1]:
         try:
