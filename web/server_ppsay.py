@@ -141,7 +141,7 @@ def person_quotes(person_id):
                 quote_doc['biog_score'] = biog_score
                 quote_docs.append(quote_doc)
 
-    quote_docs = sorted(quote_docs, key=lambda x: x['said_score'], reverse=True)
+    quote_docs = sorted(quote_docs, key=lambda x: x['biog_score'], reverse=True)
 
     return render_template('person_quotes.html',
                            person=person_doc,
