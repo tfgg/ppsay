@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from collections import namedtuple
 
 def is_sublist(a, b):
     i = 0
@@ -17,6 +18,8 @@ def is_sublist(a, b):
 sep_re = re.compile(u'[ ,‘’“”.!;:\'"?\-=+_\r\n\t()\xa0]+')
 token_re = re.compile(u'([^ ,‘’“”.!;:\'"?\-=+_\r\n\t()\xa0]+)')
 
+TextTokens = namedtuple("TextTokens", ['tokens', 'spans'])
+
 def get_tokens(s):
     tokens = []
     spans = []
@@ -25,15 +28,17 @@ def get_tokens(s):
         tokens.append(match.groups()[0])
         spans.append(match.span())
         
-    return tokens, spans
+    return TextTokens(tokens=tokens, spans=spans)
 
-def find_matches(ss, *tokenss):
+TextMatch = namedtuple("TextMatch", ['source', 'range', 'text'])
+
+def find_matches(ss, *texts_tokens):
   for s in ss:
-    tokens, _ = get_tokens(s.lower())
+    target_tokens = get_tokens(s.lower())
 
-    for i, (s_tokens, s_spans) in enumerate(tokenss):
-        for sub in is_sublist(tokens, s_tokens):
-            yield (i, sub, s)
+    for i, text_tokens in enumerate(texts_tokens):
+        for sub in is_sublist(target_tokens.tokens, text_tokens.tokens):
+            yield TextMatch(source=i, range=sub, text=s)
 
 def range_overlap(a, b):
     if a[1] <= b[0] or b[1] <= a[0]:
