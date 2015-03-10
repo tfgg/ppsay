@@ -33,7 +33,7 @@ MatchEntity = namedtuple('MatchEntity', ['type', 'id', 'match'])
 Matches = namedtuple('Matches', ['matches', 'possible'])
 MatchQuotes = namedtuple('MatchQuotes', ['quotes', 'tags'])
 
-def resolve_overlaps(matches):
+def resolve_overlaps(matches, verbose=False):
     """
         Find overlapping matches and remove the shortest match.
 
@@ -50,37 +50,43 @@ def resolve_overlaps(matches):
                 # Also only look for matches in same text (e.g. title<->title)
                 if i1 != i2 and match1.match.source == match2.match.source:
                     if range_overlap(match1.match.range, match2.match.range):
-                        print "Overlap"
-                        print "    1.", match1
-                        print "    2.", match2
+                        if verbose:
+                            print "Overlap"
+                            print "    1.", match1
+                            print "    2.", match2
                         size1 = match1.match.range[1] - match1.match.range[0]
                         size2 = match2.match.range[1] - match2.match.range[0]
 
                         # extra matches always lose against non-extra, this stops e.g. Sir David Amess squishing David Amess, leaving itself parentless!
                         if match1.type.endswith("_extra") and not match2.type.endswith("_extra"):
-                            print "    1 loses"
+                            if verbose:
+                                print "    1 loses"
                             del matches[i1]
                             overlap_found = True
                             break
                         
                         if match2.type.endswith("_extra") and not match1.type.endswith("_extra"):
-                            print "    2 loses"
+                            if verbose:
+                                print "    2 loses"
                             del matches[i2]
                             overlap_found = True
                             break
 
                         if size1 > size2:
-                            print "    2 loses"
+                            if verbose:
+                                print "    2 loses"
                             del matches[i2]
                             overlap_found = True
                             break
                         elif size2 > size1:
-                            print "    1 loses"
+                            if verbose:
+                                print "    1 loses"
                             del matches[i1]
                             overlap_found = True
                             break
                         else:
-                            print "    Overlaps of equal length"
+                            if verbose:
+                                print "    Overlaps of equal length"
 
             if overlap_found:
                 break
@@ -120,7 +126,7 @@ def generate_extra_names(names, gender=None):
     return set(extra_names) - blacklist
 
 
-def add_matches(texts):
+def add_matches(texts, verbose=False):
     #texts = [doc['page']['text'],
     #         doc['page']['title']]
 
@@ -187,10 +193,11 @@ def add_matches(texts):
     print "  Found {} squishes".format(num_squish)
     print "  Total {} matches".format(len(match_entities))
 
-    for match_entity in match_entities:
-        print "   ", match_entity
+    if verbose:
+        for match_entity in match_entities:
+            print "   ", match_entity
 
-    resolve_overlaps(match_entities)
+    resolve_overlaps(match_entities, verbose)
 
     print "  Total {} matches remaining".format(len(match_entities))
     
@@ -503,7 +510,7 @@ if __name__ == "__main__":
         print >>sys.stdout, doc['keys'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
-            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']])
+            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
             doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
 
         resolve_matches(doc)
