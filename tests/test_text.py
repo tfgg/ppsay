@@ -45,5 +45,15 @@ class TestText(unittest.TestCase):
             self.assertEqual(spans_out, spans)
         
 
+    def test_find_matches(self):
+        text = get_tokens("Bloop a woop, I'm Mr Sanchez Panda!".lower())
+
+        names = ['Sanchez Panda']
+
+        matches = list(find_matches(names, text))
+
+        self.assertEqual(matches[0], TextMatch(source=0, range=(6, 8), text='Sanchez Panda')) 
+        
+
 if __name__ == '__main__':
     unittest.main()

@@ -34,7 +34,7 @@ def munge_names(names, incumbent, prefix):
         if prefix is not None:
             names.append(u"{} {}".format(prefix, name))
 
-def ngrams(tokens, n):
+def get_ngrams(tokens, n):
     n = min(len(tokens), n)
     for i in range(len(tokens) + 1 - n):
         yield tuple(tokens[i:i+n])
@@ -50,7 +50,7 @@ for constituency in constituencies:
     for name in names:
         tokens, spans = get_tokens(name.lower())
 
-        for ngram in ngrams(tokens, 3):
+        for ngram in get_ngrams(tokens, 3):
             if ngram in index:
                 index[ngram].append(('constituency', constituency['id']))
             else:
@@ -62,7 +62,7 @@ for party_id, party in parties.items():
     for name in names:
         tokens, spans = get_tokens(name.lower())
 
-        for ngram in ngrams(tokens, 3):
+        for ngram in get_ngrams(tokens, 3):
             if ngram in index:
                 index[ngram].append(('party', party['id']))
             else:
@@ -76,7 +76,7 @@ for candidate in get_candidates():
     for name in names:
         tokens, spans = get_tokens(name.lower())
 
-        for ngram in ngrams(tokens, 3):
+        for ngram in get_ngrams(tokens, 3):
             if ngram in index:
                 index[ngram].append(('candidate', candidate['id']))
             else:

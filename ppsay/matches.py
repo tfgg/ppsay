@@ -25,10 +25,21 @@ from text import (
 )
 
 from itertools import chain
+from collections import namedtuple
 
-from ppsay.match_lookup import ngrams, index, munge_names
+from ppsay.match_lookup import get_ngrams, index, munge_names
+
+MatchEntity = namedtuple('MatchEntity', ['type', 'id', 'match']) 
+Matches = namedtuple('Matches', ['matches', 'possible'])
+MatchQuotes = namedtuple('MatchQuotes', ['quotes', 'tags'])
 
 def resolve_overlaps(matches):
+    """
+        Find overlapping matches and remove the shortest match.
+
+        This uses a stupid O(N^2) loop. There is probably a faster way.
+    """
+
     overlap_found = True
     while overlap_found:
         overlap_found = False
@@ -37,46 +48,60 @@ def resolve_overlaps(matches):
             for i2, match2 in enumerate(matches):
                 # Make sure we're not looking at the same match object
                 # Also only look for matches in same text (e.g. title<->title)
-                if i1 != i2 and match1[2][0] == match2[2][0]:
-                    if range_overlap(match1[2][1], match2[2][1]):
-                        print "Overlap", match1, match2
-                        size1 = match1[2][1][1] - match1[2][1][0]
-                        size2 = match2[2][1][1] - match2[2][1][0]
+                if i1 != i2 and match1.match.source == match2.match.source:
+                    if range_overlap(match1.match.range, match2.match.range):
+                        print "Overlap"
+                        print "    1.", match1
+                        print "    2.", match2
+                        size1 = match1.match.range[1] - match1.match.range[0]
+                        size2 = match2.match.range[1] - match2.match.range[0]
 
                         # extra matches always lose against non-extra, this stops e.g. Sir David Amess squishing David Amess, leaving itself parentless!
-                        if match1[0].endswith("_extra") and not match2[0].endswith("_extra"):
-                            print "1 loses"
+                        if match1.type.endswith("_extra") and not match2.type.endswith("_extra"):
+                            print "    1 loses"
                             del matches[i1]
                             overlap_found = True
                             break
                         
-                        if match2[0].endswith("_extra") and not match1[0].endswith("_extra"):
-                            print "2 loses"
+                        if match2.type.endswith("_extra") and not match1.type.endswith("_extra"):
+                            print "    2 loses"
                             del matches[i2]
                             overlap_found = True
                             break
 
                         if size1 > size2:
-                            print "2 loses"
+                            print "    2 loses"
                             del matches[i2]
                             overlap_found = True
                             break
                         elif size2 > size1:
-                            print "1 loses"
+                            print "    1 loses"
                             del matches[i1]
                             overlap_found = True
                             break
                         else:
-                            print "Overlaps of equal length"
+                            print "    Overlaps of equal length"
 
             if overlap_found:
                 break
 
-def generate_extra_names(names):
+def generate_extra_names(names, gender=None):
+    """
+        Make extra (non-primary) names to match someone.
+
+        These are only used when there's a primary match.
+    """
     extra_names = []
 
-    # We could be smarter here and only return geneder-appropriate potential titles.
-    titles = {'Mr', 'Dr', 'Mrs', 'Miss', 'Ms', 'Cllr', 'Sir', 'Prof'}
+    # Try to only match gender appropriate titles
+    titles = {'Dr', 'Cllr', 'Sir', 'Prof'}
+    if gender == 'male':
+        titles |= {'Mr'}
+    elif gender == 'female':
+        titles |= {'Mrs', 'Miss', 'Ms'}
+    else:
+        titles |= {'Mr', 'Mrs', 'Miss', 'Ms'}
+
     blacklist = {'pub', 'the', 'landlord', 'pub landlord', 'will'}
 
     for name in names:
@@ -95,21 +120,21 @@ def generate_extra_names(names):
     return set(extra_names) - blacklist
 
 
-def add_matches(doc):
-    texts = [doc['page']['text'],
-             doc['page']['title']]
+def add_matches(texts):
+    #texts = [doc['page']['text'],
+    #         doc['page']['title']]
 
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
     # Pre-screen with an n-gram match
-    ngs = chain(*[ngrams(text_tokens[0], n) for n in range(1,4) for text_tokens in texts_tokens])
+    ngrams = chain(*[get_ngrams(text_tokens.tokens, n) for n in range(1,4) for text_tokens in texts_tokens])
 
     poss_matches = set()
-    for ng in ngs:
-        if ng in index:
-            poss_matches |= set(index[ng])
+    for ngram in ngrams:
+        if ngram in index:
+            poss_matches |= set(index[ngram])
 
-    matches = []
+    match_entities = []
 
     # Take candidate matches and refine match
     for obj_type, obj_index in poss_matches:
@@ -132,20 +157,18 @@ def add_matches(doc):
 
         have_matches = False
         for match in find_matches(names, *texts_tokens):
-            if match is not None:
-                matches.append((obj_type, obj_index, match))
-                have_matches = True
+            match_entities.append(MatchEntity(type=obj_type, id=obj_index, match=match))
+            have_matches = True
 
         # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
         if have_matches:
             for match in find_matches(extra_names, *texts_tokens):
-                if match is not None:
-                    matches.append((obj_type + "_extra", obj_index, match))
+                match_entities.append(MatchEntity(type=obj_type + "_extra", id=obj_index, match=match))
             
 
-    party_ids = {x[1] for x in matches if x[0] == 'party'}
-    candidate_ids = {x[1] for x in matches if x[0] == 'candidate'}
-    constituency_ids = {x[1] for x in matches if x[0] == 'constituency'}
+    party_ids = {x[1] for x in match_entities if x.type == 'party'}
+    candidate_ids = {x[1] for x in match_entities if x.type == 'candidate'}
+    constituency_ids = {x[1] for x in match_entities if x.type == 'constituency'}
 
     print "  Found {} parties".format(len(party_ids))
     print "  Found {} candidates".format(len(candidate_ids))
@@ -158,34 +181,33 @@ def add_matches(doc):
         if constituency_id in squish_constituencies:
             phrases = squish_constituencies[constituency_id]
             for match in find_matches(phrases, *texts_tokens):
-                if match is not None:
-                    matches.append(('squish', None, match))
-                    num_squish += 1
+                match_entities.append(MatchEntity(type='squish', id=None, match=match))
+                num_squish += 1
 
     print "  Found {} squishes".format(num_squish)
-    print "  Total {} matches".format(len(matches))
+    print "  Total {} matches".format(len(match_entities))
 
-    for match in matches:
-        print "   ", match[0], match[1], match[2]
+    for match_entity in match_entities:
+        print "   ", match_entity
 
-    resolve_overlaps(matches)
+    resolve_overlaps(match_entities)
 
-    print "  Total {} matches remaining".format(len(matches))
+    print "  Total {} matches remaining".format(len(match_entities))
     
     possible_party_matches = {}
-    for match_type, match_id, _ in matches:
-        if match_type == 'party':
-            possible_party_matches[match_id] = {'id': parties[match_id]['id']}
+    for match_entity in match_entities:
+        if match_entity.type == 'party':
+            possible_party_matches[match_entity.id] = {'id': parties[match_entity.id]['id']}
 
     possible_constituency_matches = {}
-    for match_type, match_id, _ in matches:
-        if match_type == 'constituency':
-            possible_constituency_matches[match_id] = {'id': constituencies_index[match_id]['id']}
+    for match_entity in match_entities:
+        if match_entity.type == 'constituency':
+            possible_constituency_matches[match_entity.id] = {'id': constituencies_index[match_entity.id]['id']}
 
     possible_candidate_matches = {}
-    for match_type, match_id, _ in matches:
-        if match_type == 'candidate':
-            candidate = get_candidate(match_id)
+    for match_entity in match_entities:
+        if match_entity.type == 'candidate':
+            candidate = get_candidate(match_entity.id)
 
             party_match = False
             for _, candidacy in candidate['candidacies'].items():
@@ -219,37 +241,25 @@ def add_matches(doc):
             possible_candidate_matches[candidate['id']] = match_doc
 
     # Remove extra matches which no longer have a parent match
-    def filter_extra(match):
-        if match[0] == 'candidate_extra':
-            if match[1] not in possible_candidate_matches:
-                print match, "not got parent"
+    def filter_extra(match_entity):
+        if match_entity.type == 'candidate_extra':
+            if match_entity.id not in possible_candidate_matches:
+                print match_entity, "not got parent"
                 return False
         return True
 
-    doc['matches'] = filter(filter_extra, matches)
-    doc['possible'] = {}
-    doc['possible']['candidates'] = possible_candidate_matches.values()
-    doc['possible']['constituencies'] = possible_constituency_matches.values()
-    doc['possible']['parties'] = possible_party_matches.values()
 
-    if 'user' not in doc:
-        doc['user'] = {}
-
-    if 'candidates' not in doc['user']:
-        doc['user']['candidates'] = {'confirm': [], 'remove': []}
-
-    if 'constituencies' not in doc['user']:
-        doc['user']['constituencies'] = {'confirm': [], 'remove': []}
-
-    return doc
+    possible = {}
+    possible['candidates'] = possible_candidate_matches.values()
+    possible['constituencies'] = possible_constituency_matches.values()
+    possible['parties'] = possible_party_matches.values()
+    
+    return Matches(matches=filter(filter_extra, match_entities),
+                   possible=possible)
 
 
-def add_quotes(doc):
-    texts = [doc['page']['text'],
-             doc['page']['title']]
-
+def add_quotes(matches, texts):
     texts_tokens = [get_tokens(text.lower()) for text in texts]
-
     parsed_texts = [Text(text) for text in texts]
 
     for parsed_text in parsed_texts:
@@ -259,49 +269,45 @@ def add_quotes(doc):
     quotes = []
     tags = []
 
-    for match_type, match_id, match in doc['matches']:
+    for match in matches:
         # Don't bother making quotes out of party matches
-        if match_type == 'party':
+        if match.type == 'party':
             continue
 
-        # Convert extra matches to full citizens
-        if match_type == 'candidate_extra':
-            match_type = 'candidate'
-
-        sub = match[1]
-        spans = texts_tokens[match[0]][1]
+        sub = match.match.range
+        spans = texts_tokens[match.match.source].spans
 
         wmatch_start = spans[max(sub[0], 0)][0]
         wmatch_end = spans[min(sub[1]-1, len(spans)-1)][1]
 
-        tags.append((wmatch_start, wmatch_end, match_type, match_id, match[0]))
+        tags.append((wmatch_start, wmatch_end, match.type, match.id, match.match.source))
 
-        for i, eos in enumerate(parsed_texts[match[0]].end_of_sentences):
+        for i, eos in enumerate(parsed_texts[match.match.source].end_of_sentences):
             if eos >= wmatch_start:
                 if i != 0:
-                    match_start = parsed_texts[match[0]].end_of_sentences[i-1] + 1
+                    match_start = parsed_texts[match.match.source].end_of_sentences[i-1] + 1
                     match_end = eos
                 else:
                     match_start = 0
-                    match_end = parsed_texts[match[0]].end_of_sentences[0] + 1
+                    match_end = parsed_texts[match.match.source].end_of_sentences[0] + 1
                 break
         else:
             print "Fallthrough"
             match_start = 0
-            match_end = len(texts[match[0]])
+            match_end = len(texts[match.match.source])
 
         quote_doc = {'constituency_ids': [],
                      'party_ids': [],
                      'candidate_ids': [],
                      'quote_span': (match_start, match_end),
-                     'match_text': match[0]}
+                     'match_text': match.match.source}
 
-        if match_type == 'candidate':
-            quote_doc['candidate_ids'].append((match_id, wmatch_start, wmatch_end))
+        if match.type == 'candidate' or match.type == 'candidate_extra':
+            quote_doc['candidate_ids'].append((match.id, wmatch_start, wmatch_end))
         #elif match_type == 'party':
         #    quote_doc['party_ids'].append((match_id, wmatch_start, wmatch_end))
-        elif match_type == 'constituency':
-            quote_doc['constituency_ids'].append((match_id, wmatch_start, wmatch_end))
+        elif match.type == 'constituency':
+            quote_doc['constituency_ids'].append((match.id, wmatch_start, wmatch_end))
 
         quotes.append(quote_doc)
 
@@ -338,9 +344,9 @@ def add_quotes(doc):
     quotes = merged_quotes 
 
     print "  Total {} quotes".format(len(quotes))
-    
-    doc['quotes'] = quotes
-    doc['tags'] = tags
+   
+    return MatchQuotes(quotes=quotes,
+                       tags=tags) 
 
 def resolve_candidates(doc_user, doc_possible):
     resolved_candidates = []
@@ -447,6 +453,15 @@ def resolve_matches(doc):
         Generate the final description of the tags by combining the machine matched
         tags and the user contributed tags.
     """
+    
+    if 'user' not in doc:
+        doc['user'] = {}
+
+    if 'candidates' not in doc['user']:
+        doc['user']['candidates'] = {'confirm': [], 'remove': []}
+
+    if 'constituencies' not in doc['user']:
+        doc['user']['constituencies'] = {'confirm': [], 'remove': []}
 
     if 'possible' in doc:
         doc['candidates'] = resolve_candidates(doc['user'], doc['possible'])
@@ -488,8 +503,8 @@ if __name__ == "__main__":
         print >>sys.stdout, doc['keys'], doc['_id']
 
         if doc['page'] is not None and doc['page']['text'] is not None:
-            add_matches(doc)
-            add_quotes(doc)
+            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']])
+            doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
 
         resolve_matches(doc)
         db.save(doc)

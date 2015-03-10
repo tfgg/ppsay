@@ -46,8 +46,12 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
             pass
 
         add_domain(doc)
-        add_matches(doc)
-        add_quotes(doc)
+        doc['matches'], doc['possible'] = add_matches([doc['page']['text'],
+                                                       doc['page']['title'],])
+
+        doc['quotes'], doc['tags'] = add_quotes(doc['matches'],
+                                                [doc['page']['text'],
+                                                 doc['page']['title']])
 
         # Only save if it has matches
         if len(doc['possible']['candidates']) >= min_candidates and \
