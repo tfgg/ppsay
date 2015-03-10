@@ -15,5 +15,5 @@ for doc in db_articles.find():
         final_urls.append(doc_web_cache['url_final'])
     doc['page']['final_urls'] = final_urls
 
-    print final_urls
-
+    db_articles.save(doc)
+    print doc['_id']

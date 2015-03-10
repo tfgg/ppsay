@@ -76,6 +76,7 @@ class ArticleGeneric(object):
         return re_title.sub("", s).strip()
 
     return {'urls': [self.url],
+            'final_urls': [self.url_final],
             'url_canonical': self.article.canonical_link,
             'title': fix_title(self.article.title),
             'text': self.article.cleaned_text,

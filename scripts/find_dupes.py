@@ -37,6 +37,7 @@ for title, docs in titles.items():
 
             new_keys = set(sum([doc['keys'] for doc in docs], []))
             new_urls = set(sum([doc['page']['urls'] for doc in docs], []))
+            new_final_urls = set(sum([doc['page']['final_urls'] for doc in docs], []))
            
             new_user_candidates_confirm = []
             for doc in docs:
@@ -65,6 +66,7 @@ for title, docs in titles.items():
 
             docs[0]['keys'] = list(new_keys)
             docs[0]['page']['urls'] = list(new_urls)
+            docs[0]['page']['final_urls'] = list(new_final_urls)
             docs[0]['user'] = new_user
 
             articles.save(docs[0])
