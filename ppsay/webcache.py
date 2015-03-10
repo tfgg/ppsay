@@ -23,6 +23,7 @@ def cache_get(url, callback):
       return None
 
   html = doc['html']
+  final_url = doc['url_final']
 
-  return html
+  return html, final_url
 
