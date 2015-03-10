@@ -264,6 +264,7 @@ def add_matches(texts, verbose=False):
     return Matches(matches=filter(filter_extra, match_entities),
                    possible=possible)
 
+MatchTag = namedtuple('MatchTag', ['start', 'end', 'type', 'id', 'source']) 
 
 def add_quotes(matches, texts):
     texts_tokens = [get_tokens(text.lower()) for text in texts]
@@ -287,7 +288,11 @@ def add_quotes(matches, texts):
         wmatch_start = spans[max(sub[0], 0)][0]
         wmatch_end = spans[min(sub[1]-1, len(spans)-1)][1]
 
-        tags.append((wmatch_start, wmatch_end, match.type, match.id, match.match.source))
+        tags.append(MatchTag(start=wmatch_start,
+                             end=wmatch_end,
+                             type=match.type,
+                             id=match.id,
+                             source=match.match.source))
 
         for i, eos in enumerate(parsed_texts[match.match.source].end_of_sentences):
             if eos >= wmatch_start:
@@ -446,10 +451,10 @@ def resolve_quotes(doc):
     tags = []
 
     for tag in doc['tags']:
-        if tag[4] == 0:
-            if tag[2] == "constituency":
+        if tag.source == 0:
+            if tag.type == "constituency":
                 tags.append(((tag[0], tag[1]), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(tag[3]), "</a>"))
-            elif tag[2] == "candidate":
+            elif tag.type in ["candidate", "candidate_extra"] :
                 tags.append(((tag[0], tag[1]), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(tag[3]), "</a>"))
 
     doc['tagged_html'] = add_tags(doc['page']['text'], tags)

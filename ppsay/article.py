@@ -26,18 +26,20 @@ class ArticleGeneric(object):
   def __init__(self, article_url):
     self.url = article_url
 
-    self.html = cache_get(self.url, self.fetch)
+    rtn = cache_get(self.url, self.fetch)
+    if rtn is None:
+      raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
 
-    if self.html is not None:
-      try:
+
+    self.html, self.url_final = rtn
+
+    try:
         try:
             self.article = g.extract(raw_html=self.html)
         except ValueError, e:
             raise ArticleGeneric.FetchError("Stupid unicode error, probably: {}".format(str(e)))
-      except IOError, e:
+    except IOError, e:
         raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
-    else:
-      raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
 
   @classmethod
   def fetch(self, url):
