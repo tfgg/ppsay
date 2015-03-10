@@ -269,7 +269,7 @@ def add_quotes(matches, texts):
     quotes = []
     tags = []
 
-    for match in doc['matches']:
+    for match in matches:
         # Don't bother making quotes out of party matches
         if match.type == 'party':
             continue
