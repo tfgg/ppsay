@@ -1,0 +1,58 @@
+{% extends 'page.html' %}
+
+{% block canonical_link %}{{ url_for('.person', person_id=person.id) }}{% endblock %}
+
+{% block title %}{{ person.name }} mentions - #ge2015 mentions{% endblock %}
+
+{% if '2015' in person.candidacies %}
+    {% set person_party=person.candidacies['2015'].party.name %}
+    {% set person_constituency=person.candidacies['2015'].constituency.name %}
+{% elif '2010' in person.candidacies %}
+    {% set person_party=person.candidacies['2010'].party.name %}
+    {% set person_constituency=person.candidacies['2010'].constituency.name %}
+{% else %}
+    {% set person_party="" %}
+    {% set person_constituency="" %}
+{% endif %}
+
+{% block content %}
+<div class='container'>
+  {% include "header.html" %}
+  <div class='row'>
+    <div class='col-md-12 top-banner'>
+      <h1>{{ person.name }}</h1>
+      {% if person.deleted %}
+        <p class='text-danger'>This person has been deleted</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-2'>
+      {% if person.image %}
+        <img width='100%' class='person-image' src='{{ person.image|replace("http://","https://") }}' alt='Photo of {{ person.name }}'/>
+      {% endif %}
+      {% for year, candidacy in person.candidacies.items() %}
+      <p class='person-candidacy'>
+          <span class='year'>{{ year }}</span>
+          <span class='party'>{{ candidacy.party.name }}</span>
+          <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
+      </p>
+      {% endfor %}
+
+      <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
+    </div>
+    <div class='col-md-10'>
+        <ul>
+        {% for quote in quotes %}
+            <li>{{ quote.html|safe }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+  </div>
+</div>
+<div class='footer'>
+<div class='container'>
+  {% include "footer.html" %}
+</div>
+</div>
+{% endblock content %}
