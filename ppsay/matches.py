@@ -101,9 +101,10 @@ def generate_extra_names(names, gender=None):
 
     # Try to only match gender appropriate titles
     titles = {'Dr', 'Cllr', 'Sir', 'Prof'}
-    if gender == 'male':
+
+    if gender and gender.lower() == 'male':
         titles |= {'Mr'}
-    elif gender == 'female':
+    elif gender and gender.lower() == 'female':
         titles |= {'Mrs', 'Miss', 'Ms'}
     else:
         titles |= {'Mr', 'Mrs', 'Miss', 'Ms'}
@@ -157,7 +158,7 @@ def add_matches(texts, verbose=False):
         elif obj_type == 'candidate':
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
-            extra_names = generate_extra_names(names)
+            extra_names = generate_extra_names(names, candidate.get('gender', None))
             munge_names(names, candidate['incumbent'], candidate['name_prefix'])
             names = set(names)
 
@@ -451,6 +452,7 @@ def resolve_quotes(doc):
     tags = []
 
     for tag in doc['tags']:
+        tag = MatchTag(*tag)
         if tag.source == 0:
             if tag.type == "constituency":
                 tags.append(((tag[0], tag[1]), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(tag[3]), "</a>"))

@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import re
+import Levenshtein
 from collections import Counter
 
 client = MongoClient()
@@ -28,11 +29,23 @@ for title, docs in titles.items():
         print title.encode('utf-8')
 
         for doc in docs:
-            print "  ", doc['keys'][0], [doc['page']['text'] == doc2['page']['text'] for doc2 in docs]
+            print "  ", doc['_id'], doc['keys'][0], [doc['page']['text'] == doc2['page']['text'] for doc2 in docs]
 
-        same_text = [doc1['page']['text'] == doc2['page']['text'] for doc1 in docs for doc2 in docs]
+        same_text = {}
 
-        if all(same_text):
+        for doc in docs:
+            key = doc['page']['text']
+            if key not in same_text:
+                same_text[key] = []
+
+            same_text[key].append(doc)
+
+        #same_text = [doc1['page']['text'] == doc2['page']['text'] for doc1 in docs for doc2 in docs]
+
+        for text, docs in same_text.items():
+            if len(docs) == 1:
+                continue
+
             print "  Merging", " ".join([str(doc['_id']) for doc in docs])
 
             new_keys = set(sum([doc['keys'] for doc in docs], []))

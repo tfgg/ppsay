@@ -178,7 +178,6 @@ def constituency(constituency_id):
             score += len(quote_doc['candidate_ids']) * 0.1
             score += len(quote_doc['constituency_ids']) * 0.1
  
-            print score
             quote_doc['score'] = score
 
         article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)

@@ -19,12 +19,12 @@ for doc_webcache in db_webcache.find():
     doc_article = db_articles.find_one({'keys': doc_webcache['url']})
 
     if doc_article is None:
-        print "WIPING", doc_webcache['_id'], doc_webcache['url']
+        print u"WIPING", doc_webcache['_id'], doc_webcache['url'].encode('utf-8')
         doc_webcache['html'] = None
         db_webcache.save(doc_webcache)
         wiped += 1
     else:
         didnt_wipe += 1
 
-print "{} web cache objects wiped, {} web cache objects kept".format(wiped, didnt_wipe)
+print u"{} web cache objects wiped, {} web cache objects kept".format(wiped, didnt_wipe)
 

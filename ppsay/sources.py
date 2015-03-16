@@ -85,8 +85,12 @@ def get_source(source_url, source, state):
             pass
 
         add_domain(doc)
-        add_matches(doc)
-        add_quotes(doc)
+        doc['matches'], doc['possible'] = add_matches([doc['page']['text'],
+                                                       doc['page']['title'],])
+
+        doc['quotes'], doc['tags'] = add_quotes(doc['matches'],
+                                                [doc['page']['text'],
+                                                 doc['page']['title']])
 
         resolve_matches(doc)
 

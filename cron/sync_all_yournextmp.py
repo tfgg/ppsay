@@ -51,6 +51,7 @@ def save_person(person):
                  'id': person['id'],
                  'image': person.get('image', None),
                  'candidacies': candidacies,
+                 'gender': person['gender'],
                  'incumbent': incumbent}
 
     candidate_doc = db_candidates.find_one({'id': person['id']})
