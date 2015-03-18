@@ -42,6 +42,13 @@ for title, docs in titles.items():
 
         #same_text = [doc1['page']['text'] == doc2['page']['text'] for doc1 in docs for doc2 in docs]
 
+        dists = []
+        for text1 in same_text:
+            for text2 in same_text:
+                dists.append(Levenshtein.distance(text1, text2) < 500)
+
+        # Do something with this.
+
         for text, docs in same_text.items():
             if len(docs) == 1:
                 continue
