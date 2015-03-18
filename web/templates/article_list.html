@@ -86,7 +86,8 @@
               <p class='quote-text'>&hellip; {{ quote.html|safe }} &hellip; <a href='{{ article.page.urls.0 }}'>read more</a></p>
             </li>
           {% endfor %}
-          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>
+          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
+          {#<li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>#}
           </ul>
       </div>
       <div style='clear:both;'></div>
