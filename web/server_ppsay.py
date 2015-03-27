@@ -73,9 +73,11 @@ def statistics_json():
 
     total_mentions = sum([x['mentions']['total_count'] for x in total_candidate_mentions if 'mentions' in x])
     last_week_mentions = sum([x['mentions']['last_week_count'] for x in last_week_candidate_mentions if 'mentions' in x])
+    num_candidates = len([x for x in total_candidate_mentions if 'mentions' in x and x['mentions']['total_count'] > 0])
 
     return jsonify({'candidates': {'total_mentions': total_mentions,
-                                   'last_week_mentions': last_week_mentions,}})
+                                   'last_week_mentions': last_week_mentions,
+                                   'num_candidates': num_candidates}})
 
 
 @app.route('/person/<int:person_id>')
