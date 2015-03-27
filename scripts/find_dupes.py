@@ -9,26 +9,38 @@ articles = client.news.articles
 
 docs = articles.find()
 
-titles = {}
-
 #titles = Counter(doc['page']['title'] for doc in articles.find() if doc['page'])
 
+print "Grouping by title"
+c = Counter()
 for doc in docs:
     if not doc['page']:
         continue
 
     title = doc['page']['title']
 
-    print title
+    c[title] += 1
 
-    if title not in titles:
-        titles[title] = []
+print "Building dict of duplicates"
+docs = articles.find()
 
-    titles[title].append(doc)
+titles = {}
 
-titles = {title: docs for title, docs in titles.items() if len(docs) > 1}
+for doc in docs:
+    if not doc['page']:
+        continue
 
-for title, docs in titles.items():
+    title = doc['page']['title']
+    if title in c and c[title] > 1:
+        if title not in titles:
+            titles[title] = []
+
+        titles[title].append(doc)
+
+print "Checking for body text dupes"
+for title_hash, docs in titles.items():
+    title = docs[0]['page']['title']
+
     if len(docs) > 1 and title != u"":
         print title.encode('utf-8')
 
@@ -43,15 +55,6 @@ for title, docs in titles.items():
                 same_text[key] = []
 
             same_text[key].append(doc)
-
-        #same_text = [doc1['page']['text'] == doc2['page']['text'] for doc1 in docs for doc2 in docs]
-
-        #dists = []
-        #for text1 in same_text:
-        #    for text2 in same_text:
-        #        dists.append(Levenshtein.distance(text1, text2) < 500)
-
-        # Do something with this.
 
         for text, docs_group in same_text.items():
             if len(docs_group) == 1:
