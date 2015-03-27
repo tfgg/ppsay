@@ -66,6 +66,18 @@ def statistics():
                            total_candidate_mentions=total_candidate_mentions,
                            last_week_candidate_mentions=last_week_candidate_mentions)
 
+@app.route('/statistics.json')
+def statistics_json():
+    total_candidate_mentions = list(db_candidates.find().sort([("mentions.total_count", -1)]))
+    last_week_candidate_mentions = list(db_candidates.find().sort([("mentions.last_week_count", -1)]))
+
+    total_mentions = sum([x['mentions']['total_count'] for x in total_candidate_mentions if 'mentions' in x])
+    last_week_mentions = sum([x['mentions']['last_week_count'] for x in last_week_candidate_mentions if 'mentions' in x])
+
+    return jsonify({'candidates': {'total_mentions': total_mentions,
+                                   'last_week_mentions': last_week_mentions,}})
+
+
 @app.route('/person/<int:person_id>')
 def person(person_id):
     person_id = str(person_id)
