@@ -6,7 +6,16 @@ from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from flask import Blueprint, url_for, render_template, request, jsonify, abort, redirect
+from flask import (
+    Blueprint,
+    url_for,
+    render_template,
+    request,
+    jsonify,
+    abort,
+    redirect,
+    make_response
+)
 from flask.ext.login import login_required, current_user
 
 from ppsay.log import log
@@ -161,8 +170,15 @@ def person_quotes(person_id):
                            person=person_doc,
                            quotes=quote_docs)
 
+@app.route('/constituency/<int:constituency_id>.xml')
+def constituency_rss(constituency_id):
+    resp =  make_response(constituency(constituency_id, rss=True))
+    resp.headers['Content-Type'] = 'application/atom+xml'
+    
+    return resp
+
 @app.route('/constituency/<int:constituency_id>')
-def constituency(constituency_id):
+def constituency(constituency_id, rss=False):
     candidate_docs = db_candidates.find({'deleted': {'$ne': True},
                                        '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
                                                {"candidacies.2015.constituency.id": str(constituency_id)}]})
@@ -206,10 +222,16 @@ def constituency(constituency_id):
     area_doc = get_mapit_area(constituency_id)
     area_doc['id'] = str(area_doc['id'])
 
-    return render_template('constituency.html',
-                           articles=article_docs,
-                           candidates=candidate_docs,
-                           area=area_doc)
+    if rss:
+        return render_template('constituency_rss.xml',
+                               articles=article_docs,
+                               candidates=candidate_docs,
+                               area=area_doc)
+    else:
+        return render_template('constituency.html',
+                               articles=article_docs,
+                               candidates=candidate_docs,
+                               area=area_doc)
 
 @app.route('/article', methods=['POST'])
 def article_add():

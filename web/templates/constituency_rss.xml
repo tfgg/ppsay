@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-gb">
+    <title>Election Mentions in {{ area.name }}</title>
+    <link href="https://www.electionmenions.com{{ url_for('.constituency_rss', constituency_id=area.id) }}" rel="alternate"></link>
+    <link href="https://www.electionmenions.com{{ url_for('.constituency_rss', constituency_id=area.id) }}" rel="self"></link>
+    <id href="https://www.electionmenions.com{{ url_for('.constituency_rss', constituency_id=area.id) }}" rel="self"></id>
+    <updated></updated>
+    {% for article in articles %}
+    <entry>
+        <title>{{ article.page.title }}</title>
+        <link href="{{ article.page.urls.0 }}" rel="alternate"></link>
+        <id>{{ article._id }}</id>
+        <summary type="html">
+           {{ article.quotes[0].html|safe }} 
+        </summary>
+    </entry>
+    {% endfor %}
+</feed>
+
