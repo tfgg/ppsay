@@ -58,6 +58,7 @@ a.link-back {
 
 form.add-article-form {
   padding: 10px;
+  margin-bottom: 20px;
   background: #4665FF;
   color: white; }
   form.add-article-form h3 {
@@ -74,6 +75,11 @@ p.warning {
   padding: 10px;
   color: #6977B8;
   background: rgba(69, 100, 253, 0.06); }
+
+p.success {
+  padding: 10px;
+  color: #5D8B00;
+  background: rgba(97, 153, 0, 0.06); }
 
 img.person-image {
   margin-bottom: 20px; }
@@ -220,7 +226,7 @@ ul.article-list {
       margin-bottom: 10px;
       font-size: 1.4em; }
       ul.article-list li.article-item h2 a.article-link {
-        color: #3333cc; }
+        color: #3333CC; }
       ul.article-list li.article-item h2 small a {
         color: #999;
         text-decoration: underline; }

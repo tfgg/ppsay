@@ -78,7 +78,12 @@
           </ul>
 
           <ul class='quotes' id='quotes-{{ article._id }}'>
-          {% for quote in article.quotes[:1] %}
+          {% if all_quotes %}
+              {% set quotes = article.quotes %}
+          {% else %}
+              {% set quotes = article.quotes[:1] %}
+          {% endif %}
+          {% for quote in quotes %}
             <li class='quote
                       {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
                       {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
@@ -87,7 +92,6 @@
             </li>
           {% endfor %}
           <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
-          {#<li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ article.page.urls.0 }}' target="_blank"><p></p></a></li>#}
           </ul>
       </div>
       <div style='clear:both;'></div>

@@ -1,5 +1,9 @@
         <form method="post" action="{{ url_for(".article_add") }}" class='add-article-form form-inline'>
-            <h3>Add article</h3>
+            {% if article_add_form_text %}
+                <h3>{{ article_add_form_text }}</h3>
+            {% else %}
+                <h3>Add article</h3>
+            {% endif %}
             <div class="form-group">
                 <label for='url'>Article URL</label>
                 <input type='text' name='url' value='{{ url }}' id='url' placeholder='Enter url here...' class="form-control"/>

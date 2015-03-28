@@ -218,10 +218,10 @@ def article_add():
     if url is None:
         return abort(500, "URL of article not supplied")
 
-    if current_user.is_authenticated():
-        user_name = current_user['user_name']
-    else:
+    if current_user.is_anonymous():
         user_name = "anonymous"
+    else:
+        user_name = current_user['user_name']
 
     article_doc = get_source(url, 'user/' + user_name, 'moderated')
     
@@ -232,8 +232,12 @@ def article_add():
     if url_parsed.netloc in domain_whitelist:
         article_doc['state'] = 'approved'
         db_articles.save(article_doc)
-    
-    return redirect(url_for(".article", doc_id=str(article_doc['_id'])))
+
+    if current_user.is_anonymous(): 
+        return render_template('article_add_thanks.html',
+                               article=article_doc)
+    else:
+        return redirect(url_for(".article", doc_id=str(article_doc['_id'])))
 
 
 @app.route('/article/<doc_id>')

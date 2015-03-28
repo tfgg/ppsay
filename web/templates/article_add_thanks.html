@@ -1,0 +1,41 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+  {% include "header.html" %}
+  <div class='row'>
+    <div class='col-md-12 top-banner'>
+        {% if article.state == 'moderated' %}
+          <h1>Article queued</h1>
+        {% else %}
+          <h1>Successfully added article</h1>
+        {% endif %}
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+        {% set article_add_form_text = 'Add another article' %}
+        {% include "article_add_form.html" %}
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+        {% if article.state == 'moderated' %}
+            <p class='warning'>Thank you for adding an article. It has been queued for moderation.</p>
+        {% else %}
+            <p class='success'>Thank you for adding an article, it has been analysed for candidate and constituency mentions:</p>
+
+            {% set articles = [article] %}
+            {% set all_quotes = True %}
+            {% include "article_list.html" %}
+
+        {% endif %}
+    </div>
+  </div>
+</div>
+<div class='footer'>
+<div class='container'>
+  {% include "footer.html" %}
+</div>
+</div>
+{% endblock content %}
