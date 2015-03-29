@@ -173,7 +173,7 @@ def person_quotes(person_id):
 @app.route('/constituency/<int:constituency_id>.xml')
 def constituency_rss(constituency_id):
     resp =  make_response(constituency(constituency_id, rss=True))
-    resp.headers['Content-Type'] = 'application/atom+xml'
+    resp.headers['Content-Type'] = 'application/atom+xml; charset=utf-8'
     
     return resp
 
@@ -217,7 +217,10 @@ def constituency(constituency_id, rss=False):
         else:
             article_doc['order_date'] = article_doc['time_added']
 
-    article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
+    if not rss:
+        article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
+    else:
+        article_docs = sorted(article_docs, key=lambda x: x['time_added'], reverse=True)
 
     area_doc = get_mapit_area(constituency_id)
     area_doc['id'] = str(area_doc['id'])

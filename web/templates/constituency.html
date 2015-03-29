@@ -4,6 +4,10 @@
 
 {% block canonical_link %}{{ url_for('.constituency', constituency_id=area.id) }}{% endblock %}
 
+{% block header %}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ url_for('.constituency_rss', constituency_id=area.id) }}" />
+{% endblock %}
+
 {% block content %}
 <div class='container'>
   {% include "header.html" %}
