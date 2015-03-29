@@ -29,7 +29,7 @@
   <div class='row'>
     <div class='col-md-2'>
       {% if person.image %}
-        <img width='100%' class='person-image' src='{{ person.image|replace("http://","https://") }}' alt='Photo of {{ person.name }}'/>
+        <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
       {% endif %}
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>

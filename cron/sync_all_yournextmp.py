@@ -50,6 +50,7 @@ def save_person(person):
                  'url': person['url'],
                  'id': person['id'],
                  'image': person.get('image', None),
+                 'proxy_image': person.get('proxy_image', None),
                  'candidacies': candidacies,
                  'gender': person['gender'],
                  'incumbent': incumbent}
