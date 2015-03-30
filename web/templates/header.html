@@ -4,7 +4,7 @@
        {% if current_user.is_authenticated() %}
        <div style='float:right;'>Logged in as <strong>{{ current_user.user_name }}</strong></div>
        {% endif %}
-         <a href='{{ url_for("ppsay.index") }}' class='header-title-text'><img src='/static/images/icon.png' style='height:1.1em;margin-right:5px;top: -0.1em; position: relative;'/>#ge2015 mentions</a> <a href='{{ url_for("ppsay.statistics") }}' id='nav-statistics'>statistics</a>
+         <a href='{{ url_for("ppsay.index") }}' class='header-title-text'><img src='/static/images/em-dc-brand-border-60.png' style='height:60px;margin-right:20px;top: -0.1em; position: relative;'/>Election mentions</a> <a href='{{ url_for("ppsay.statistics") }}' id='nav-statistics'>statistics</a>
        </div>
     </div>
   </div>
