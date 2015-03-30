@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import re
-#import Levenshtein
+import Levenshtein
 from collections import Counter
 
 client = MongoClient()
@@ -55,6 +55,19 @@ for title_hash, docs in titles.items():
                 same_text[key] = []
 
             same_text[key].append(doc)
+
+        dists = [Levenshtein.distance(text1, text2) for text1 in same_text for text2 in same_text]
+
+        print dists
+        if all(dist < 500 for dist in dists):
+            text_longest = sorted(same_text.keys(), key=lambda x: len(x), reverse=True)[0]
+
+            all_docs = sum(same_text.values(), [])
+            new_same_text = {text_longest: all_docs}
+
+            print len(new_same_text[text_longest])
+
+            same_text = new_same_text
 
         for text, docs_group in same_text.items():
             if len(docs_group) == 1:
