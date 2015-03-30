@@ -64,12 +64,13 @@ form.add-article-form {
   form.add-article-form h3 {
     margin-top: 0; }
 
-.intro p {
-  padding: 10px;
-  font-size: 1.1em;
-  line-height: 1.5em;
-  font-family: "Droid Serif";
-  border: 1px solid rgba(70, 101, 255, 0.24); }
+.intro {
+  /*padding: 10px;
+  border: 1px solid rgba(70, 101, 255, 0.24);*/ }
+  .intro p {
+    font-size: 1.1em;
+    line-height: 1.5em;
+    font-family: "Droid Serif"; }
 
 p.warning {
   padding: 10px;
@@ -87,7 +88,9 @@ img.person-image {
 p.person-candidacy {
   font-size: 1.0em;
   color: #666;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 10px; }
   p.person-candidacy .year {
     display: block;
     font-size: 1.1em; }
@@ -105,13 +108,18 @@ ul.candidates {
   ul.candidates li.candidate {
     padding: 0;
     margin: 0; }
+    ul.candidates li.candidate div.candidate-photo {
+      display: inline;
+      width: 20px;
+      margin-right: 2px;
+      background: #999; }
+      ul.candidates li.candidate div.candidate-photo img {
+        width: 20px; }
     ul.candidates li.candidate div.candidate-name {
       font-weight: bold;
-      width: 90%;
-      float: left; }
+      display: inline; }
     ul.candidates li.candidate div.candidate-num-mentions {
-      width: 10%;
-      float: left;
+      display: inline;
       border: 1px solid rgba(211, 219, 255, 0.99);
       text-align: center;
       color: #4564fd; }

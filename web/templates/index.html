@@ -5,20 +5,22 @@
 {% block content %}
 <div class='container'>
   {% include "header.html" %}
-  <div class='row'>
-    <div class='col-md-6 intro'>
+  <div class='row' style='margin-top: 20px;'>
+    <div class='col-md-6'>
+        <div class='intro'>
         <p>See what the press has had to say about your constituency and election candidates with <em>Election Mentions</em>. Learn what they've said and done, make an informed vote.</p>
         <form class='form-inline' method='post' action='{{ url_for("postcode.postcode") }}'>
             <div class='form-group'>
                 <input type='text' name='postcode' placeholder='Postcode, e.g. OX1 3DR' class='form-control'/> <input type='submit' value='find my constituency' class='btn btn-default'/>
             </div>
         </form>
+        </div>
     </div>
     <div class='col-md-6'>
         {% include "article_add_form.html" %}
     </div>
   </div>
-  <div class='row'>
+  <div class='row' style='margin-top: 20px;'>
     <div class='col-md-9'>
         <h2>Recently added</h2>
         {% set quotes_closed=True %}

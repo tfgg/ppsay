@@ -97,12 +97,13 @@ form.add-article-form {
 }
 
 .intro {
+    /*padding: 10px;
+    border: 1px solid rgba(70, 101, 255, 0.24);*/
+
     p {
-        padding: 10px;
         font-size: 1.1em;
         line-height: 1.5em;
         font-family: "Droid Serif";
-        border: 1px solid rgba(70, 101, 255, 0.24);
     }
 }
 
@@ -126,6 +127,8 @@ p.person-candidacy {
   font-size: 1.0em;
   color: #666;
   margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 10px;
 
   .year {
     display: block;
@@ -152,15 +155,24 @@ ul.candidates {
         padding: 0;
         margin: 0;
 
+        div.candidate-photo {
+            display: inline;
+            width: 20px;
+            margin-right: 2px;
+            background: #999;
+
+            img {
+                width: 20px;
+            }
+        }
+
         div.candidate-name {
             font-weight: bold;
-            width: 90%;
-            float: left;
+            display: inline;
         }
 
         div.candidate-num-mentions {
-            width: 10%;
-            float: left;
+            display: inline;
             border: 1px solid rgba(211, 219, 255, 0.99);
             text-align: center;
             color: rgb(69, 100, 253);
