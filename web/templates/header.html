@@ -1,11 +1,11 @@
 <div class='row header'>
     <div class='col-md-12'>
-        <div class='header-title' style='padding-left:80px; margin-bottom: 20px; font-family: "Droid Serif", serif;'>
-            {#{% if current_user.is_authenticated() %}
-                <div style='float:right;'>
+        <div class='header-title' style='padding-left:80px; margin-bottom: 20px; font-family: "Droid Serif", serif; text-rendering: optimizeLegibility;'>
+            {% if current_user.is_authenticated() %}
+                <div style='float:right; font-family: "Droid Sans", sans;'>
                     Logged in as <strong>{{ current_user.user_name }}</strong>
                 </div>
-            {% endif %}#}
+            {% endif %}
             <a href='{{ url_for("ppsay.index") }}' style='height: 60px; width: 60px; margin: 0; margin-left: -80px; float: left;'>
                 <img src='/static/images/em-dc-brand-border-60.png'/>
             </a>
@@ -14,10 +14,10 @@
                     Election mentions
                 </a>
             </div>
-            <div style='font-size: 12px; line-height: 20px; font-style:italic; margin: 0;'>
+            <div style='font-size: 12px; line-height: 20px; font-style:italic; margin: 0; color: #626262;'>
                 Read the press, learn what they've said and done
             </div>
         </div>
-        <a href='{{ url_for("ppsay.statistics") }}' id='nav-statistics'>statistics</a>
+        {#<a href='{{ url_for("ppsay.statistics") }}' id='nav-statistics'>statistics</a>#}
     </div>
 </div>
