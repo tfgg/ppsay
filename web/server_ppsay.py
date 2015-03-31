@@ -44,6 +44,8 @@ app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
 
+date_election_2010 = datetime(2010, 5, 6)
+
 def get_mapit_area(area_id):
   req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
 
@@ -57,6 +59,9 @@ def index():
 
   article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] != 'removed']) > 0 
                                           or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
+
+  for article_doc in article_docs:
+    article_doc['election'] = 'ge2015'
 
   return render_template('index.html',
                          constituencies=constituencies,
@@ -125,8 +130,20 @@ def person(person_id):
             score += len(quote_doc['constituency_ids']) * 0.1
  
             quote_doc['score'] = score
+        
+        if article_doc['page']['date_published']:
+            article_doc['order_date'] = article_doc['page']['date_published']
+        else:
+            article_doc['order_date'] = article_doc['time_added']
+
+        if article_doc['order_date'] <= date_election_2010:
+            article_doc['election'] = 'ge2010'
+        else:
+            article_doc['election'] = 'ge2015'
 
         article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
+ 
+    article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
 
     return render_template('person.html',
                            articles=article_docs,
@@ -216,6 +233,11 @@ def constituency(constituency_id, rss=False):
             article_doc['order_date'] = article_doc['page']['date_published']
         else:
             article_doc['order_date'] = article_doc['time_added']
+        
+        if article_doc['order_date'] <= date_election_2010:
+            article_doc['election'] = 'ge2010'
+        else:
+            article_doc['election'] = 'ge2015'
 
     if not rss:
         article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
