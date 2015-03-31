@@ -77,6 +77,23 @@ class ArticleGeneric(object):
     def fix_title(s):
         return re_title.sub("", s).strip()
 
+    tree = lxml.html.fromstring(self.html)
+
+    h1s = [(x.text_content().strip(), x.attrib) for x in tree.xpath('//h1')]
+        
+    headline = None
+    for h1_headline, h1_attribs in h1s:
+        if headline is None or len(headline) < len(h1_headline):
+            headline = h1_headline
+
+    for h1_headline, h1_attribs in h1s:
+        if h1_attribs.get('itemprop', None) == 'headline':
+            headline = h1_headline
+
+    title = fix_title(self.article.title)
+    if headline and title != headline:
+        title = headline
+
     return {'urls': [self.url],
             'final_urls': [self.url_final],
             'url_canonical': self.article.canonical_link,
