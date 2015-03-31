@@ -31,8 +31,13 @@
     }
 </script>
 <ul class='article-list'>
+{% set election = 'ge2015' %}
 {% for article in articles[:100] %}
     {% if article.page %}
+    {% if article.election != election %}
+        <li class='article-election-break'>General Election 2010</li>
+        {% set election = article.election %}
+    {% endif %}
     <li class='article-item'>
       <div class='article-left-float'>
           {% if article.page.date_published %}

@@ -19,7 +19,7 @@
   </div>
   <div class='row'>
     <div class='col-md-2'>
-        <h3>2015 candidates</h3>
+        <h3 style='margin-top:0;'>2015</h3>
         <ul class="candidates">
         {% for candidate in candidates %}
           {% if "2015" in candidate.candidacies and candidate.candidacies['2015'].constituency.id == area.id %}
@@ -36,15 +36,22 @@
           {% endif %}
         {% endfor %}
         </ul>
-        <h3>2010 candidates</h3>
+        <h3>2010</h3>
+        <ul class="candidates">
         {% for candidate in candidates %}
           {% if "2010" in candidate.candidacies and candidate.candidacies['2010'].constituency.id == area.id %}
-          <p>
-            <strong><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></strong><br/>
-            <em>{{ candidate.candidacies['2010'].party.name }}</em>
-          </p>
+          <li class="candidate">
+            {% if candidate.proxy_image %}
+                <div class="candidate-photo"><img src='{{ candidate.proxy_image }}/0/20' alt='Photo of {{ candidate.name }}'/></div>
+            {% else %}
+                <div class="candidate-photo"><img src='/static/images/blank-man.png' alt='Photo of {{ candidate.name }}'/></div>
+            {% endif %}
+            <div class="candidate-name"><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></div>
+            <div class="candidate-party">{{ candidate.candidacies['2010'].party.name }}</div>
+          </li>
           {% endif %}
         {% endfor %}
+        </ul>
     </div>
     {#<div class='col-md-10'>
         {% include "article_add_form.html" %}

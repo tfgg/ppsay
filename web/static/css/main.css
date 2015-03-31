@@ -108,7 +108,8 @@ ul.candidates {
   margin: 0; }
   ul.candidates li.candidate {
     padding: 0;
-    margin: 0; }
+    margin: 0;
+    margin-bottom: 10px; }
     ul.candidates li.candidate div.candidate-photo {
       display: inline;
       width: 20px;
@@ -199,6 +200,12 @@ ul.article-list {
   margin: 0;
   padding: 0;
   word-wrap: break-word; }
+  ul.article-list li.article-election-break {
+    padding-top: 20px;
+    padding-left: 70px;
+    font-size: 24px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px; }
   ul.article-list li.article-item {
     margin: 0;
     padding: 10px;
