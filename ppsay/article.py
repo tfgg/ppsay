@@ -97,7 +97,7 @@ class ArticleGeneric(object):
     return {'urls': [self.url],
             'final_urls': [self.url_final],
             'url_canonical': self.article.canonical_link,
-            'title': fix_title(self.article.title),
+            'title': title,
             'text': self.article.cleaned_text,
             'date_published': try_parse_date(self.article.publish_date),
             'parser': 'ArticleGeneric'}

@@ -2,17 +2,23 @@
 
 {% block canonical_link %}{{ url_for('.person', person_id=person.id) }}{% endblock %}
 
-{% block title %}{{ person.name }} mentions - #ge2015 mentions{% endblock %}
+{% block title %}{{ person.name }} mentions - Election Mentions{% endblock %}
 
 {% if '2015' in person.candidacies %}
     {% set person_party=person.candidacies['2015'].party.name %}
     {% set person_constituency=person.candidacies['2015'].constituency.name %}
+    {% set person_constituency_id=person.candidacies['2015'].constituency.id %}
+    {% set person_year="2015" %}
 {% elif '2010' in person.candidacies %}
     {% set person_party=person.candidacies['2010'].party.name %}
     {% set person_constituency=person.candidacies['2010'].constituency.name %}
+    {% set person_constituency_id=person.candidacies['2010'].constituency.id %}
+    {% set person_year="2010" %}
 {% else %}
     {% set person_party="" %}
     {% set person_constituency="" %}
+    {% set person_constituency_id="" %}
+    {% set person_year="" %}
 {% endif %}
 
 {% block content %}
@@ -20,7 +26,19 @@
   {% include "header.html" %}
   <div class='row'>
     <div class='col-md-12 top-banner'>
-      <h1>{{ person.name }}</h1>
+      <div class='name'>
+          <h1>{{ person.name }}</h1>
+      </div>
+      {% if person_party %}
+      <div class='party-and-constituency'>
+          <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>({{ person_year }})</small></h2>
+      </div>
+      {% else %}
+      <div class='party-and-constituency'>
+          <h2>No known candidacies</h2>
+      </div>
+      {% endif %}
+
       {% if person.deleted %}
         <p class='text-danger'>This person has been deleted</p>
       {% endif %}

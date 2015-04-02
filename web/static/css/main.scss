@@ -69,12 +69,32 @@ span.stats-green {
 }
 
 div.top-banner {
-    h1 {
+    div.name {
         background: rgb(69, 100, 253);
         color: white;
         padding: 15px;
-        margin: 0;
-        text-rendering: optimizeLegibility;
+
+        h1 {
+            margin: 0;
+            text-rendering: optimizeLegibility;
+        }
+    }
+
+    div.party-and-constituency {
+        background: #F7F7F7;
+        color: rgb(110, 112, 124);
+        padding: 15px;
+
+        h2 {
+            font-size: 20px;
+            margin: 0;
+            text-rendering: optimizeLegibility;
+
+            a:link, a:visited {
+                color: rgb(110, 112, 124);
+                text-decoration: underline;
+            }
+        }
     }
 
     margin-bottom: 20px;

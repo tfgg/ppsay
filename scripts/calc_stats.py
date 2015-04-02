@@ -12,6 +12,7 @@ docs = db_articles.find()
 total_candidates = Counter()
 last_week_candidates = Counter()
 last_last_week_candidates = Counter()
+
 total_constituencies = Counter()
 
 one_week_ago = datetime.now() - timedelta(days=7)
