@@ -262,7 +262,14 @@ def constituency(constituency_id, rss=False):
 def export():
     export_data = {}
 
-    for constituency_id in constituencies_index:
+    num = int(request.args.get('num', -1))
+
+    if num > 0:
+        constituency_ids = constituencies_index.keys()[:num]
+    else:
+        constituency_ids = constituencies_index.keys()
+
+    for constituency_id in constituency_ids:
         candidate_docs = db_candidates.find({'deleted': {'$ne': True},
                                            '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
                                                    {"candidacies.2015.constituency.id": str(constituency_id)}]})
@@ -275,7 +282,6 @@ def export():
         article_docs = db_articles.find({'state': 'approved',
                                        '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
                                                {'candidates': {'$elemMatch': {'id': {'$in': candidate_ids}, 'state': {'$ne': 'removed'}}}}]}) \
-                                 .sort([["time_added", -1]])
 
         article_docs = list(article_docs)
         for article_doc in article_docs:
@@ -289,7 +295,7 @@ def export():
 
         export_data[constituency_id] = [{'url': doc['page']['urls'][0],
                                          'title': doc['page']['title'],
-                                         'source': doc['domain'],
+                                         'source': doc.get('domain'),
                                          'date': doc['order_date'].isoformat(),} for doc in article_docs[:10]]
 
     return jsonify(export_data)
