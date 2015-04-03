@@ -15,6 +15,7 @@
     <div class='col-md-12 top-banner'>
       {#<a href='{{ url_for(".index") }}' class='link-back'>&lt; all articles</a>#}
       <div class='name'>
+          <a href='{{ url_for('.constituency_rss', constituency_id=area.id) }}' style='float: right; color: white; line-height: 1em;'>RSS feed</a>
           <h1>{{ area.name }}</h1>
       </div>
     </div>
