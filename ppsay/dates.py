@@ -1,3 +1,4 @@
+import sys
 import lxml.html
 import re
 
@@ -16,7 +17,7 @@ time_names = {'DC.date.issued': try_date_issued,
               'DCTERMS.created': parse_date,
               'OriginalPublicationDate': lambda s: parse_date(s.replace('/', '-')),
               'DCTERMS.modified': parse_date,
-              'published-date': lambda s: datetime.strptime(s, "%a, %d %b %Y %H:%M:%S GMT").replace(tzinfo=UTC), # Sat, 22 Nov 2014 11:15:00 GMT
+              'published-date': lambda s: datetime.strptime(" ".join(s.split()[:-1]), "%a, %d %b %Y %H:%M:%S").replace(tzinfo=UTC), # Sat, 22 Nov 2014 11:15:00 GMT
               'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8]), tzinfo=UTC),
               'article:published_time': parse_date,
              }
@@ -134,4 +135,20 @@ def find_dates(html):
                 continue
             dates.append(parsed_time)
 
+    # wscountrytimes
+    for date_time_str in tree.xpath('//time[@pubdate]/@datetime'):
+        # Fri Sep 12 06:00:00 BST 2014
+        parsed_time = datetime.strptime(date_time_str.replace("BST","").replace("GMT", ""), "%a %b %d %H:%M:%S %Y").replace(tzinfo=UTC)
+        dates.append(parsed_time)
+
     return dates
+
+if __name__ == "__main__":
+    url = sys.argv[1]
+    web_cache_doc = db_web_cache.find_one({'url': url})
+    
+    if web_cache_doc['html']:
+        dates = find_dates(web_cache_doc['html']) 
+
+        print dates
+
