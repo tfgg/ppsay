@@ -84,6 +84,9 @@ function add_constituency() {
       {% elif article.state == 'removed' %}
         <p style='background:#FCC;padding:10px;color:black;'>This article has been removed.</p>
       {% endif %}
+      {% if article.tag_clash %}
+        <p style='background:#FCC;padding:10px;color:black;'>There are clashing tags in this article.</p>
+      {% endif %}
     </div>
   </div>
   <div class='row'>

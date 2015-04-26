@@ -45,7 +45,7 @@
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-2'>
+    <div class='col-md-2 col-sm-3'>
       {% if person.image %}
         <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
       {% endif %}
@@ -62,7 +62,7 @@
     {#<div class='col-md-10'>
       {% include "article_add_form.html" %}
     </div>#}
-    <div class='col-md-10'>
+    <div class='col-md-10 col-sm-9'>
         {% set num_articles=articles|length %}
         {% if num_articles == 0 %}
         <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>

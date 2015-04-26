@@ -2,6 +2,8 @@
 
 import sys
 import json
+from itertools import combinations
+
 from bson import ObjectId
 from ppsay.data import (
     constituencies,
@@ -419,7 +421,7 @@ def resolve_constituencies(doc_user, doc_possible):
     return resolved_constituencies
 
 
-def resolve_quotes(doc):
+def resolve_quotes(doc, verbose=False):
     texts = [doc['page']['text'],
              doc['page']['title']]
 
@@ -451,18 +453,43 @@ def resolve_quotes(doc):
 
     tags = []
 
+    doc['tags'] = [MatchTag(*tag) for tag in doc['tags']]
+
     for tag in doc['tags']:
-        tag = MatchTag(*tag)
         if tag.source == 0:
-            if tag.type == "constituency":
+            if tag.type == "constituency" and tag.id in constituencies:
                 tags.append(((tag[0], tag[1]), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(tag[3]), "</a>"))
-            elif tag.type in ["candidate", "candidate_extra"] :
+            elif tag.type in ["candidate", "candidate_extra"] and tag.id in candidates:
                 tags.append(((tag[0], tag[1]), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(tag[3]), "</a>"))
 
+    clash = False
+    for tag1, tag2 in combinations(doc['tags'], 2):
+        if tag1.source == tag2.source and tag1.id != tag2.id and (tag1[0], tag1[1]) == (tag2[0], tag2[1]):
+            if tag1.type == "constituency" and tag1.id in constituencies:
+                tag1_ok = True
+            elif tag1.type in ["candidate", "candidate_extra"] and tag1.id in candidates:
+                tag1_ok = True
+            else:
+                tag1_ok = False
+            
+            if tag2.type == "constituency" and tag2.id in constituencies:
+                tag2_ok = True
+            elif tag2.type in ["candidate", "candidate_extra"] and tag2.id in candidates:
+                tag2_ok = True
+            else:
+                tag2_ok = False
+
+            if tag1_ok and tag2_ok:
+                clash = True
+
+                if verbose:
+                    print "Clash", tag1, tag2
+
     doc['tagged_html'] = add_tags(doc['page']['text'], tags)
+    doc['tag_clash'] = clash
         
 
-def resolve_matches(doc):
+def resolve_matches(doc, verbose=False):
     """
         Generate the final description of the tags by combining the machine matched
         tags and the user contributed tags.
@@ -482,7 +509,7 @@ def resolve_matches(doc):
         doc['constituencies'] = resolve_constituencies(doc['user'], doc['possible']) 
 
     if 'quotes' in doc:
-        resolve_quotes(doc)
+        resolve_quotes(doc, verbose)
 
     return
 
@@ -520,6 +547,6 @@ if __name__ == "__main__":
             doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
             doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
 
-        resolve_matches(doc)
+        resolve_matches(doc, a.verbose)
         db.save(doc)
 

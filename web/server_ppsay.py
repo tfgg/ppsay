@@ -177,6 +177,7 @@ def person_quotes(person_id):
                     if word in quote_doc['text'].lower():
                         biog_score += 1.0
 
+                quote_doc['url'] = article_doc['page']['urls'][0]
                 quote_doc['said_score'] = said_score
                 quote_doc['biog_score'] = biog_score
                 quote_docs.append(quote_doc)
@@ -509,6 +510,9 @@ dashboard_queries = [{'query': {},
                      {'query': {'possible.constituencies': {'$size': 0}},
                       'id': 'num_articles_no_constituencies',
                       'name': 'Number of articles with no constituencies',},
+                     {'query': {'tag_clash': True},
+                      'id': 'tag_clash',
+                      'name': 'Number of articles with clashing tags',}
                     ]
 
 dashboard_query_index = {q['id']: q for q in dashboard_queries}

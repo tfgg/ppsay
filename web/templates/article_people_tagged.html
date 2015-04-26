@@ -1,6 +1,6 @@
     {% for person in article.candidates %}
         <li class='person-tagged person-tagged-{{ person.state }}'>
-            <div class='name'>{{ person.name }}</a></div>
+            <div class='name'><a href='{{ url_for('.person', person_id=person.id) }}'>{{ person.name }}</a></div>
             <div class='candidacies'>
             {% for year, candidacy in person.candidacies.items() %}
                 <div class='candidacy'>

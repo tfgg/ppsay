@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-2'>
+    <div class='col-md-2 col-sm-3'>
         <h3 style='margin-top:0;'>2015</h3>
         <ul class="candidates">
         {% for candidate in candidates %}
@@ -59,7 +59,7 @@
     {#<div class='col-md-10'>
         {% include "article_add_form.html" %}
     </div>#}
-    <div class='col-md-10'>
+    <div class='col-md-10 col-sm-9'>
         {% set num_articles=articles|length %}
         {% set quotes_closed=False %}
         {% if num_articles == 0 %}

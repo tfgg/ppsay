@@ -44,7 +44,7 @@
     <div class='col-md-10'>
         <ul>
         {% for quote in quotes %}
-            <li>{{ quote.html|safe }}</li>
+            <li>{{ quote.html|safe }} <a href='{{ quote.url }}'>Read article</a></li>
         {% endfor %}
         </ul>
     </div>
