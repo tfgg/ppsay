@@ -328,10 +328,15 @@ ul.quotes {
     }
 
     li.quote {
+        p.quote-article-link {
+            text-align: right;
+            color: #999;
+            font-size: 0.8em;
+        }
+
         p.quote-text {
             background: #F0F0F0;
             padding: 10px;
-            margin: 10px;
 
             a.quote-candidate-highlight {
                 background: rgba(255,255,128,0.25);

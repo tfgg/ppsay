@@ -68,8 +68,12 @@
         <ul class='quotes'>
         {% for quote in quotes %}
             <li class='quote'>
-                <a class='btn btn-default' style='float: right;' href='{{ quote.url }}'>Read article</a>
                 <p class='quote-text'>{{ quote.html|safe }}</p>
+                <p class='quote-article-link'>
+                    {% if quote.article.page.date_published %}
+                        published {{ quote.article.page.date_published.strftime("%-d %b %Y") }} 
+                    {% endif %}
+                    in <a href='{{ quote.article.page.urls[0] }}'>{{ quote.article.page.title }}</a> ({{ quote.article.domain }})</p>
             </li>
         {% endfor %}
         </ul>

@@ -162,27 +162,29 @@ def person_quotes(person_id):
 
     quote_docs = []
 
+    interesting_words = [
+        'said', 'called', 'called on', 'says', 'promised', 'gaffe', 'popular',
+        'mp', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hated', 'loved',
+        'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married',
+        'gaffe', 'apologised', 'apology', 'tackle', 'fix', 'moral', 'ethical', 'penalty', 'law',
+        'responsible', 'pledge',
+    ]
+
     for article_doc in article_docs:
         for quote_doc in article_doc['quotes']:
             if person_id in [x[0] for x in quote_doc['candidate_ids']]:
                 quote_doc['article'] = article_doc
 
-                said_score = 0.0
-                for word in ['said', 'called', 'called on', 'says', 'promised']:
+                score = 0.0
+                for word in interesting_words:
                     if word in quote_doc['text'].lower():
-                        said_score += 1.0
+                        score += 1.0
                 
-                biog_score = 0.0
-                for word in ['MP', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hated', 'loved', 'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married']:
-                    if word in quote_doc['text'].lower():
-                        biog_score += 1.0
-
-                quote_doc['url'] = article_doc['page']['urls'][0]
-                quote_doc['said_score'] = said_score
-                quote_doc['biog_score'] = biog_score
+                quote_doc['article'] = article_doc
+                quote_doc['score'] = score
                 quote_docs.append(quote_doc)
 
-    quote_docs = sorted(quote_docs, key=lambda x: x['biog_score'], reverse=True)
+    quote_docs = sorted(quote_docs, key=lambda x: x['score'], reverse=True)
 
     return render_template('person_quotes.html',
                            person=person_doc,

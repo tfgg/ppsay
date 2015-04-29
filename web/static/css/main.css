@@ -219,10 +219,13 @@ ul.quotes {
     font-size: 0.9em;
     font-style: italic;
     text-align: right; }
+  ul.quotes li.quote p.quote-article-link {
+    text-align: right;
+    color: #999;
+    font-size: 0.8em; }
   ul.quotes li.quote p.quote-text {
     background: #F0F0F0;
-    padding: 10px;
-    margin: 10px; }
+    padding: 10px; }
     ul.quotes li.quote p.quote-text a.quote-candidate-highlight {
       background: rgba(255, 255, 128, 0.25);
       color: #333;
