@@ -64,6 +64,11 @@
       <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
     </div>
     <div class='col-md-10 col-sm-9'>
+        <ul class='tab-nav'>
+            <li><a href='{{ url_for('.person', person_id=person.id) }}'>quotes</a></li>
+            <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
+        </ul>
+        <div style='clear:both;'></div>
         <p class='warning'>These are automatically extracted quotes that we think are talking about {{ person.name }}. There may be errors, for example the article may be talking about a different {{ person.name }}.</p>
         <ul class='quotes'>
         {% for quote in quotes %}

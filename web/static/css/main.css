@@ -207,6 +207,22 @@ div.article-text a.quote-constituency-highlight {
   color: #333;
   padding: 5px; }
 
+ul.tab-nav {
+  list-style: none;
+  padding: 0; }
+  ul.tab-nav li {
+    float: left;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem; }
+    ul.tab-nav li a {
+      display: block;
+      border: 1px solid #eee;
+      border-bottom: 0;
+      padding: 1rem; }
+      ul.tab-nav li a:link, ul.tab-nav li a:visited, ul.tab-nav li a:hover {
+        text-decoration: none;
+        color: #666; }
+
 ul.quotes {
   clear: both;
   list-style: none;

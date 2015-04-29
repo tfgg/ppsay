@@ -310,6 +310,28 @@ div.article-text {
     }
 }
 
+ul.tab-nav {
+    list-style: none;
+    padding: 0;
+
+    li {
+        float: left;
+        a {
+            display: block;
+            border: 1px solid #eee;
+            border-bottom: 0;
+            padding: 1rem;
+
+            &:link, &:visited, &:hover {
+                text-decoration: none;
+                color: #666;
+            }
+        }
+        margin-right: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
 ul.quotes {
     clear: both;
     list-style: none;

@@ -63,12 +63,17 @@
       {% include "article_add_form.html" %}
     </div>#}
     <div class='col-md-10 col-sm-9'>
+        <ul class='tab-nav'>
+            <li><a href='{{ url_for('.person', person_id=person.id) }}'>quotes</a></li>
+            <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
+        </ul>
+        <div style='clear:both;'></div>
         {% set num_articles=articles|length %}
         {% if num_articles == 0 %}
         <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
         {% include "article_add_form.html" %}
         {% else %}
-        <p class='warning'>These are news articles that we think are talking about {{ person.name }}. There may be errors.</p>
+        <p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors, for example the article may be talking about a different {{ person.name }}.</p>
         {% set quotes_closed=False %}
         {% include "article_list.html" %}
         <script>

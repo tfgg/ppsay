@@ -94,8 +94,8 @@ def statistics_json():
                                    'num_candidates': num_candidates}})
 
 
-@app.route('/person/<int:person_id>')
-def person(person_id):
+@app.route('/person/<int:person_id>/articles')
+def person_articles(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
     
@@ -149,8 +149,8 @@ def person(person_id):
                            articles=article_docs,
                            person=person_doc)
 
-@app.route('/person/<int:person_id>/quotes')
-def person_quotes(person_id):
+@app.route('/person/<int:person_id>')
+def person(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
     
