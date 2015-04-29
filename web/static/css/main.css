@@ -207,6 +207,54 @@ div.article-text a.quote-constituency-highlight {
   color: #333;
   padding: 5px; }
 
+ul.quotes {
+  clear: both;
+  list-style: none;
+  padding: 0;
+  padding-top: 5px; }
+  ul.quotes li.quote-more p {
+    background: #FFFFFF;
+    padding: 0;
+    margin: 10px;
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: right; }
+  ul.quotes li.quote p.quote-text {
+    background: #F0F0F0;
+    padding: 10px;
+    margin: 10px; }
+    ul.quotes li.quote p.quote-text a.quote-candidate-highlight {
+      background: rgba(255, 255, 128, 0.25);
+      color: #333;
+      padding: 5px; }
+    ul.quotes li.quote p.quote-text a.quote-constituency-highlight {
+      background: rgba(200, 200, 255, 0.25);
+      color: #333;
+      padding: 5px; }
+    ul.quotes li.quote p.quote-text a.candidate-highlight {
+      background: rgba(255, 255, 128, 0.75); }
+    ul.quotes li.quote p.quote-text a.constituency-highlight {
+      background: rgba(200, 200, 255, 0.75); }
+  ul.quotes li.quote ul.quote-mentions {
+    font-size: 0.8em;
+    list-style: none;
+    padding: 0; }
+    ul.quotes li.quote ul.quote-mentions li {
+      display: inline-block; }
+      ul.quotes li.quote ul.quote-mentions li a {
+        display: block;
+        margin: 2px;
+        padding: 3px;
+        color: #333; }
+    ul.quotes li.quote ul.quote-mentions li.quote-mention-candidate {
+      background: #FFFECE; }
+    ul.quotes li.quote ul.quote-mentions li.quote-mention-party {
+      background: #E7FFE6; }
+    ul.quotes li.quote ul.quote-mentions li.quote-mention-constituency {
+      background: #ebebfa; }
+  ul.quotes li.quote-closed {
+    display: none; }
+
 ul.article-list {
   list-style: none;
   margin: 0;
@@ -258,53 +306,6 @@ ul.article-list {
       ul.article-list li.article-item h2 small a {
         color: #999;
         text-decoration: underline; }
-    ul.article-list li.article-item ul.quotes {
-      clear: both;
-      list-style: none;
-      padding: 0;
-      padding-top: 5px; }
-      ul.article-list li.article-item ul.quotes li.quote-more p {
-        background: #FFFFFF;
-        padding: 0;
-        margin: 10px;
-        font-size: 0.9em;
-        font-style: italic;
-        text-align: right; }
-      ul.article-list li.article-item ul.quotes li.quote p.quote-text {
-        background: #F0F0F0;
-        padding: 10px;
-        margin: 10px; }
-        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-candidate-highlight {
-          background: rgba(255, 255, 128, 0.25);
-          color: #333;
-          padding: 5px; }
-        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.quote-constituency-highlight {
-          background: rgba(200, 200, 255, 0.25);
-          color: #333;
-          padding: 5px; }
-        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.candidate-highlight {
-          background: rgba(255, 255, 128, 0.75); }
-        ul.article-list li.article-item ul.quotes li.quote p.quote-text a.constituency-highlight {
-          background: rgba(200, 200, 255, 0.75); }
-      ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions {
-        font-size: 0.8em;
-        list-style: none;
-        padding: 0; }
-        ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li {
-          display: inline-block; }
-          ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li a {
-            display: block;
-            margin: 2px;
-            padding: 3px;
-            color: #333; }
-        ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li.quote-mention-candidate {
-          background: #FFFECE; }
-        ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li.quote-mention-party {
-          background: #E7FFE6; }
-        ul.article-list li.article-item ul.quotes li.quote ul.quote-mentions li.quote-mention-constituency {
-          background: #ebebfa; }
-      ul.article-list li.article-item ul.quotes li.quote-closed {
-        display: none; }
     ul.article-list li.article-item ul.article-mentions-people, ul.article-list li.article-item ul.article-mentions-constituencies {
       float: left;
       list-style: none;

@@ -15,19 +15,41 @@
     {% set person_constituency="" %}
 {% endif %}
 
+{% if '2015' in person.candidacies %}
+    {% set person_party=person.candidacies['2015'].party.name %}
+    {% set person_constituency=person.candidacies['2015'].constituency.name %}
+    {% set person_constituency_id=person.candidacies['2015'].constituency.id %}
+    {% set person_year="2015" %}
+{% elif '2010' in person.candidacies %}
+    {% set person_party=person.candidacies['2010'].party.name %}
+    {% set person_constituency=person.candidacies['2010'].constituency.name %}
+    {% set person_constituency_id=person.candidacies['2010'].constituency.id %}
+    {% set person_year="2010" %}
+{% else %}
+    {% set person_party="" %}
+    {% set person_constituency="" %}
+    {% set person_constituency_id="" %}
+    {% set person_year="" %}
+{% endif %}
+
 {% block content %}
 <div class='container'>
   {% include "header.html" %}
   <div class='row'>
     <div class='col-md-12 top-banner'>
-      <h1>{{ person.name }}</h1>
+      <div class='name'>
+          <h1>{{ person.name }}</h1>
+      </div>
+      <div class='party-and-constituency'>
+          <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>({{ person_year }})</small></h2>
+      </div>
       {% if person.deleted %}
         <p class='text-danger'>This person has been deleted</p>
       {% endif %}
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-2'>
+    <div class='col-md-2 col-sm-3'>
       {% if person.image %}
         <img width='100%' class='person-image' src='{{ person.image|replace("http://","https://") }}' alt='Photo of {{ person.name }}'/>
       {% endif %}
@@ -41,10 +63,14 @@
 
       <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
     </div>
-    <div class='col-md-10'>
-        <ul>
+    <div class='col-md-10 col-sm-9'>
+        <p class='warning'>These are automatically extracted quotes that we think are talking about {{ person.name }}. There may be errors, for example the article may be talking about a different {{ person.name }}.</p>
+        <ul class='quotes'>
         {% for quote in quotes %}
-            <li>{{ quote.html|safe }} <a href='{{ quote.url }}'>Read article</a></li>
+            <li class='quote'>
+                <a class='btn btn-default' style='float: right;' href='{{ quote.url }}'>Read article</a>
+                <p class='quote-text'>{{ quote.html|safe }}</p>
+            </li>
         {% endfor %}
         </ul>
     </div>

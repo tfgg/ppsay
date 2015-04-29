@@ -259,7 +259,7 @@ def constituency(constituency_id, rss=False):
                                candidates=candidate_docs,
                                area=area_doc)
 
-@app.route('/export.json', methods=['GET'])
+@app.route('/export.json.regen', methods=['GET'])
 def export():
     export_data = {}
 

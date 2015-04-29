@@ -310,6 +310,86 @@ div.article-text {
     }
 }
 
+ul.quotes {
+    clear: both;
+    list-style: none;
+    padding: 0;
+    padding-top: 5px;
+
+    li.quote-more {
+        p {
+            background: #FFFFFF;
+            padding: 0;
+            margin: 10px;
+            font-size: 0.9em;
+            font-style: italic;
+            text-align: right;
+        }
+    }
+
+    li.quote {
+        p.quote-text {
+            background: #F0F0F0;
+            padding: 10px;
+            margin: 10px;
+
+            a.quote-candidate-highlight {
+                background: rgba(255,255,128,0.25);
+                color: #333;
+                padding: 5px;
+            }
+            
+            a.quote-constituency-highlight {
+                background: rgba(200,200,255,0.25);
+                color: #333;
+                padding: 5px;
+            }
+
+            a.candidate-highlight {
+                background: rgba(255,255,128,0.75);
+            }
+            
+            a.constituency-highlight {
+                background: rgba(200,200,255,0.75);
+            }
+        }
+
+        ul.quote-mentions {
+            font-size:0.8em;
+            list-style: none;
+            padding: 0;
+
+            li {
+                display: inline-block;
+
+                a {
+                  display: block;
+                  margin: 2px;
+                  padding: 3px;
+                  color: #333;
+                }
+            }
+
+            li.quote-mention-candidate {
+                background: #FFFECE;
+            }
+            
+            li.quote-mention-party {
+                background: #E7FFE6;
+            }
+            
+            li.quote-mention-constituency {
+                background: lighten($highlight, 45%);
+            }
+        }
+    }
+
+    li.quote-closed {
+        display: none;
+    }
+}
+
+
 ul.article-list {
   list-style:none;
   margin:0;
@@ -382,86 +462,7 @@ ul.article-list {
         text-decoration: underline;
       } 
     }
-
-    ul.quotes {
-        clear: both;
-        list-style: none;
-        padding: 0;
-        padding-top: 5px;
-
-        li.quote-more {
-            p {
-                background: #FFFFFF;
-                padding: 0;
-                margin: 10px;
-                font-size: 0.9em;
-                font-style: italic;
-                text-align: right;
-            }
-        }
-
-        li.quote {
-            p.quote-text {
-                background: #F0F0F0;
-                padding: 10px;
-                margin: 10px;
-
-                a.quote-candidate-highlight {
-                    background: rgba(255,255,128,0.25);
-                    color: #333;
-                    padding: 5px;
-                }
-                
-                a.quote-constituency-highlight {
-                    background: rgba(200,200,255,0.25);
-                    color: #333;
-                    padding: 5px;
-                }
-
-                a.candidate-highlight {
-                    background: rgba(255,255,128,0.75);
-                }
-                
-                a.constituency-highlight {
-                    background: rgba(200,200,255,0.75);
-                }
-            }
-
-            ul.quote-mentions {
-                font-size:0.8em;
-                list-style: none;
-                padding: 0;
-
-                li {
-                    display: inline-block;
-
-                    a {
-                      display: block;
-                      margin: 2px;
-                      padding: 3px;
-                      color: #333;
-                    }
-                }
-
-                li.quote-mention-candidate {
-                    background: #FFFECE;
-                }
-                
-                li.quote-mention-party {
-                    background: #E7FFE6;
-                }
-                
-                li.quote-mention-constituency {
-                    background: lighten($highlight, 45%);
-                }
-            }
-        }
-
-        li.quote-closed {
-            display: none;
-        }
-    }
-
+ 
     ul.article-mentions-people, ul.article-mentions-constituencies {
       float: left;
       list-style:none;
