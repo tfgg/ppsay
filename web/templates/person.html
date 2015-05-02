@@ -52,8 +52,12 @@
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
           <span class='year'>{{ year }}</span>
+          {% if candidacy.party %}
           <span class='party'>{{ candidacy.party.name }}</span>
+          {% endif %}
+          {% if candidacy.constituency %}
           <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
+          {% endif %}
       </p>
       {% endfor %}
 
@@ -73,7 +77,7 @@
         <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
         {% include "article_add_form.html" %}
         {% else %}
-        <p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors, for example the article may be talking about a different {{ person.name }}.</p>
+        <p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
         {% set quotes_closed=False %}
         {% include "article_list.html" %}
         <script>

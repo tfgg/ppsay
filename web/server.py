@@ -13,6 +13,7 @@ app.register_blueprint(ppsay_app)
 app.register_blueprint(postcode_app)
 app.register_blueprint(users_app)
 
+@app.route('/export.people.quotes.json')
 @app.route('/export.people.json')
 @app.route('/export.json')
 @app.route('/robots.txt')

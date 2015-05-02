@@ -41,7 +41,15 @@
           <h1>{{ person.name }}</h1>
       </div>
       <div class='party-and-constituency'>
-          <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>({{ person_year }})</small></h2>
+          <h2>
+            {% if person_party and person_constituency %}
+            {{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a>
+
+            <small>({{ person_year }})</small>
+            {% else %}
+            No known candidacies
+            {% endif %}
+        </h2>
       </div>
       {% if person.deleted %}
         <p class='text-danger'>This person has been deleted</p>
@@ -56,8 +64,12 @@
       {% for year, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
           <span class='year'>{{ year }}</span>
+          {% if candidacy.party %}
           <span class='party'>{{ candidacy.party.name }}</span>
+          {% endif %}
+          {% if candidacy.constituency %}
           <span class='constituency'><a href='{{ url_for('.constituency', constituency_id=candidacy.constituency.id) }}'>{{ candidacy.constituency.name }}</a></span>
+          {% endif %}
       </p>
       {% endfor %}
 
@@ -69,7 +81,8 @@
             <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
         </ul>
         <div style='clear:both;'></div>
-        <p class='warning'>These are automatically extracted quotes that we think are talking about {{ person.name }}. There may be errors, for example the article may be talking about a different {{ person.name }}.</p>
+        {% if quotes %}
+        <p class='warning'>These are automatically extracted quotes that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
         <ul class='quotes'>
         {% for quote in quotes %}
             <li class='quote'>
@@ -82,6 +95,10 @@
             </li>
         {% endfor %}
         </ul>
+        {% else %}
+        <p class='warning'>We don't know of any quotes mentioning {{ person.name }}.</p>
+        {% include "article_add_form.html" %}
+        {% endif %}
     </div>
   </div>
 </div>

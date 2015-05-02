@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import json
 from urlparse import urlparse
@@ -166,8 +167,8 @@ def person(person_id):
         'said', 'called', 'called on', 'says', 'promised', 'gaffe', 'popular',
         'mp', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hated', 'loved',
         'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married',
-        'gaffe', 'apologised', 'apology', 'tackle', 'fix', 'moral', 'ethical', 'penalty', 'law',
-        'responsible', 'pledge',
+        'apologised', 'apology', 'tackle', 'fix', 'moral', 'ethical', 'penalty', 'law',
+        'responsible', 'pledge', 'urge', 'petition', 'received', u'£',
     ]
 
     for article_doc in article_docs:

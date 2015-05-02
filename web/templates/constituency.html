@@ -66,7 +66,7 @@
         <p class='warning'>We don't know of any news articles about {{ area.name }}. Why not try to find one and add it?</p>
         {% include "article_add_form.html" %}
         {% else %}
-        <p class='warning'>These are news articles that we think are talking about {{ area.name }} constituency or the candidates standing here. There may be errors.</p>
+        <p class='warning'>These are automatically matched pages that we think are talking about the {{ area.name }} constituency or the candidates standing here. There may be errors.</p>
         {% include "article_list.html" %} 
         <script>
             $('.quote-constituency-{{ area.id }}').removeClass('quote-closed').show();

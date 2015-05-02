@@ -1,4 +1,4 @@
-    {% for person in article.candidates %}
+    {% for person in article.candidates|sort(attribute='name') %}
         <li class='person-tagged person-tagged-{{ person.state }}'>
             <div class='name'><a href='{{ url_for('.person', person_id=person.id) }}'>{{ person.name }}</a></div>
             <div class='candidacies'>
