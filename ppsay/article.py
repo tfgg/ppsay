@@ -6,6 +6,17 @@ import requests
 from webcache import cache_get
 from goose import Goose
 from iso8601 import parse_date
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+from ppsay.data import elections
+
+try:
+    db_client = MongoClient()
+except ConnectionFailure:
+    print "Can't connect to MongoDB"
+    sys.exit(0)
+
+db_articles = db_client.news.articles
 
 g = Goose()
 
@@ -101,6 +112,37 @@ class ArticleGeneric(object):
             'text': self.article.cleaned_text,
             'date_published': try_parse_date(self.article.publish_date),
             'parser': 'ArticleGeneric'}
+
+
+def get_articles(person_ids, constituency_ids=None):
+    if constituency_ids:
+        article_docs = db_articles.find({'state': 'approved',
+                                       '$or': [{'constituencies': {'$elemMatch': {'id': {'$in': constituency_ids}, 'state': {'$ne': 'removed'}}}},
+                                               {'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}]}) \
+                                  .sort([["time_added", -1]])
+    else:
+        article_docs = db_articles.find({'state': 'approved',
+                                         'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}) \
+                                  .sort([('time_added', -1)])
+
+
+    article_docs = list(article_docs)
+
+    for article_doc in article_docs:
+        if article_doc['page']['date_published']:
+            article_doc['order_date'] = article_doc['page']['date_published']
+        else:
+            article_doc['order_date'] = article_doc['time_added']
+        
+        if article_doc['order_date'] <= elections['ge2010']['date']:
+            article_doc['election'] = 'ge2010'
+        else:
+            article_doc['election'] = 'ge2015'
+
+    return article_docs
+
+
+
 
 if __name__ == "__main__":
   url = sys.argv[1]

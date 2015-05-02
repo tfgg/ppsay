@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from os.path import realpath, join, dirname
 from pymongo import MongoClient
 
@@ -41,3 +42,7 @@ def get_candidates():
 
         yield candidate
 
+elections = {
+    'ge2010': {'date': datetime(2010, 5, 6),},
+    'ge2015': {'date': datetime(2015, 5, 7),},
+}

@@ -23,6 +23,11 @@ from ppsay.log import log
 from ppsay.domains import domain_whitelist
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
+from ppsay.article import get_articles
+from ppsay.constituency import (
+    constituency_get_candidates,
+    filter_candidate_or_incumbent,
+)
 from ppsay.data import (
     constituencies,
     constituencies_index,
@@ -44,8 +49,6 @@ db_log = db_client.news.action_log
 app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
-
-date_election_2010 = datetime(2010, 5, 6)
 
 def get_mapit_area(area_id):
   req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
@@ -93,33 +96,6 @@ def statistics_json():
     return jsonify({'candidates': {'total_mentions': total_mentions,
                                    'last_week_mentions': last_week_mentions,
                                    'num_candidates': num_candidates}})
-
-def get_articles(person_ids, constituency_ids=None):
-    if constituency_ids:
-        article_docs = db_articles.find({'state': 'approved',
-                                       '$or': [{'constituencies': {'$elemMatch': {'id': {'$in': constituency_ids}, 'state': {'$ne': 'removed'}}}},
-                                               {'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}]}) \
-                                  .sort([["time_added", -1]])
-    else:
-        article_docs = db_articles.find({'state': 'approved',
-                                         'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}) \
-                                  .sort([('time_added', -1)])
-
-
-    article_docs = list(article_docs)
-
-    for article_doc in article_docs:
-        if article_doc['page']['date_published']:
-            article_doc['order_date'] = article_doc['page']['date_published']
-        else:
-            article_doc['order_date'] = article_doc['time_added']
-        
-        if article_doc['order_date'] <= date_election_2010:
-            article_doc['election'] = 'ge2010'
-        else:
-            article_doc['election'] = 'ge2015'
-
-    return article_docs
 
 @app.route('/person/<int:person_id>/articles')
 def person_articles(person_id):
@@ -207,27 +183,12 @@ def constituency_rss(constituency_id):
     
     return resp
 
-def constituency_get_candidates(constituency_id):
-    candidate_docs = db_candidates.find({'deleted': {'$ne': True},
-                                       '$or': [{"candidacies.2010.constituency.id": constituency_id},
-                                               {"candidacies.2015.constituency.id": constituency_id}]})
-
-    candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
-
-    return candidate_docs
-
-def filter_candidates_or_incumbent(candidate_docs, constituency_id):
-    person_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
-                                                       or x['incumbent']]
-
-    return person_ids
-
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id, rss=False):
     constituency_id = str(constituency_id)
 
     candidate_docs = constituency_get_candidates(constituency_id)
-    person_ids = filter_candidates_or_incumbent(candidate_docs, constituency_id)
+    person_ids = filter_candidate_or_incumbent(candidate_docs, constituency_id)
 
     article_docs = get_articles(person_ids, [constituency_id])
 
