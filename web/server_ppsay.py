@@ -94,28 +94,51 @@ def statistics_json():
                                    'last_week_mentions': last_week_mentions,
                                    'num_candidates': num_candidates}})
 
+def get_articles(person_ids, constituency_ids=None):
+    if constituency_ids:
+        article_docs = db_articles.find({'state': 'approved',
+                                       '$or': [{'constituencies': {'$elemMatch': {'id': {'$in': constituency_ids}, 'state': {'$ne': 'removed'}}}},
+                                               {'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}]}) \
+                                  .sort([["time_added", -1]])
+    else:
+        article_docs = db_articles.find({'state': 'approved',
+                                         'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}) \
+                                  .sort([('time_added', -1)])
+
+
+    article_docs = list(article_docs)
+
+    for article_doc in article_docs:
+        if article_doc['page']['date_published']:
+            article_doc['order_date'] = article_doc['page']['date_published']
+        else:
+            article_doc['order_date'] = article_doc['time_added']
+        
+        if article_doc['order_date'] <= date_election_2010:
+            article_doc['election'] = 'ge2010'
+        else:
+            article_doc['election'] = 'ge2015'
+
+    return article_docs
 
 @app.route('/person/<int:person_id>/articles')
 def person_articles(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
     
-    current_party_id = None
-    current_constituency_id = None
-
-    if '2010' in person_doc['candidacies']:
-        current_party_id = person_doc['candidacies']['2010']['party']['id']
-        current_constituency_id = person_doc['candidacies']['2010']['constituency']['id']
-
     if '2015' in person_doc['candidacies']:
         current_party_id = person_doc['candidacies']['2015']['party']['id']
         current_constituency_id = person_doc['candidacies']['2015']['constituency']['id']
 
-    article_docs = db_articles.find({'state': 'approved',
-                                   'candidates': {'$elemMatch': {'id': person_id, 'state': {'$ne': 'removed'}}}}) \
-                            .sort([('time_added', -1)])
+    elif '2010' in person_doc['candidacies']:
+        current_party_id = person_doc['candidacies']['2010']['party']['id']
+        current_constituency_id = person_doc['candidacies']['2010']['constituency']['id']
 
-    article_docs = list(article_docs)
+    else:
+        current_party_id = None
+        current_constituency_id = None
+
+    article_docs = list(get_articles([person_id]))
 
     for article_doc in article_docs:
         for quote_doc in article_doc['quotes']:
@@ -132,16 +155,6 @@ def person_articles(person_id):
  
             quote_doc['score'] = score
         
-        if article_doc['page']['date_published']:
-            article_doc['order_date'] = article_doc['page']['date_published']
-        else:
-            article_doc['order_date'] = article_doc['time_added']
-
-        if article_doc['order_date'] <= date_election_2010:
-            article_doc['election'] = 'ge2010'
-        else:
-            article_doc['election'] = 'ge2015'
-
         article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
  
     article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
@@ -155,11 +168,7 @@ def person(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
     
-    article_docs = db_articles.find({'state': 'approved',
-                                   'candidates': {'$elemMatch': {'id': person_id, 'state': {'$ne': 'removed'}}}}) \
-                              .sort([('time_added', -1)])
-
-    article_docs = list(article_docs)
+    article_docs = list(get_articles([person_id]))
 
     quote_docs = []
 
@@ -198,29 +207,36 @@ def constituency_rss(constituency_id):
     
     return resp
 
-@app.route('/constituency/<int:constituency_id>')
-def constituency(constituency_id, rss=False):
+def constituency_get_candidates(constituency_id):
     candidate_docs = db_candidates.find({'deleted': {'$ne': True},
-                                       '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
-                                               {"candidacies.2015.constituency.id": str(constituency_id)}]})
+                                       '$or': [{"candidacies.2010.constituency.id": constituency_id},
+                                               {"candidacies.2015.constituency.id": constituency_id}]})
 
     candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
 
-    candidate_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
+    return candidate_docs
+
+def filter_candidates_or_incumbent(candidate_docs, constituency_id):
+    person_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
                                                        or x['incumbent']]
 
-    article_docs = db_articles.find({'state': 'approved',
-                                   '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
-                                           {'candidates': {'$elemMatch': {'id': {'$in': candidate_ids}, 'state': {'$ne': 'removed'}}}}]}) \
-                            .sort([["time_added", -1]])
+    return person_ids
 
-    article_docs = list(article_docs)
+@app.route('/constituency/<int:constituency_id>')
+def constituency(constituency_id, rss=False):
+    constituency_id = str(constituency_id)
+
+    candidate_docs = constituency_get_candidates(constituency_id)
+    person_ids = filter_candidates_or_incumbent(candidate_docs, constituency_id)
+
+    article_docs = get_articles(person_ids, [constituency_id])
+
     for article_doc in article_docs:
         for quote_doc in article_doc['quotes']:
             score = 0.0
 
-            for candidate_id in candidate_ids:
-                if candidate_id in [x[0] for x in quote_doc['candidate_ids']]:
+            for person_id in person_ids:
+                if person_id in [x[0] for x in quote_doc['candidate_ids']]:
                     score += 0.5
 
             if str(constituency_id) in [x[0] for x in quote_doc['constituency_ids']]:
@@ -232,16 +248,6 @@ def constituency(constituency_id, rss=False):
             quote_doc['score'] = score
 
         article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
-
-        if article_doc['page']['date_published']:
-            article_doc['order_date'] = article_doc['page']['date_published']
-        else:
-            article_doc['order_date'] = article_doc['time_added']
-        
-        if article_doc['order_date'] <= date_election_2010:
-            article_doc['election'] = 'ge2010'
-        else:
-            article_doc['election'] = 'ge2015'
 
     if not rss:
         article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
@@ -262,47 +268,6 @@ def constituency(constituency_id, rss=False):
                                candidates=candidate_docs,
                                area=area_doc)
 
-@app.route('/export.json.regen', methods=['GET'])
-def export():
-    export_data = {}
-
-    num = int(request.args.get('num', -1))
-
-    if num > 0:
-        constituency_ids = constituencies_index.keys()[:num]
-    else:
-        constituency_ids = constituencies_index.keys()
-
-    for constituency_id in constituency_ids:
-        candidate_docs = db_candidates.find({'deleted': {'$ne': True},
-                                           '$or': [{"candidacies.2010.constituency.id": str(constituency_id)},
-                                                   {"candidacies.2015.constituency.id": str(constituency_id)}]})
-
-        candidate_docs = sorted(candidate_docs, key=lambda x: x['name'])
-
-        candidate_ids = [x['id'] for x in candidate_docs if ('2015' in x['candidacies'] and x['candidacies']['2015']['constituency']['id'] == str(constituency_id)) \
-                                                           or x['incumbent']]
-
-        article_docs = db_articles.find({'state': 'approved',
-                                       '$or': [{'constituencies': {'$elemMatch': {'id': str(constituency_id), 'state': {'$ne': 'removed'}}}},
-                                               {'candidates': {'$elemMatch': {'id': {'$in': candidate_ids}, 'state': {'$ne': 'removed'}}}}]}) \
-
-        article_docs = list(article_docs)
-        for article_doc in article_docs:
-            if article_doc['page']['date_published']:
-                article_doc['order_date'] = article_doc['page']['date_published']
-            else:
-                article_doc['order_date'] = article_doc['time_added']
-        
-        
-        article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
-
-        export_data[constituency_id] = [{'url': doc['page']['urls'][0],
-                                         'title': doc['page']['title'],
-                                         'source': doc.get('domain'),
-                                         'date': doc['order_date'].isoformat(),} for doc in article_docs[:10]]
-
-    return jsonify(export_data)
 
 @app.route('/article', methods=['POST'])
 def article_add():
