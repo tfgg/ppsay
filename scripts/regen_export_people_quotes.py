@@ -5,6 +5,7 @@ import json
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+from ppsay.article import get_articles
 from ppsay.data import (
     get_candidates,
     get_candidate,
@@ -34,10 +35,7 @@ candidates = [x for x in get_candidates() if '2015' in x['candidacies']]
 for i, candidate in enumerate(candidates):
     print >>sys.stderr, "{}/{}".format(i, len(candidates))
 
-    article_docs = db_articles.find({'state': 'approved',
-                                   'candidates': {'$elemMatch': {'id': candidate['id'], 
-                                                                 'state': {'$ne': 'removed'}}}}) \
-                              .sort([('time_added', -1)])
+    article_docs = list(get_articles([candidate['id']]))
 
     # Use dict to remove dupes
     quote_docs = {}

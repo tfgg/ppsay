@@ -1,8 +1,10 @@
+import sys
 import json
 
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+from ppsay.article import get_articles
 from ppsay.data import (
     get_candidates,
 )
@@ -18,17 +20,12 @@ db_candidates = db_client.news.candidates
 
 export_data = {}
 
-for candidate in get_candidates():
-    article_docs = db_articles.find({'state': 'approved',
-                                     'candidates': {'$elemMatch': {'id': candidate['id'], 'state': {'$ne': 'removed'}}}})
+candidates = [x for x in get_candidates() if '2015' in x['candidacies']]
 
-    article_docs = list(article_docs)
-    for article_doc in article_docs:
-        if article_doc['page']['date_published']:
-            article_doc['order_date'] = article_doc['page']['date_published']
-        else:
-            article_doc['order_date'] = article_doc['time_added']
-    
+for i, candidate in enumerate(candidates):
+    print >>sys.stderr, "{}/{}".format(i, len(candidates))
+
+    article_docs = list(get_articles([candidate['id']]))
     
     article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
 

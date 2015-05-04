@@ -141,9 +141,6 @@ def get_articles(person_ids, constituency_ids=None):
 
     return article_docs
 
-
-
-
 if __name__ == "__main__":
   url = sys.argv[1]
 
