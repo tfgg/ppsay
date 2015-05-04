@@ -66,40 +66,18 @@
     {#<div class='col-md-10'>
       {% include "article_add_form.html" %}
     </div>#}
-    {#<div class='col-md-10 col-sm-9'>
+    <div class='col-md-10 col-sm-9'>
         <ul class='tab-nav'>
             <li><a href='{{ url_for('.person', person_id=person.id) }}'>quotes</a></li>
             <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
         </ul>
-    </div>#}
-    <div class='col-md-10 col-sm-9'>
-        <p class='warning'>These are automatically matched articles and extracted quotes that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
-        <h3>Quotes mentioning {{ person.name }}</h3>
-        <ul class='quotes'>
-        {% if quotes %}
-        {% for quote in quotes[:5] %}
-            <li class='quote'>
-                <p class='quote-text'>{{ quote.html|safe }}</p>
-                <p class='quote-article-link'>
-                    {% if quote.article.page.date_published %}
-                        published {{ quote.article.page.date_published.strftime("%-d %b %Y") }} 
-                    {% endif %}
-                    in <a href='{{ quote.article.page.urls[0] }}'>{{ quote.article.page.title }}</a> ({{ quote.article.domain }})</p>
-            </li>
-        {% endfor %}
-        </ul>
-        <a href='{{ url_for('.person_quotes', person_id=person.id) }}' class='btn btn-default'>see all quotes mentioning {{ person.name }}</a>
-        {% else %}
-        <p class='warning'>We don't know of any quotes mentioning {{ person.name }}.</p>
-        {% endif %}
-
-        <h3>Articles mentioning {{ person.name }}</h3>
+        <div style='clear:both;'></div>
         {% set num_articles=articles|length %}
         {% if num_articles == 0 %}
         <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
         {% include "article_add_form.html" %}
         {% else %}
-        {#<p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>#}
+        <p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
         {% set quotes_closed=False %}
         {% include "article_list.html" %}
         <script>
@@ -111,7 +89,7 @@
             $('.quote-candidate-{{ person.id }}').removeClass('quote-closed').show();
             $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
 
-            /*recalculate_extra_quotes();*/
+            recalculate_extra_quotes();
         </script>
         {% endif %}
     </div>

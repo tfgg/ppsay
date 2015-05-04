@@ -97,11 +97,9 @@ def statistics_json():
                                    'last_week_mentions': last_week_mentions,
                                    'num_candidates': num_candidates}})
 
-@app.route('/person/<int:person_id>/articles')
-def person_articles(person_id):
-    person_id = str(person_id)
+def get_person_articles(person_id):
     person_doc = db_candidates.find_one({'id': person_id})
-    
+
     if '2015' in person_doc['candidacies']:
         current_party_id = person_doc['candidacies']['2015']['party']['id']
         current_constituency_id = person_doc['candidacies']['2015']['constituency']['id']
@@ -135,15 +133,20 @@ def person_articles(person_id):
  
     article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
 
+    return article_docs
+
+@app.route('/person/<int:person_id>/articles')
+def person_articles(person_id):
+    person_id = str(person_id)
+    person_doc = db_candidates.find_one({'id': person_id})
+
+    article_docs = get_person_articles(person_id)
+
     return render_template('person.html',
                            articles=article_docs,
                            person=person_doc)
 
-@app.route('/person/<int:person_id>')
-def person(person_id):
-    person_id = str(person_id)
-    person_doc = db_candidates.find_one({'id': person_id})
-    
+def get_person_quotes(person_id):
     article_docs = list(get_articles([person_id]))
 
     quote_docs = []
@@ -172,9 +175,31 @@ def person(person_id):
 
     quote_docs = sorted(quote_docs, key=lambda x: x['score'], reverse=True)
 
+    return quote_docs
+
+@app.route('/person/<int:person_id>/quotes')
+def person_quotes(person_id):
+    person_id = str(person_id)
+    person_doc = db_candidates.find_one({'id': person_id})
+
+    quote_docs = get_person_quotes(person_id)
+
     return render_template('person_quotes.html',
                            person=person_doc,
                            quotes=quote_docs)
+
+@app.route('/person/<int:person_id>')
+def person(person_id):
+    person_id = str(person_id)
+    person_doc = db_candidates.find_one({'id': person_id})
+
+    quote_docs = get_person_quotes(person_id)
+    article_docs = get_person_articles(person_id)
+
+    return render_template('person.html',
+                           person=person_doc,
+                           quotes=quote_docs,
+                           articles=article_docs)
 
 @app.route('/constituency/<int:constituency_id>.xml')
 def constituency_rss(constituency_id):
