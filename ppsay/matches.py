@@ -429,7 +429,7 @@ def resolve_quotes(doc, verbose=False):
     constituencies = {constituency['id']: constituency for constituency in doc['constituencies'] if constituency['state'] != 'removed'}
 
     for quote_doc in doc['quotes']:
-        # Grab info, only include if they're in the final resolvesd constituencies/candidates 
+        # Grab info, only include if they're in the final resolved constituencies/candidates 
         quote_doc['candidates'] = [candidates[candidate_id[0]] for candidate_id in quote_doc['candidate_ids'] if candidate_id[0] in candidates]
         quote_doc['constituencies'] = [constituencies[constituency_id[0]] for constituency_id in quote_doc['constituency_ids'] if constituency_id[0] in constituencies]
 
@@ -479,7 +479,7 @@ def resolve_quotes(doc, verbose=False):
             else:
                 tag2_ok = False
 
-            if tag1_ok and tag2_ok:
+            if tag1_ok and tag2_ok and not (tag1.type == 'candidate_extra' and tag2.type == 'candidate_extra'):
                 clash = True
 
                 if verbose:
@@ -548,5 +548,6 @@ if __name__ == "__main__":
             doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
 
         resolve_matches(doc, a.verbose)
+
         db.save(doc)
 

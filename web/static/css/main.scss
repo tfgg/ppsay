@@ -359,25 +359,28 @@ ul.quotes {
         p.quote-text {
             background: #F0F0F0;
             padding: 10px;
+            line-height: 2em;
 
             a.quote-candidate-highlight {
-                background: rgba(255,255,128,0.25);
+                border-bottom: rgba(255,255,128,0.25) 5px solid;
                 color: #333;
                 padding: 5px;
             }
             
             a.quote-constituency-highlight {
-                background: rgba(200,200,255,0.25);
+                border-bottom: rgba(200,200,255,0.25) 5px solid;
                 color: #333;
                 padding: 5px;
             }
 
             a.candidate-highlight {
-                background: rgba(255,255,128,0.75);
+                background: rgba(255,255,128,0.25);
+                border-bottom: rgba(255,255,128,0.75) 5px solid;
             }
             
             a.constituency-highlight {
-                background: rgba(200,200,255,0.75);
+                background: rgba(200,200,255,0.25);
+                border-bottom: rgba(200,200,255,0.75) 5px solid;
             }
         }
 

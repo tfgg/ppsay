@@ -153,11 +153,14 @@ def get_person_quotes(person_id):
 
     interesting_words = [
         'said', 'called', 'called on', 'says', 'promised', 'gaffe', 'popular',
-        'mp', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hated', 'loved',
+        'mp', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hate', 'love',
         'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married',
         'apologised', 'apology', 'tackle', 'fix', 'moral', 'ethical', 'penalty', 'law',
-        'responsible', 'pledge', 'urge', 'petition', 'received', u'£',
+        'responsible', 'pledge', 'urge', 'petition', 'received', u'£', 'leader',
     ]
+    
+    # Use dict to remove dupes
+    quote_docs = {}
 
     for article_doc in article_docs:
         for quote_doc in article_doc['quotes']:
@@ -171,9 +174,9 @@ def get_person_quotes(person_id):
                 
                 quote_doc['article'] = article_doc
                 quote_doc['score'] = score
-                quote_docs.append(quote_doc)
+                quote_docs[quote_doc['html']] = quote_doc
 
-    quote_docs = sorted(quote_docs, key=lambda x: x['score'], reverse=True)
+    quote_docs = sorted(quote_docs.values(), key=lambda x: x['score'], reverse=True)
 
     return quote_docs
 

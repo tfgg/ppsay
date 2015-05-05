@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import sys
 import json
-
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+from collections import defaultdict
 
 from ppsay.article import get_articles
 from ppsay.data import (
     get_candidates,
     get_candidate,
 )
+
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 try:
     db_client = MongoClient()
@@ -18,7 +19,6 @@ except ConnectionFailure:
     sys.exit(0)
 
 db_articles = db_client.news.articles
-db_candidates = db_client.news.candidates
 
 interesting_words = [
     'said', 'called', 'called on', 'says', 'promised', 'gaffe', 'popular',
@@ -28,45 +28,40 @@ interesting_words = [
     'responsible', 'pledge', 'urge', 'petition', 'received', u'£',
 ]
 
+quotes = defaultdict(dict)
+
+for i, article_doc in enumerate(db_articles.find({'quotes': {'$exists': True}})):
+    print >>sys.stderr, i
+
+    for quote_doc in article_doc['quotes']:
+        if article_doc['page']['date_published']:
+            date = article_doc['page']['date_published'].isoformat()
+        else:
+            date = None
+
+        score = 0.0
+
+        for word in interesting_words:
+            if word in quote_doc['text'].lower():
+                score += 1.0
+
+        quote = {'html': quote_doc['html'],
+                 'article': {'url': article_doc['page']['urls'][0],
+                             'title': article_doc['page']['title'],
+                             'domain': article_doc.get('domain'),
+                             'date': date,
+                             'id': str(article_doc['_id']),},
+                 'score': score,}
+
+        for person in quote_doc['candidates']:
+            quotes[person['id']][quote_doc['text']] = quote
+
 export_data = {}
 
-candidates = [x for x in get_candidates() if '2015' in x['candidacies']]
-
-for i, candidate in enumerate(candidates):
-    print >>sys.stderr, "{}/{}".format(i, len(candidates))
-
-    article_docs = list(get_articles([candidate['id']]))
-
+for i, (person_id, person_quotes) in enumerate(quotes.items()):
     # Use dict to remove dupes
-    quote_docs = {}
-
-    for article_doc in article_docs:
-        for quote_doc in article_doc['quotes']:
-            if candidate['id'] in [x[0] for x in quote_doc['candidate_ids']]:
-                quote_doc['article'] = article_doc
-
-                score = 0.0
-                for word in interesting_words:
-                    if word in quote_doc['text'].lower():
-                        score += 1.0
-                
-                if article_doc['page']['date_published']:
-                    date = article_doc['page']['date_published'].isoformat()
-                else:
-                    date = None
-
-                quote = {'html': quote_doc['html'],
-                         'article': {'url': article_doc['page']['urls'][0],
-                                     'title': article_doc['page']['title'],
-                                     'domain': article_doc.get('domain'),
-                                     'date': date,
-                                     'id': str(article_doc['_id']),},
-                         'score': score,}
-
-                quote_docs[quote['html']] = quote
-
-    quote_docs = sorted(quote_docs.values(), key=lambda x: x['score'], reverse=True)
-    export_data[candidate['id']] = quote_docs[:20]
+    quote_docs = sorted(person_quotes.values(), key=lambda x: x['score'], reverse=True)
+    export_data[person_id] = quote_docs[:20]
 
 print json.dumps(export_data, indent=4)
 
