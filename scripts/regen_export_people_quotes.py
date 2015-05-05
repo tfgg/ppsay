@@ -30,7 +30,10 @@ interesting_words = [
 
 quotes = defaultdict(dict)
 
-for i, article_doc in enumerate(db_articles.find({'quotes': {'$exists': True}})):
+articles = db_articles.find({'quotes': {'$exists': True},
+                             'state': 'approved',})
+
+for i, article_doc in enumerate(articles):
     print >>sys.stderr, i
 
     for quote_doc in article_doc['quotes']:
