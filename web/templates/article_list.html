@@ -96,6 +96,7 @@
             </li>
           {% endfor %}
           <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
+          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ url_for("article_report", doc_id=article._id) }}' target="_blank">report this</a></li>
           </ul>
       </div>
       <div style='clear:both;'></div>

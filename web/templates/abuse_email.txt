@@ -1,0 +1,15 @@
+Report from ElectionMentions.com for this article
+
+    title: {{ article.page.title }}
+
+    url: https://www.electionmentions.com/article/{{ article._id }}
+
+with the following message
+
+    {{ text }}
+
+and the following reply email address
+
+    email: {{ reply_email }}
+
+

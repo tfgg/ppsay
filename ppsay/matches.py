@@ -193,6 +193,13 @@ def add_matches(texts, verbose=False):
                 match_entities.append(MatchEntity(type='squish', id=None, match=match))
                 num_squish += 1
 
+    # Fixes complaint about https://www.electionmentions.com/article/553ab95f238f31772f962b5d
+    extra_squishes = ['Ian Smart']
+    for match in find_matches(extra_squishes, *texts_tokens):
+        match_entities.append(MatchEntity(type='squish', id=None, match=match))
+        num_squish += 1
+
+
     print "  Found {} squishes".format(num_squish)
     print "  Total {} matches".format(len(match_entities))
 

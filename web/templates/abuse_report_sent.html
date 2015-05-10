@@ -1,0 +1,27 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+    {% include "header.html" %}
+    <div class='row'>
+        <div class='col-md-12'>
+            <h1>Report sent</h1>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>
+            {% if error %}
+                <p class='text-warning'>{{ error }}</p>
+                <p>Please email us on <a href='mailto:yournextmp@mysociety.org'>yournextmp@mysociety.org</a> or call 0773 22 33 072.</p>
+            {% else %}
+                <p>Thanks for sending us your report. We will reply as rapidly as possible. If you fail to get a prompt reply, please email us at <a href='mailto:yournextmp@mysociety.org'>yournextmp@mysociety.org</a>.</p>
+            {% endif %}
+        </div> 
+    </div>
+</div>
+<div class='footer'>
+<div class='container'>
+    {% include "footer.html" %}
+</div>
+</div>
+{% endblock %}

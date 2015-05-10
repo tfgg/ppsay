@@ -1,0 +1,44 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='container'>
+    {% include "header.html" %}
+    <div class='row'>
+        <div class='col-md-12'>
+            <h1>Report problem</h1>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>
+            {% if error %}
+                <p class='text-warning'>{{ error }}</p>
+            {% endif %}
+            <p class='text-success'>
+                Report a problem with the article <em><a href='{{ article.page.urls[0] }}'>{{ article.page.title }}</a></em>. This could be, for example, a bad match to a person's name.
+            </p>
+            <p>
+                We aim to respond to emails as quickly as possible. You can also email directly on <a href='mailto:yournextmp@mysociety.org'>yournextmp@mysociety.org</a>.
+            </p>
+
+            <form method='POST' action='{{ url_for('.article_report', doc_id=article._id) }}' class='form'>
+            <div class='form-group'>
+            <label for='email'>Your email address</label>
+            <input type='text' name='email' id='email' class='form-control' value='{{ reply_email }}'/>
+            </div>
+            <div class='form-group'>
+            <label for='text'>Description of problem</label>
+            <textarea type='text' name='text' id='text' class='form-control' value='{{ user_name }}'></textarea>
+            </div>
+            <div class='form-group'>
+            <input type='submit' value='send' class='btn btn-defaul'/>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class='footer'>
+<div class='container'>
+    {% include "footer.html" %}
+</div>
+</div>
+{% endblock %}

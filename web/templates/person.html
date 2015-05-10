@@ -80,6 +80,7 @@
         {% for quote in quotes[:5] %}
             <li class='quote'>
                 <p class='quote-text'>{{ quote.html|safe }}</p>
+                <p style='float: left;' class='quote-article-link'><a href='{{ url_for("article_report", doc_id=quote.article._id) }}'>report</a></p>
                 <p class='quote-article-link'>
                     {% if quote.article.page.date_published %}
                         published {{ quote.article.page.date_published.strftime("%-d %b %Y") }} 

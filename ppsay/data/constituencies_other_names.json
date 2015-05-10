@@ -493,7 +493,9 @@
     ], 
     "65618": [
         "Kingston upon Hull North", 
-        "North Kingston upon Hull"
+        "North Kingston upon Hull",
+        "Hull North",
+        "North Hull"
     ], 
     "65619": [
         "North East Somerset"
@@ -814,7 +816,9 @@
     ], 
     "65709": [
         "Kingston upon Hull East", 
-        "East Kingston upon Hull"
+        "East Kingston upon Hull",
+        "Hull East",
+        "East Hull"
     ], 
     "65710": [
         "Stoke-on-Trent Central"
@@ -1789,7 +1793,9 @@
     ], 
     "65984": [
         "Kingston upon Hull West and Hessle", 
-        "Kingston upon Hull West & Hessle"
+        "Kingston upon Hull West & Hessle",
+        "Hull West and Hessle", 
+        "Hull West & Hessle"
     ], 
     "65985": [
         "Dagenham and Rainham", 

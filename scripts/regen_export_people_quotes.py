@@ -48,6 +48,15 @@ for i, article_doc in enumerate(articles):
             if word in quote_doc['text'].lower():
                 score += 1.0
 
+        words = quote_doc['text'].lower()
+        #for word in blacklist:
+        #    if word in words and len(quote_doc['candidates']) > 0:
+                #print >>sys.stderr, "Blacklisted word:", word
+                #print >>sys.stderr, " ".join([x['name'] for x in quote_doc['candidates']])
+                #print >>sys.stderr, quote_doc['text']
+                #print >>sys.stderr, "https://www.electionmentions.com/article/{}".format(article_doc['_id'])
+                #print >>sys.stderr
+
         quote = {'html': quote_doc['html'],
                  'article': {'url': article_doc['page']['urls'][0],
                              'title': article_doc['page']['title'],
