@@ -22,15 +22,27 @@ PYTHONPATH=/home/ppsay/site/ppsay/
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-*/15 * * * * ~/venv/bin/python ~/site/ppsay/cron/sync_recent_yournextmp.py &> ~/ynmp_sync_recent.out
-5 */12 * * * ~/venv/bin/python ~/site/ppsay/cron/sync_all_yournextmp.py &> ~/ynmp_sync_all.out
+
+*/15 * * * * ~/venv/bin/python ~/site/ppsay/cron/sync_recent_yournextmp.py &> ~/cron_logs/ynmp_sync_recent.out
+5 */12 * * * ~/venv/bin/python ~/site/ppsay/cron/sync_all_yournextmp.py &> ~/cron_logs/ynmp_sync_all.out
+
 15 0,6,12,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_bbc.py &> ~/rss_logs/rss_bbc.out
 15 1,7,13,19 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_conservative_home.py &> ~/rss_logs/rss_conservative_home.out
 15 2,8,14,20 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_guardian.py &> ~/rss_logs/rss_guardian.out
 15 3,9,15,21 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_labour_list.py &> ~/rss_logs/rss_labour_list.out
 15 4,10,16,22 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_libdem_voice.py &> ~/rss_logs/rss_libdem_voice.out
 15 5,11,17,23 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_telegraph.py &> ~/rss_logs/rss_telegraph.out
+45 9,6,12,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_independent.py &> ~/rss_logs/rss_independent.out
 15 9,18 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_newsquest_weeklies.py &> ~/rss_logs/rss_newsquest_weeklies.out
 15 */3 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_newsquest_daylies.py &> ~/rss_logs/rss_newsquest_daylies.out
-*/30 * * * * ~/venv/bin/python ~/site/ppsay/scripts/find_dupes.py &> ~/find_dupes.out
+45 */3 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_trinitymirror.py &> ~/rss_logs/rss_trinitymirror.out
+30 */12 * * * ~/venv/bin/python ~/site/ppsay/cron/rss_misc.py &> ~/rss_logs/rss_misc.out
+*/30 * * * * ~/venv/bin/python ~/site/ppsay/scripts/find_dupes.py &> ~/cron_logs/find_dupes.out
+0 */6 * * * ~/venv/bin/python ~/site/ppsay/scripts/calc_stats.py &> ~/cron_logs/calc_stats.out
+0 0 * * * ~/venv/bin/python ~/site/ppsay/scripts/prune_webcache.py &> ~/cron_logs/prune_webcache.out
+
+37 */3 * * * ~/venv/bin/python ~/site/ppsay/scripts/regen_export_people.py 1> ~/site/ppsay/web/static/export.people.json 2> ~/cron_logs/export.people.json
+42 */3 * * * ~/venv/bin/python ~/site/ppsay/scripts/regen_export_constituencies.py 1> ~/site/ppsay/web/static/export.json 2> ~/cron_logs/export.constituencies.json
+*/5 * * * * ~/venv/bin/python ~/site/ppsay/scripts/regen_export_people_quotes.py 1> ~/site/ppsay/web/static/export.people.quotes.json 2> ~/cron_logs/export.people.quotes.json
+
 
