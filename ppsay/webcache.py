@@ -1,29 +1,65 @@
+import bz2
+from bson.binary import Binary
+
 from datetime import datetime
 from pymongo import MongoClient
 
 client = MongoClient()
-db = client.news.web_cache
 
-def cache_get(url, callback):
-  doc = db.find_one({'url': url})
+class WebPage(object):
+    db = client.news.web_cache
 
-  if doc is None:
-    resp = callback(url)
+    def __init__(self, url, fetcher):
+        self.url = url
+        self.fetcher = fetcher
+        self.html = None
+        self.final_url = None
 
-    if resp is not None:
-      doc = {'html': resp.text,
-             'headers_server': dict(resp.headers),
-             'url_final': resp.url,
-             'time_fetched': datetime.now(),
-             'url': url,
-             'charset': resp.encoding}
+        self.fetch()
 
-      db.save(doc)
-    else:
-      return None
+    def fetch(self):
+        success = self.fetch_local()
 
-  html = doc['html']
-  final_url = doc['url_final']
+        if not success:
+            success = self.fetch_remote()
 
-  return html, final_url
+    def fetch_local(self):
+        doc = self.db.find_one({'url': self.url})
+
+        if doc is None:
+            return False
+
+        if 'html' in doc:
+            self.html = doc['html']
+        elif 'html_compressed' in doc:
+            self.html = bz2.decompress(doc['html_compressed']).decode('utf-8')
+ 
+        self.final_url = doc['url_final']
+
+        return True
+
+    def fetch_remote(self):
+        resp = self.fetcher(self.url)
+
+        if resp is not None:
+          self.html = resp.text
+          self.final_url = resp.url
+
+          text_encoded = resp.text.encode('utf-8')
+          text_compressed = Binary(bz2.compress(text_encoded))
+
+          print "Compression ratio: {} -> {}".format(len(text_encoded), len(text_compressed))
+
+          doc = {'html_compressed': text_compressed,
+                 'headers_server': dict(resp.headers),
+                 'url_final': resp.url,
+                 'time_fetched': datetime.now(),
+                 'url': self.url,
+                 'charset': resp.encoding}
+
+          self.db.save(doc)
+
+          return True
+        else:
+          return False
 

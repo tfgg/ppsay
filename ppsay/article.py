@@ -3,12 +3,13 @@ import feedparser
 import re
 import lxml.html
 import requests
-from webcache import cache_get
+
+from webcache import WebPage
 from goose import Goose
-from iso8601 import parse_date
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from ppsay.data import elections
+from ppsay.dates import find_dates_tree
 
 try:
     db_client = MongoClient()
@@ -23,96 +24,109 @@ g = Goose()
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
 def try_parse_date(x):
-  try:
-    return parse_date(x)
-  except:
-    return x
+    try:
+        return parse_date(x)
+    except:
+        return x
+
+def fix_title(s):
+    return re_title.sub("", s).strip()
 
 re_title = re.compile("(\(From.*?\))")
 
 class ArticleGeneric(object):
-  class FetchError(Exception):
-    pass
+    class FetchError(Exception):
+        pass
 
-  def __init__(self, article_url):
-    self.url = article_url
+    def __init__(self, article_url):
+        self.url = article_url
 
-    rtn = cache_get(self.url, self.fetch)
-    if rtn is None:
-      raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
+        page = WebPage(self.url, self.fetch)
 
+        if page.html is None:
+            raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
 
-    self.html, self.url_final = rtn
+        self.url_final = page.final_url
 
-    try:
         try:
-            self.article = g.extract(raw_html=self.html)
-        except ValueError, e:
-            raise ArticleGeneric.FetchError("Stupid unicode error, probably: {}".format(str(e)))
-    except IOError, e:
-        raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
+            try:
+                article = g.extract(raw_html=page.html)
+            except ValueError, e:
+                raise ArticleGeneric.FetchError("Stupid unicode error, probably: {}".format(str(e)))
+        except IOError, e:
+            raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
 
-  @classmethod
-  def fetch(self, url):
-    print u"Getting fresh: {}".format(url)
-    try:
-      req = requests.get(url,headers=headers,timeout=10)
-    except requests.exceptions.ConnectionError, e:
-      print e
-      req = None
-    except requests.exceptions.ReadTimeout, e:
-      print e
-      req = None
+        tree = lxml.html.fromstring(page.html)
 
-    if req:
-        # Sometimes the encoding isn't guessed correctly, update from HTML
-        tree = lxml.html.fromstring(req.content)
+        dates = find_dates_tree(tree)
 
-        for charset in tree.xpath('//meta/@charset'):
-            req.encoding = charset  
+        if dates:
+            self.date_published = min(dates)
+        else:
+            self.date_published = None
 
-        #{'content': 'text/html; charset=utf-8', 'http-equiv': 'Content-Type'}   
-        for content_type in tree.xpath('//meta'):
-            if content_type.attrib.get('http-equiv', None) == 'Content-Type':
-                try:
-                    charset = content_type.attrib['content'].split(';')[-1].split('=')[1].strip()
-                    print "Fixing charset", charset
-                    req.encoding = charset
-                except IndexError:
-                    pass
+        h1s = [(x.text_content().strip(), x.attrib) for x in tree.xpath('//h1')]
+        
+        headline = None
+        for h1_headline, h1_attribs in h1s:
+            if headline is None or len(headline) < len(h1_headline):
+                headline = h1_headline
+
+        for h1_headline, h1_attribs in h1s:
+            if h1_attribs.get('itemprop', None) == 'headline':
+                headline = h1_headline
+
+        self.title = fix_title(article.title)
+        if headline and self.title != headline:
+            self.title = headline
+
+        self.canonical_link = article.canonical_link
+        self.text = article.cleaned_text
+        self.date_published = try_parse_date(article.publish_date)
+
+    def as_dict(self):
+        return {'urls': [self.url],
+                'final_urls': [self.url_final],
+                'title': self.title,
+                'text': self.text,
+                'date_published': self.date_published,
+                'parser': 'ArticleGeneric'}
+
+    @classmethod
+    def fetch(self, url):
+        print u"Getting fresh: {}".format(url)
+        try:
+            req = requests.get(url,
+                               headers=headers,
+                               timeout=10)
+
+        except requests.exceptions.ConnectionError, e:
+            print e
+            req = None
+
+        except requests.exceptions.ReadTimeout, e:
+            print e
+            req = None
+
+        if req:
+            # Sometimes the encoding isn't guessed correctly, update from HTML
+            tree = lxml.html.fromstring(req.content)
+
+            for charset in tree.xpath('//meta/@charset'):
+                req.encoding = charset  
+
+            #{'content': 'text/html; charset=utf-8', 'http-equiv': 'Content-Type'}   
+            for content_type in tree.xpath('//meta'):
+                if content_type.attrib.get('http-equiv', None) == 'Content-Type':
+                    try:
+                        charset = content_type.attrib['content'].split(';')[-1].split('=')[1].strip()
+                        print "Fixing charset", charset
+                        req.encoding = charset
+                    except IndexError:
+                        pass
 
  
-    return req
-
-  def as_dict(self):
-    def fix_title(s):
-        return re_title.sub("", s).strip()
-
-    tree = lxml.html.fromstring(self.html)
-
-    h1s = [(x.text_content().strip(), x.attrib) for x in tree.xpath('//h1')]
-        
-    headline = None
-    for h1_headline, h1_attribs in h1s:
-        if headline is None or len(headline) < len(h1_headline):
-            headline = h1_headline
-
-    for h1_headline, h1_attribs in h1s:
-        if h1_attribs.get('itemprop', None) == 'headline':
-            headline = h1_headline
-
-    title = fix_title(self.article.title)
-    if headline and title != headline:
-        title = headline
-
-    return {'urls': [self.url],
-            'final_urls': [self.url_final],
-            'url_canonical': self.article.canonical_link,
-            'title': title,
-            'text': self.article.cleaned_text,
-            'date_published': try_parse_date(self.article.publish_date),
-            'parser': 'ArticleGeneric'}
-
+        return req
 
 def get_articles(person_ids, constituency_ids=None):
     if constituency_ids:

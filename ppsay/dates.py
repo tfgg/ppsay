@@ -1,6 +1,7 @@
 import sys
 import lxml.html
 import re
+import bz2
 
 from pymongo import MongoClient
 import iso8601.iso8601
@@ -42,8 +43,13 @@ def add_date(doc):
     url = doc['page']['urls'][0]
     web_cache_doc = db_web_cache.find_one({'url': url})
     
-    if web_cache_doc['html']:
-        dates = find_dates(web_cache_doc['html']) 
+    if 'html' in web_cache_doc or 'html_compressed' in web_cache_doc:
+        if 'html' in web_cache_doc:
+            html = web_cache_doc['html']
+        elif 'html_compressed' in web_cache_doc:
+            html = bz2.decompress(web_cache_doc['html_compressed']).decode('utf-8')
+
+        dates = find_dates(html)
 
         if dates:
             earliest_date = min(dates)
@@ -51,9 +57,13 @@ def add_date(doc):
             doc['page']['date_published'] = earliest_date
 
 def find_dates(html):
+    tree = lxml.html.fromstring(html)
+
+    return find_dates_tree(tree)
+
+def find_dates_tree(tree):
     dates = []
 
-    tree = lxml.html.fromstring(html)
     for meta in tree.xpath('//meta'):
         if 'name' in meta.attrib and meta.attrib['name'] in time_names:
             try:
