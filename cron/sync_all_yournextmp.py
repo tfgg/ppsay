@@ -13,12 +13,7 @@ client = MongoClient()
 db_articles = client.news.articles
 db_candidates = client.news.candidates
 
-url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons?per_page=100"
-
-if len(sys.argv) > 1:
-    url = "http://yournextmp.popit.mysociety.org/api/v0.1/persons/{}".format(sys.argv[1])
-
-resp = requests.get(url).json()
+url = "http://yournextmp.popit.mysociety.org/api/v0.1/export.json"
 
 def save_person(person):
     if 'party_memberships' not in person:
@@ -71,32 +66,21 @@ sources = []
 all_ids = {candidate['id'] for candidate in db_candidates.find()}
 found_ids = set()
 
+print "Downloading data"
+export_data = requests.get(url).json()
+
+
 print "Updating candidates"
-while True:
-    if 'page' in resp:
-        print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
+for i, person in enumerate(export_data['persons']):
+    print i, 
+    save_person(person)
+    found_ids.add(person['id'])
 
-    if type(resp['result']) is list:
-        results = resp['result']
-    else:
-        results = [resp['result']]
-
-    for i, person in enumerate(results):
-        print i, 
-        save_person(person)
-        found_ids.add(person['id'])
-
-        # Look for any new sources
-        if 'versions' in person:
-            for version in person['versions']:
-                sources.append(version['information_source'])
-
-    print '\n',
-
-    if 'next_url' in resp:
-        resp = requests.get(resp['next_url']).json()
-    else:
-        break
+    # Look for any new sources
+    #if 'versions' in person:
+    #    for version in person['versions']:
+    #        sources.append(version['information_source'])
+print
 
 print "Finding deleted candidates"
 missing_ids = all_ids - found_ids
@@ -108,6 +92,7 @@ for missing_id in missing_ids:
     candidate_doc['deleted'] = True
 
     db_candidates.save(candidate_doc)
+
 
 print "Processing sources"
 

@@ -24,11 +24,11 @@ app.register_blueprint(postcode_app)
 app.register_blueprint(users_app)
 
 app.config.update(
-  MAIL_SERVER = config['mail_server'],
-  MAIL_PORT = config['mail_port'],
-  MAIL_USE_SSL = config['mail_use_ssl'],
-  MAIL_USERNAME = config['mail_username'],
-  MAIL_PASSWORD = config['mail_password'],
+  MAIL_SERVER = config.get('mail_server'),
+  MAIL_PORT = config.get('mail_port'),
+  MAIL_USE_SSL = config.get('mail_use_ssl'),
+  MAIL_USERNAME = config.get('mail_username'),
+  MAIL_PASSWORD = config.get('mail_password'),
 )
 
 mail = Mail(app)
@@ -55,8 +55,8 @@ def article_report(doc_id):
         reply_email = request.form.get('email')
 
         msg = Message('Report on Election Mentions from {}'.format(reply_email),
-                      sender=config['mail_sender'],
-                      recipients=config['report_emails'])
+                      sender=config.get('mail_sender'),
+                      recipients=config.get('report_emails'))
 
         msg.body = render_template('abuse_email.txt',
                                    article=doc,
