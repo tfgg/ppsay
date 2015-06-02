@@ -13,4 +13,7 @@ pyyaml
 flask-login
 flask-mail
 newspaper
+numpy
+scikit-learn
+scipy
 

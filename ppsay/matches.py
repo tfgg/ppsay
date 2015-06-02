@@ -36,63 +36,47 @@ MatchEntity = namedtuple('MatchEntity', ['type', 'id', 'match'])
 Matches = namedtuple('Matches', ['matches', 'possible'])
 MatchQuotes = namedtuple('MatchQuotes', ['quotes', 'tags'])
 
+def find_overlaps(matches):
+    for i, match1 in enumerate(matches):
+        for j, match2 in enumerate(matches[i+1:]):
+            if match2.match.range[0] < match1.match.range[1] and match2.match.range[1] > match1.match.range[0]:
+                yield i, j+i+1
+
+
 def resolve_overlaps(matches, verbose=False):
-    """
-        Find overlapping matches and remove the shortest match.
+    matches = sorted(matches, key=lambda match: (match.match.range[0]-match.match.range[1],match.match.range[0])) 
+    
+    remove = set()
+    for i, j in find_overlaps(matches):
+        match1 = matches[i]
+        match2 = matches[j]
 
-        This uses a stupid O(N^2) loop. There is probably a faster way.
-    """
-
-    overlap_found = True
-    while overlap_found:
-        overlap_found = False
-
-        for i1, match1 in enumerate(matches):
-            for i2, match2 in enumerate(matches):
-                # Make sure we're not looking at the same match object
-                # Also only look for matches in same text (e.g. title<->title)
-                if i1 != i2 and match1.match.source == match2.match.source:
-                    if range_overlap(match1.match.range, match2.match.range):
-                        if verbose:
-                            print "Overlap"
-                            print "    1.", match1
-                            print "    2.", match2
-                        size1 = match1.match.range[1] - match1.match.range[0]
-                        size2 = match2.match.range[1] - match2.match.range[0]
-
-                        # extra matches always lose against non-extra, this stops e.g. Sir David Amess squishing David Amess, leaving itself parentless!
-                        if match1.type.endswith("_extra") and not match2.type.endswith("_extra"):
-                            if verbose:
-                                print "    1 loses"
-                            del matches[i1]
-                            overlap_found = True
-                            break
+        size1 = match1.match.range[1] - match1.match.range[0]
+        size2 = match2.match.range[1] - match2.match.range[0]
+        
+        if i in remove or j in remove:
+            continue
+        
+        if match1.type.endswith("_extra") and not match2.type.endswith("_extra"):
+            remove.add(i)
                         
-                        if match2.type.endswith("_extra") and not match1.type.endswith("_extra"):
-                            if verbose:
-                                print "    2 loses"
-                            del matches[i2]
-                            overlap_found = True
-                            break
+        elif match2.type.endswith("_extra") and not match1.type.endswith("_extra"):
+            remove.add(j)
 
-                        if size1 > size2:
-                            if verbose:
-                                print "    2 loses"
-                            del matches[i2]
-                            overlap_found = True
-                            break
-                        elif size2 > size1:
-                            if verbose:
-                                print "    1 loses"
-                            del matches[i1]
-                            overlap_found = True
-                            break
-                        else:
-                            if verbose:
-                                print "    Overlaps of equal length"
+        elif size1 > size2:
+            remove.add(j)
 
-            if overlap_found:
-                break
+        elif size1 < size2:
+            remove.add(i)
+
+        else:
+            if verbose:
+                print "Same", i, j
+            
+    for i, match in enumerate(matches):
+        if i not in remove:
+            yield match
+
 
 def generate_extra_names(names, gender=None):
     """
@@ -208,7 +192,7 @@ def add_matches(texts, verbose=False):
         for match_entity in match_entities:
             print "   ", match_entity
 
-    resolve_overlaps(match_entities, verbose)
+    match_entities = list(resolve_overlaps(match_entities, verbose))
 
     print "  Total {} matches remaining".format(len(match_entities))
     
