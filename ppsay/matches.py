@@ -370,12 +370,14 @@ def add_quotes(matches, texts):
     return MatchQuotes(quotes=quotes,
                        tags=tags) 
 
-def resolve_candidates(doc_user, doc_possible):
+def resolve_candidates(doc_user, doc_possible, doc_machine):
     resolved_candidates = []
+
+    poss_ids = {candidate['id'] for candidate in doc_possible['candidates']}
 
     # Add candidates that users have added that the machine didn't find.
     for candidate_id in doc_user['candidates']['confirm']:
-        if not any([candidate_id == candidate['id'] for candidate in doc_possible['candidates']]):
+        if candidate_id not in poss_ids:
             candidate = get_candidate(candidate_id)
 
             if 'deleted' not in candidate or not candidate['deleted']:
@@ -386,10 +388,17 @@ def resolve_candidates(doc_user, doc_possible):
     for candidate in doc_possible['candidates']:
         candidate_state = 'unknown'
 
-        if candidate['id'] in doc_user['candidates']['confirm']:
-            candidate_state = 'confirmed'
-        elif candidate['id'] in doc_user['candidates']['remove']:
-            candidate_state = 'removed'
+        if doc_machine:
+            if candidate['id'] in doc_machine['candidates']['confirm']:
+                candidate_state = 'confirmed_ml'
+            elif candidate['id'] in doc_machine['candidates']['remove']:
+                candidate_state = 'removed_ml'
+
+        if doc_user:
+            if candidate['id'] in doc_user['candidates']['confirm']:
+                candidate_state = 'confirmed'
+            elif candidate['id'] in doc_user['candidates']['remove']:
+                candidate_state = 'removed'
 
         candidate_ = get_candidate(candidate['id'])
         if 'deleted' not in candidate_ or not candidate_['deleted']:
@@ -432,7 +441,7 @@ def resolve_quotes(doc, verbose=False):
     texts = [doc['page']['text'],
              doc['page']['title']]
 
-    candidates = {candidate['id']: candidate for candidate in doc['candidates'] if candidate['state'] != 'removed'}
+    candidates = {candidate['id']: candidate for candidate in doc['candidates'] if candidate['state'] not in ['removed', 'removed_ml']}
     constituencies = {constituency['id']: constituency for constituency in doc['constituencies'] if constituency['state'] != 'removed'}
 
     for quote_doc in doc['quotes']:
@@ -512,7 +521,7 @@ def resolve_matches(doc, verbose=False):
         doc['user']['constituencies'] = {'confirm': [], 'remove': []}
 
     if 'possible' in doc:
-        doc['candidates'] = resolve_candidates(doc['user'], doc['possible'])
+        doc['candidates'] = resolve_candidates(doc['user'], doc['possible'], doc.get('machine'))
         doc['constituencies'] = resolve_constituencies(doc['user'], doc['possible']) 
 
     if 'quotes' in doc:
@@ -550,9 +559,9 @@ if __name__ == "__main__":
         print >>sys.stderr, doc['keys'], doc['_id']
         print >>sys.stdout, doc['keys'], doc['_id']
 
-        if doc['page'] is not None and doc['page']['text'] is not None:
-            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
-            doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
+        #if doc['page'] is not None and doc['page']['text'] is not None:
+        #    doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
+        #    doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
 
         resolve_matches(doc, a.verbose)
 

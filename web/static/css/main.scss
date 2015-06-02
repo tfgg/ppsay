@@ -250,6 +250,16 @@ ul.people-tagged {
         }
     }
 
+    li.person-tagged-confirmed_ml {
+        background: #ffc;
+        border: 0;
+    }
+    
+    li.person-tagged-removed_ml {
+        background: #fee;
+        border: 0;
+    }
+
     li.person-tagged-confirmed {
         background: #dfd;
         border: 0;
@@ -564,7 +574,15 @@ ul.article-list {
             background: #FFFECE;
         }   
         
+        &.candidate-score-confirmed_ml {
+            background: #FFFECE;
+        }   
+        
         &.candidate-score-removed {
+            display: none;
+        }   
+        
+        &.candidate-score-removed_ml {
             display: none;
         }   
         

@@ -132,11 +132,11 @@ def get_articles(person_ids, constituency_ids=None):
     if constituency_ids:
         article_docs = db_articles.find({'state': 'approved',
                                        '$or': [{'constituencies': {'$elemMatch': {'id': {'$in': constituency_ids}, 'state': {'$ne': 'removed'}}}},
-                                               {'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}]}) \
+                                               {'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$nin': ['removed','removed_ml']}}}}]}) \
                                   .sort([["time_added", -1]])
     else:
         article_docs = db_articles.find({'state': 'approved',
-                                         'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$ne': 'removed'}}}}) \
+                                         'candidates': {'$elemMatch': {'id': {'$in': person_ids}, 'state': {'$nin': ['removed','removed_ml']}}}}) \
                                   .sort([('time_added', -1)])
 
 

@@ -168,6 +168,12 @@ ul.people-tagged {
         ul.people-tagged li.person-tagged .candidacies .candidacy .constituency {
           display: block;
           color: #333; }
+  ul.people-tagged li.person-tagged-confirmed_ml {
+    background: #ffc;
+    border: 0; }
+  ul.people-tagged li.person-tagged-removed_ml {
+    background: #fee;
+    border: 0; }
   ul.people-tagged li.person-tagged-confirmed {
     background: #dfd;
     border: 0; }
@@ -367,7 +373,11 @@ ul.article-list {
         background: #FFFEEE; }
       ul.article-list li.article-item ul.article-mentions-people li.candidate-score-confirmed {
         background: #FFFECE; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-confirmed_ml {
+        background: #FFFECE; }
       ul.article-list li.article-item ul.article-mentions-people li.candidate-score-removed {
+        display: none; }
+      ul.article-list li.article-item ul.article-mentions-people li.candidate-score-removed_ml {
         display: none; }
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
