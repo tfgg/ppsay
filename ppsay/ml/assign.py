@@ -9,7 +9,9 @@ logistic = get_classifier()
 
 def get_machine(article):
     article_vecs = vecs(article, True)
-    print article_vecs
+    
+    for vec in article_vecs:
+        print vec
 
     machine = {'candidates': {'confirm': [], 'remove': []}}
 
@@ -21,7 +23,7 @@ def get_machine(article):
         else:
             machine['candidates']['remove'].append(vec['person_id'])
 
-        print vec['person_id'], logistic.predict_proba(vec['X'])[0]
+        print vec['person_name'], logistic.predict_proba(vec['X'])[0]
 
     return machine
 

@@ -4,6 +4,7 @@ from domains import domain_whitelist, add_domain
 from tasks import task_get_page
 from dates import add_date
 from matches import add_matches, resolve_matches, add_quotes
+from ml.assign import get_machine
 
 client = MongoClient()
 
@@ -52,6 +53,8 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
         doc['quotes'], doc['tags'] = add_quotes(doc['matches'],
                                                 [doc['page']['text'],
                                                  doc['page']['title']])
+            
+        doc['machine'] = get_machine(doc)
 
         # Only save if it has matches
         if len(doc['possible']['candidates']) >= min_candidates and \
@@ -91,6 +94,8 @@ def get_source(source_url, source, state):
         doc['quotes'], doc['tags'] = add_quotes(doc['matches'],
                                                 [doc['page']['text'],
                                                  doc['page']['title']])
+        
+        doc['machine'] = get_machine(doc)
 
         resolve_matches(doc)
 

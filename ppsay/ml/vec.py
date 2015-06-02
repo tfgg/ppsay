@@ -1,5 +1,6 @@
 import sys
 import json
+import numpy
 from collections import defaultdict
 from bson import ObjectId
 from pymongo import MongoClient
@@ -68,11 +69,6 @@ def vecs(article, return_all=False):
     vecs = {}
 
     for person in people.values():
-        #print "Other people in their party mentioned:", len(people_party[person['current_party_id']]) - 1
-        #print "Other people in their constituency mentioned:", len(people_constituency[person['current_constituency_id']]) - 1
-        #print "Party mentioned:", person['current_party_id'] in parties
-        #print "Constituency mentioned:", person['current_constituency_id'] in constituencies
-
         vec = {
                'other_party': len(people_party[person['current_party_id']]) - 1.0,
                'other_constituency': len(people_constituency[person['current_constituency_id']]) - 1.0,
@@ -84,16 +80,21 @@ def vecs(article, return_all=False):
         vecs[person['id']] = {'X': vec.values(), 'y': None,}
 
         if True:
-            vecs[person['id']].update({'person_id': person['id'], 'doc_id': str(article['_id'])})
+            vecs[person['id']].update({'person_id': person['id'],
+                                       'doc_id': str(article.get('_id')),
+                                       'person_name': person['name'],})
 
-    for candidate in article['candidates']:
-        if candidate['id'] in vecs:
-            if candidate['state'] == 'confirmed':
-               vecs[candidate['id']]['y'] = 1.0
-            elif candidate['state'] == 'removed':
-               vecs[candidate['id']]['y'] = 0.0
-        else:
-            print "Unknown candidate added"
+    if 'candidates' in article:
+        for candidate in article['candidates']:
+            if candidate['id'] in vecs:
+                if candidate['state'] == 'confirmed':
+                   vecs[candidate['id']]['y'] = 1.0
+                elif candidate['state'] == 'removed':
+                   vecs[candidate['id']]['y'] = 0.0
+            else:
+                print "Unknown candidate added"
+    else:
+        print "No resolved candidate data"
 
     if return_all:
         return vecs.values()
