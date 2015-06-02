@@ -5,7 +5,8 @@ import lxml.html
 import requests
 
 from webcache import WebPage
-from goose import Goose
+#from goose import Goose
+from newspaper import Article as NewspaperArticle
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from ppsay.data import elections
@@ -19,7 +20,7 @@ except ConnectionFailure:
 
 db_articles = db_client.news.articles
 
-g = Goose()
+#g = Goose()
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -48,13 +49,10 @@ class ArticleGeneric(object):
 
         self.url_final = page.final_url
 
-        try:
-            try:
-                article = g.extract(raw_html=page.html)
-            except ValueError, e:
-                raise ArticleGeneric.FetchError("Stupid unicode error, probably: {}".format(str(e)))
-        except IOError, e:
-            raise ArticleGeneric.FetchError("Goose exception: {}".format(str(e)))
+        article = NewspaperArticle(url=self.url_final)
+        article.html = page.html
+        article.is_downloaded = True
+        article.parse()
 
         tree = lxml.html.fromstring(page.html)
 
@@ -80,8 +78,8 @@ class ArticleGeneric(object):
         if headline and self.title != headline:
             self.title = headline
 
-        self.canonical_link = article.canonical_link
-        self.text = article.cleaned_text
+        self.canonical_link = None #article.canonical_link
+        self.text = article.text
         self.date_published = try_parse_date(article.publish_date)
 
     def as_dict(self):
