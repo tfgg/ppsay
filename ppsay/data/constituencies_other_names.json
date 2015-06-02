@@ -171,7 +171,9 @@
     ], 
     "14439": [
         "Linlithgow and East Falkirk", 
-        "Linlithgow & East Falkirk"
+        "Linlithgow & East Falkirk",
+        "Linlithgow and Falkirk East",
+        "Linlithgow & Falkirk East"
     ], 
     "14440": [
         "Livingston"
@@ -859,7 +861,8 @@
         "Chingford & Woodford Green"
     ], 
     "65722": [
-        "Richmond (Yorks)"
+        "Richmond (Yorks)",
+        "Richmond"
     ], 
     "65723": [
         "Devizes"
@@ -1002,7 +1005,8 @@
         "South Derbyshire"
     ], 
     "65763": [
-        "Sedgefield"
+        "Sedgefield",
+        "Sedgfield"
     ], 
     "65764": [
         "Faversham and Mid Kent", 
@@ -1462,7 +1466,9 @@
     ], 
     "65892": [
         "Altrincham and Sale West", 
-        "Altrincham & Sale West"
+        "Altrincham & Sale West",
+        "Altincham and Sale",
+        "Altincham & Sale"
     ], 
     "65893": [
         "Copeland"

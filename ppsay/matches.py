@@ -14,6 +14,7 @@ from ppsay.data import (
     get_candidates,
     squish_constituencies,
 )
+from ml.assign import get_machine
 from ss import Text
 
 import re
@@ -559,9 +560,12 @@ if __name__ == "__main__":
         print >>sys.stderr, doc['keys'], doc['_id']
         print >>sys.stdout, doc['keys'], doc['_id']
 
-        #if doc['page'] is not None and doc['page']['text'] is not None:
-        #    doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
-        #    doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
+        if doc['page'] is not None and doc['page']['text'] is not None:
+            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
+
+            doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
+            
+            doc['machine'] = get_machine(doc)
 
         resolve_matches(doc, a.verbose)
 
