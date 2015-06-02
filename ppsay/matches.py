@@ -39,12 +39,15 @@ MatchQuotes = namedtuple('MatchQuotes', ['quotes', 'tags'])
 def find_overlaps(matches):
     for i, match1 in enumerate(matches):
         for j, match2 in enumerate(matches[i+1:]):
+            if match2.match.range[0] >= match1.match.range[1]:
+                break
+
             if match2.match.range[0] < match1.match.range[1] and match2.match.range[1] > match1.match.range[0]:
                 yield i, j+i+1
 
 
 def resolve_overlaps(matches, verbose=False):
-    matches = sorted(matches, key=lambda match: (match.match.range[0]-match.match.range[1],match.match.range[0])) 
+    matches = sorted(matches, key=lambda match: match.match.range[0])
     
     remove = set()
     for i, j in find_overlaps(matches):
