@@ -29,13 +29,11 @@ class ArticleGeneric(object):
     class FetchError(Exception):
         pass
 
-    def __init__(self, article_url):
-        self.url = article_url
-
-        page = WebPage(self.url, self.fetch)
+    def __init__(self, page):
+        self.url = page.url
 
         if page.html is None:
-            raise ArticleGeneric.FetchError(u"Could not fetch {}".format(article_url))
+            raise ArticleGeneric.FetchError(u"Could not fetch {}".format(self.url))
 
         self.url_final = page.final_url
 

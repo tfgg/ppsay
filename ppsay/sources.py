@@ -1,10 +1,32 @@
 from urlparse import urlparse
+from datetime import datetime
+
 from domains import domain_whitelist, add_domain
-from tasks import task_get_page
 from dates import add_date
 from matches import add_matches, resolve_matches, add_quotes
 from ml.assign import get_machine
 from db import db_web_cache, db_articles
+from article import ArticleGeneric
+from webcache import WebPage
+
+def get_or_create_doc(page, source):
+    doc = db_articles.find_one({'keys': page.url})
+
+    new = False
+
+    if doc is None:
+        page.fetch()
+
+        article = ArticleGeneric(page)
+        
+        doc = {'page': article.as_dict(),
+               'source': source,
+               'time_added': datetime.now(),
+               'keys': [page.url],}
+       
+        new = True
+
+    return new, doc
 
 def process_doc(doc, state):
     try:
@@ -48,13 +70,14 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
         Get a source and save it if there are matches.
     """
 
-    doc_cache = db_web_cache.find_one({'url': source_url})
+    page = WebPage(source_url, ArticleGeneric.fetch)
+    page.fetch(get_remote=False)
 
-    if doc_cache is not None:
+    if page.is_local:
         print "Already in cache, skipping"
         return None
 
-    new, doc = task_get_page(source_url, source, False)
+    new, doc = get_or_create_doc(page, source)
     
     if new and doc['page'] is not None:
         print "  New"
@@ -80,8 +103,10 @@ def get_source(source_url, source, state):
     """
         Get a source and save it, no matter what.
     """
+    
+    page = WebPage(self.url, ArticleGeneric.fetch)
 
-    new, doc = task_get_page(source_url, source)
+    new, doc = get_or_create_doc(page, source)
 
     if new and doc['page'] is not None:
         process_doc(doc, state) 

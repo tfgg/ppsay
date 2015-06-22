@@ -13,13 +13,17 @@ class WebPage(object):
         self.html = None
         self.final_url = None
 
+        self.is_local = None
+        self.is_remote = None
+
         self.fetch()
 
-    def fetch(self):
-        success = self.fetch_local()
+    def fetch(self, get_remote=True, do_fresh=False):
+        if self.html is None or do_fresh:
+            self.is_local = self.fetch_local()
 
-        if not success:
-            success = self.fetch_remote()
+            if not self.is_local and get_remote:
+                self.is_remote = self.fetch_remote()
 
     def fetch_local(self):
         doc = self.db.find_one({'url': self.url})
