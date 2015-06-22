@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from os.path import realpath, join, dirname
-from pymongo import MongoClient
+from db import db_candidates
 
 BASE_PATH = dirname(realpath(__file__))
 
@@ -21,10 +21,6 @@ try:
     squish_constituencies = json.load(open(x('data/squish_constituencies.json')))
 except ValueError:
     squish_constituencies = {}
-
-client = MongoClient()
-
-db_candidates = client.news.candidates
 
 def get_candidate(candidate_id):
     doc = db_candidates.find_one({'id': candidate_id})

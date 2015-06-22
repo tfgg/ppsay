@@ -2,12 +2,10 @@ import bz2
 from bson.binary import Binary
 
 from datetime import datetime
-from pymongo import MongoClient
-
-client = MongoClient()
+from db import db_web_cache
 
 class WebPage(object):
-    db = client.news.web_cache
+    db = db_web_cache
 
     def __init__(self, url, fetcher):
         self.url = url

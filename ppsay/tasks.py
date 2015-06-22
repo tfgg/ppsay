@@ -1,14 +1,9 @@
 import sys
 
 from datetime import datetime
-from pymongo import MongoClient
-
-#from feeds import feeds, feed_types
 from article import ArticleGeneric
 
-client = MongoClient()
-
-db_articles = client.news.articles
+from db import db_articles
 
 class UnrecognisedPageType(Exception):
   pass

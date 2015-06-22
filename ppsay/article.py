@@ -5,22 +5,12 @@ import lxml.html
 import requests
 
 from webcache import WebPage
-#from goose import Goose
 from newspaper import Article as NewspaperArticle
-from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from ppsay.data import elections
 from ppsay.dates import find_dates_tree
 
-try:
-    db_client = MongoClient()
-except ConnectionFailure:
-    print "Can't connect to MongoDB"
-    sys.exit(0)
-
-db_articles = db_client.news.articles
-
-#g = Goose()
+from db import db_articles
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
