@@ -147,9 +147,14 @@ def find_dates_tree(tree):
 
     # wscountrytimes
     for date_time_str in tree.xpath('//time[@pubdate]/@datetime'):
-        # Fri Sep 12 06:00:00 BST 2014
-        parsed_time = datetime.strptime(date_time_str.replace("BST","").replace("GMT", ""), "%a %b %d %H:%M:%S %Y").replace(tzinfo=UTC)
-        dates.append(parsed_time)
+        try:
+            # Fri Sep 12 06:00:00 BST 2014
+            parsed_time = datetime.strptime(date_time_str.replace("BST","").replace("GMT", ""), "%a %b %d %H:%M:%S %Y").replace(tzinfo=UTC)
+            dates.append(parsed_time)
+        except:
+            # 2015-06-17
+            parsed_time = datetime.strptime(date_time_str, "%Y-%m-%d").replace(tzinfo=UTC)
+            dates.append(parsed_time)
 
     return dates
 

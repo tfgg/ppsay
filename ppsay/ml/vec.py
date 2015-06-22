@@ -74,7 +74,7 @@ def vecs(article, return_all=False):
                'other_constituency': len(people_constituency[person['current_constituency_id']]) - 1.0,
                'party_mentioned': 1.0 if person['current_party_id'] in parties else 0.0,
                'constituency_mentioned': 1.0 if person['current_constituency_id'] in constituencies else 0.0,
-               'past_week_count': person['past_week_count'],
+               'past_week_count': numpy.log(person['past_week_count']+0.1),
         }
 
         vecs[person['id']] = {'X': vec.values(), 'y': None,}

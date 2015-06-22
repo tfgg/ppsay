@@ -600,7 +600,9 @@
         "id": "51", 
         "name": "Conservative and Unionist Party", 
         "other_names": [
-            "CUP"
+            "CUP",
+            "UUP",
+            "Ulster Unionist Party"
         ]
     }, 
     "513": {
@@ -998,7 +1000,8 @@
         "id": "83", 
         "name": "Ulster Unionist Party", 
         "other_names": [
-            "UUP"
+            "UUP",
+            "Conservative and Unionist Party"
         ]
     }, 
     "830": {

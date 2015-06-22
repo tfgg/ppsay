@@ -85,13 +85,17 @@ print
 print "Finding deleted candidates"
 missing_ids = all_ids - found_ids
 
-for missing_id in missing_ids:
-    candidate_doc = db_candidates.find_one({'id': missing_id})
+for person_id in all_ids:
+    candidate_doc = db_candidates.find_one({'id': person_id})
 
-    print "  {name:} ({id:}) deleted".format(**candidate_doc)
-    candidate_doc['deleted'] = True
-
-    db_candidates.save(candidate_doc)
+    if person_id not in missing_ids and candidate_doc.get('deleted', False):
+        print "  UNDELETING {name:} ({id:})".format(**candidate_doc)
+        candidate_doc['deleted'] = False
+        db_candidates.save(candidate_doc)
+    elif person_id in missing_ids:
+        print "  {name:} ({id:}) deleted".format(**candidate_doc)
+        candidate_doc['deleted'] = True
+        db_candidates.save(candidate_doc)
 
 
 print "Processing sources"

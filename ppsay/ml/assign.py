@@ -23,7 +23,7 @@ def get_machine(article):
         else:
             machine['candidates']['remove'].append(vec['person_id'])
 
-        print vec['person_name'], logistic.predict_proba(vec['X'])[0]
+        #print vec['person_name'], logistic.predict_proba(vec['X'])[0]
 
     return machine
 

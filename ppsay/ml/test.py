@@ -17,8 +17,8 @@ def get_classifier():
      'tol': 0.0001,
      'verbose': 0}
 
-    coef = np.array([[ 0.01020062,  0.99621041,  4.18454742,  0.23268564,  1.88353177]])
-    intercept = np.array([-2.74706061])
+    coef = np.array([[ 0.04360452,  0.98802575,  3.97606807,  0.68562664,  2.09424184]])
+    intercept = np.array([[-1.2250933]])
     classes = np.array([0, 1])
 
     logistic.set_params(**params)
