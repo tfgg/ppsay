@@ -6,7 +6,7 @@ from dates import add_date
 from matches import add_matches, resolve_matches, add_quotes
 from ml.assign import get_machine
 from db import db_web_cache, db_articles
-from article import ArticleGeneric
+from article import Article
 from webcache import WebPage
 
 def get_or_create_doc(page, source):
@@ -17,7 +17,7 @@ def get_or_create_doc(page, source):
     if doc is None:
         page.fetch()
 
-        article = ArticleGeneric(page)
+        article = Article(page)
         
         doc = {'page': article.as_dict(),
                'source': source,
@@ -70,7 +70,7 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
         Get a source and save it if there are matches.
     """
 
-    page = WebPage(source_url, ArticleGeneric.fetch)
+    page = WebPage(source_url)
     page.fetch(get_remote=False)
 
     if page.is_local:
@@ -104,7 +104,7 @@ def get_source(source_url, source, state):
         Get a source and save it, no matter what.
     """
     
-    page = WebPage(self.url, ArticleGeneric.fetch)
+    page = WebPage(self.url)
 
     new, doc = get_or_create_doc(page, source)
 
