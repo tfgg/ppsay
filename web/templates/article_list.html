@@ -66,19 +66,31 @@
           </h2>
      
           <ul class='article-mentions-people'>
+          {# This incorrectly counts hidden candidates. #}
+          {% set max_candidates = 5 %}
           {% for candidate in article.candidates %}
+            {% if article.candidates|length > max_candidates and loop.index > max_candidates %}
+            {% elif article.candidates|length > max_candidates and loop.index == max_candidates %}
+                and {{ article.candidates|length - max_candidates }} more
+            {% else %}
             <li class='candidate-score-{{ candidate.state }}'>
                 <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
-                {#<a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a>#}
             </li>
+            {% endif %}
           {% endfor %}
           </ul>
+          
+          {% set max_constituencies = 5 %}
           <ul class='article-mentions-constituencies'>
           {% for constituency in article.constituencies %}
+            {% if article.constituencies|length > max_constituencies and loop.index > max_constituencies %}
+            {% elif article.constituencies|length > max_constituencies and loop.index == max_constituencies %}
+                and {{ article.constituencies|length - max_constituencies }} more
+            {% else %}
             <li class='constituency-score-{{ constituency.state }}'>
                 <a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
-                {#<a onclick='show_constituency("{{ article._id }}", "{{ constituency.id }}");' class='constituency-mention-expand'>+</a>#}
             </li>
+            {% endif %}
           {% endfor %}
           </ul>
 
