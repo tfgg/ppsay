@@ -518,7 +518,7 @@ def resolve_matches(doc, verbose=False):
     return
 
 if __name__ == "__main__":
-    from pymongo import MongoClient
+    from db import db_articles
     import argparse
 
     parser = argparse.ArgumentParser(description='Perform matching engine against set of documents')
@@ -530,8 +530,7 @@ if __name__ == "__main__":
 
     a = parser.parse_args(sys.argv[1:])
 
-    client = MongoClient()
-    db = client.news.articles
+    db = db_articles
 
     if a.doc is not None:
         docs = db.find({'_id': ObjectId(a.doc)})

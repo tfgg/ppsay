@@ -43,26 +43,24 @@ span.stats-red {
 span.stats-green {
   color: #00CC00; }
 
-div.top-banner {
-  margin-bottom: 20px; }
-  div.top-banner div.name {
-    background: #4564fd;
-    color: white;
-    padding: 15px; }
-    div.top-banner div.name h1 {
-      margin: 0;
-      text-rendering: optimizeLegibility; }
-  div.top-banner div.party-and-constituency {
-    background: #F7F7F7;
-    color: #6e707c;
-    padding: 15px; }
-    div.top-banner div.party-and-constituency h2 {
-      font-size: 20px;
-      margin: 0;
-      text-rendering: optimizeLegibility; }
-      div.top-banner div.party-and-constituency h2 a:link, div.top-banner div.party-and-constituency h2 a:visited {
-        color: #6e707c;
-        text-decoration: underline; }
+div.top-banner div.name {
+  background: #4564fd;
+  color: white;
+  padding: 15px; }
+  div.top-banner div.name h1 {
+    margin: 0;
+    text-rendering: optimizeLegibility; }
+div.top-banner div.party-and-constituency {
+  background: #F7F7F7;
+  color: #6e707c;
+  padding: 15px; }
+  div.top-banner div.party-and-constituency h2 {
+    font-size: 20px;
+    margin: 0;
+    text-rendering: optimizeLegibility; }
+    div.top-banner div.party-and-constituency h2 a:link, div.top-banner div.party-and-constituency h2 a:visited {
+      color: #6e707c;
+      text-decoration: underline; }
 
 a.link-back {
   padding: 10px;
@@ -77,6 +75,9 @@ form.add-article-form {
     margin-top: 0; }
 
 .intro {
+  background: #4564fd;
+  color: white;
+  padding: 2em;
   /*padding: 10px;
   border: 1px solid rgba(70, 101, 255, 0.24);*/ }
   .intro p {

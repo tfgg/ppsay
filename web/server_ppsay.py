@@ -2,11 +2,9 @@
 import requests
 import json
 from urlparse import urlparse
-
 from datetime import datetime
 from bson import ObjectId
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+
 from flask import (
     Blueprint,
     url_for,
@@ -24,10 +22,12 @@ from ppsay.domains import domain_whitelist
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
 from ppsay.article import get_articles
+
 from ppsay.constituency import (
     constituency_get_candidates,
     filter_candidate_or_incumbent,
 )
+
 from ppsay.data import (
     constituencies,
     constituencies_index,
@@ -36,15 +36,11 @@ from ppsay.data import (
     get_candidates,
 )
 
-try:
-    db_client = MongoClient()
-except ConnectionFailure:
-    print "Can't connect to MongoDB"
-    sys.exit(0)
-
-db_articles = db_client.news.articles
-db_candidates = db_client.news.candidates
-db_log = db_client.news.action_log
+from ppsay.db import (
+    db_articles,
+    db_candidates,
+    db_action_log,
+)
 
 app = Blueprint('ppsay',
                 __name__,
@@ -495,8 +491,8 @@ def dashboard_article(query_id):
 
 @app.route('/recent')
 def action_log():
-    log = db_log.find() \
-                .sort([('time_now', -1)])[:50]
+    log = db_action_log.find() \
+                       .sort([('time_now', -1)])[:50]
 
     return render_template('action_log.html',
                            log=log)

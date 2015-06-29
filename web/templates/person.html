@@ -24,11 +24,22 @@
 {% block content %}
 <div class='container'>
   {% include "header.html" %}
-  <div class='row'>
-    <div class='col-md-12 top-banner'>
-      <div class='name'>
+</div>
+<div style='background:#516FFF;'>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-md-12 top-banner'>
+        <div class='name'>
           <h1>{{ person.name }}</h1>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
+<div style='background:#FAFAFA;margin-bottom:20px;'>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-md-12 top-banner'>
       {% if person_party %}
       <div class='party-and-constituency'>
           <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>(GE {{ person_year }})</small></h2>
@@ -42,8 +53,11 @@
       {% if person.deleted %}
         <p class='text-danger'>This person has been deleted</p>
       {% endif %}
+      </div>
     </div>
   </div>
+</div>
+<div class='container'>
   <div class='row'>
     <div class='col-md-2 col-sm-3'>
       {% if person.image %}

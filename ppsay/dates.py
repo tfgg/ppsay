@@ -3,10 +3,11 @@ import lxml.html
 import re
 import bz2
 
-from pymongo import MongoClient
 import iso8601.iso8601
 from iso8601.iso8601 import parse_date, UTC
 from datetime import datetime
+
+from db import db_web_cache
 
 def try_date_issued(s):
     try:
@@ -36,9 +37,6 @@ months = {'January': 1,
           'November': 11,
           'December': 12,}
 
-client = MongoClient()
-db_web_cache = client.news.web_cache
-
 def add_date(doc):
     url = doc['page']['urls'][0]
     web_cache_doc = db_web_cache.find_one({'url': url})
@@ -52,9 +50,9 @@ def add_date(doc):
         dates = find_dates(html)
 
         if dates:
-            earliest_date = min(dates)
+            return min(dates)
 
-            doc['page']['date_published'] = earliest_date
+    return None
 
 def find_dates(html):
     tree = lxml.html.fromstring(html)

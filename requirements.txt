@@ -8,7 +8,6 @@ pytz
 uwsgi
 requests
 feedparser
-goose-extractor
 pyyaml
 flask-login
 flask-mail
