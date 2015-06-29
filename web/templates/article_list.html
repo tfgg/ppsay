@@ -69,7 +69,8 @@
           {% for candidate in article.candidates %}
             <li class='candidate-score-{{ candidate.state }}'>
                 <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
-                {#<a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a></li>#}
+                {#<a onclick='show_candidate("{{ article._id }}", "{{ candidate.id }}");' class='candidate-mention-expand'>+</a>#}
+            </li>
           {% endfor %}
           </ul>
           <ul class='article-mentions-constituencies'>
