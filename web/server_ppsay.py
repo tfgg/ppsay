@@ -57,7 +57,7 @@ def index():
                             .sort([('time_added', -1)]) \
                             .limit(100)
 
-  article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] != 'removed']) > 0]
+  article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] not in ['removed', 'removed_ml']]) > 0]
                                           #or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
 
   for article_doc in article_docs:
