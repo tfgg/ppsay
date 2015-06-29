@@ -96,12 +96,13 @@ def register():
         salt = os.urandom(8)
         password_hashed = hash_pass(password, salt)
 
-        doc = {'user_name': user_name,
-               'email': email,
-               'salt': base64.b64encode(salt),
-               'hashpass': password_hashed,
-               'is_active': False,
-               }
+        doc = {
+            'user_name': user_name,
+            'email': email,
+            'salt': base64.b64encode(salt),
+            'hashpass': password_hashed,
+            'is_active': False,
+        }
 
         user_id = db_users.save(doc)
 

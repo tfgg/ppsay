@@ -15,20 +15,20 @@ def get_or_create_doc(page, source):
     new = False
 
     if doc is None:
-        page.fetch()
-
         article = Article(page)
         
-        doc = {'page': article.as_dict(),
-               'source': source,
-               'time_added': datetime.now(),
-               'keys': [page.url],}
+        doc = {
+            'page': article.as_dict(),
+            'source': source,
+            'time_added': datetime.now(),
+            'keys': [page.url],
+        }
        
         new = True
 
     return new, doc
 
-def process_doc(doc, state):
+def process_doc(doc):
     try:
         doc['page']['date_published'] = add_date(doc)
     except ValueError: # ignore date errors for now
@@ -46,8 +46,6 @@ def process_doc(doc, state):
     doc['machine'] = get_machine(doc)
 
     resolve_matches(doc)
-
-    doc['state'] = state
 
     return
 
@@ -71,7 +69,7 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
     """
 
     page = WebPage(source_url)
-    page.fetch(get_remote=False)
+    page.fetch()
 
     if page.is_local:
         print "Already in cache, skipping"
@@ -82,7 +80,7 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
     if new and doc['page'] is not None:
         print "  New"
 
-        process_doc(doc, state) 
+        process_doc(doc) 
 
         # Only save if it has matches
         if len(doc['possible']['candidates']) >= min_candidates and \
@@ -90,7 +88,8 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
            len(doc['possible']['parties']) >= min_parties:
 
             print "    Matches"
-
+    
+            doc['state'] = state
             doc['_id'] = db_articles.save(doc)
         else:
             print "    No matches"
@@ -104,13 +103,15 @@ def get_source(source_url, source, state):
         Get a source and save it, no matter what.
     """
     
-    page = WebPage(self.url)
+    page = WebPage(source_url)
+    page.fetch()
 
     new, doc = get_or_create_doc(page, source)
 
     if new and doc['page'] is not None:
-        process_doc(doc, state) 
+        process_doc(doc) 
 
+        doc['state'] = state
         doc['_id'] = db_articles.save(doc)
 
     return doc
