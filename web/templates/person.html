@@ -59,6 +59,37 @@
 </div>
 <div class='container'>
   <div class='row'>
+    <div class='col-md-12'>
+<style>
+svg.timeline circle {
+    fill: white;
+    stroke:rgba(128,128,128,1.0);
+    stroke-width:2 
+}
+
+svg.timeline line {
+    stroke:rgba(128,128,128,1.0);
+    stroke-width:2
+}
+</style>
+{% set start_time=articles[-1].order_date %}
+{% set finish_time=articles[0].order_date %}
+{% set interval=finish_time - start_time %}
+
+{{ start_time }}
+{{ finish_time }}
+{{ interval }}
+<svg width="100%" height="120" class="timeline">
+  <line x1="5%" y1="60" x2="95%" y2="60"/>
+{% for article in articles %}
+  <circle cx="{{ (article.order_date - start_time).total_seconds()/interval.total_seconds() * 90 + 5}}%" cy="60" r="10"></circle>
+{% endfor %}
+</svg>
+    </div>
+  </div>
+</div>
+<div class='container'>
+  <div class='row'>
     <div class='col-md-2 col-sm-3'>
       {% if person.image %}
         <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
