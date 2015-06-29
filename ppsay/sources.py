@@ -63,9 +63,11 @@ def get_source_whitelist(source_url, source):
     else:
         return None
 
-def get_source_if_matches(source_url, source, state, min_candidates=1, min_parties=0, min_constituencies=0):
+def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
     """
         Get a source and save it if there are matches.
+
+        min_candidates, min_constituencies, min_parties
     """
 
     page = WebPage(source_url)
@@ -83,10 +85,15 @@ def get_source_if_matches(source_url, source, state, min_candidates=1, min_parti
         process_doc(doc) 
 
         # Only save if it has matches
-        if len(doc['possible']['candidates']) >= min_candidates and \
-           len(doc['possible']['constituencies']) >= min_constituencies and \
-           len(doc['possible']['parties']) >= min_parties:
+        has_matches = False
 
+        for min_candidates, min_constituencies, min_parties in conditions:            
+            if len(doc['possible']['candidates']) >= min_candidates and \
+               len(doc['possible']['constituencies']) >= min_constituencies and \
+               len(doc['possible']['parties']) >= min_parties:
+                has_matches = True
+
+        if has_matches:
             print "    Matches"
     
             doc['state'] = state

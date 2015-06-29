@@ -53,7 +53,7 @@ for feed_url in feeds:
         get_source_if_matches(url,
                               'rss',
                               'approved',
-                              min_candidates=1,
-                              min_parties=1,
-                              min_constituencies=0)
+                              [(1,0,1), # candidates, constituencies, parties
+                               (3,0,0),
+                               (2,0,1),],)
 

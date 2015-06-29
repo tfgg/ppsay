@@ -32,6 +32,6 @@ for url in daylies:
     for item in feed['items']:
         url = clean_link(item['link'])
         print url
-        get_source_if_matches(url, 'rss', 'approved', min_candidates=1, min_parties=1, min_constituencies=0)
+        get_source_if_matches(url, 'rss', 'approved', [(1,0,1),])
 
 
