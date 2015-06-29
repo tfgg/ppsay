@@ -13,14 +13,20 @@ didnt_wipe = 0
 wiped = 0
 
 for doc_webcache in db_webcache.find():
-    if doc_webcache['time_fetched'] > last_week or doc_webcache['html'] is None:
+    if doc_webcache['time_fetched'] > last_week or (doc_webcache.get('html_compressed') is None and doc_webcache.get('html') is None):
         continue
 
     doc_article = db_articles.find_one({'keys': doc_webcache['url']})
 
     if doc_article is None:
         print u"WIPING", doc_webcache['_id'], doc_webcache['url'].encode('utf-8')
-        doc_webcache['html'] = None
+
+        if 'html' in doc_webcache:
+            doc_webcache['html'] = None
+
+        if 'html_compressed' in doc_webcache:
+            doc_webcache['html_compressed'] = None
+
         db_webcache.save(doc_webcache)
         wiped += 1
     else:
