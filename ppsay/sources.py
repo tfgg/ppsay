@@ -71,14 +71,24 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
     """
 
     page = WebPage(source_url)
-    page.fetch()
+
+    try:
+        page.fetch()
+    except WebPage.FailedToFetch, e:
+        print "FAILED", e
+        return None
+        
 
     if page.is_local:
         print "Already in cache, skipping"
         return None
 
-    new, doc = get_or_create_doc(page, source)
-    
+    try:
+        new, doc = get_or_create_doc(page, source)
+    except Article.FetchError, e:
+        print "FAILED", e
+        return None
+
     if new and doc['page'] is not None:
         print "  New"
 
@@ -111,9 +121,18 @@ def get_source(source_url, source, state):
     """
     
     page = WebPage(source_url)
-    page.fetch()
 
-    new, doc = get_or_create_doc(page, source)
+    try:
+        page.fetch()
+    except WebPage.FailedToFetch, e:
+        print "FAILED", e
+        return None
+
+    try:
+        new, doc = get_or_create_doc(page, source)
+    except Article.FetchError, e:
+        print "FAILED", e
+        return None
 
     if new and doc['page'] is not None:
         process_doc(doc) 

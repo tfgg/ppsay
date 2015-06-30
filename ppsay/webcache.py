@@ -77,10 +77,12 @@ class WebPage(object):
         if doc is None:
             raise self.NotInCache(self.url)
 
-        if 'html' in doc:
+        if doc.get('html') is not None:
             self.html = doc['html']
-        elif 'html_compressed' in doc:
+        elif doc.get('html_compressed') is not None:
             self.html = bz2.decompress(doc['html_compressed']).decode('utf-8')
+        else:
+            self.html = None
  
         self.final_url = doc['url_final']
 
