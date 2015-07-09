@@ -447,18 +447,20 @@ ul.article-list {
   }
 
   li.article-item {
-    margin:0;
-    padding: 10px;
-    padding-left: 70px;
+    margin-bottom: 1em;
+    padding: 20px;
+    padding-left: 90px;
     background: #FFFFFF;
-    border-bottom: 1px solid #eee;
+    border: 1px solid #eee;
+    box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08);
 
     &:nth-of-type(1) {
-        padding-top: 0px;
+    /*    padding-top: 0px; */
     }
     
     &:nth-last-of-type(1) {
-        border-bottom: 0;
+    /*    border-bottom: 0; */
+        margin-bottom: 0;
     }
 
     div.article-left-float {
@@ -516,6 +518,10 @@ ul.article-list {
         display: inline-block;
         float: left;
         margin-left: 5px;
+    
+        &:nth-of-type(1) {
+            margin-left: 0;
+        }
 
         a {
           /*display: block;

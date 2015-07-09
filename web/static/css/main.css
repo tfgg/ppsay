@@ -296,15 +296,17 @@ ul.article-list {
     border-bottom: 1px solid #eee;
     padding-bottom: 20px; }
   ul.article-list li.article-item {
-    margin: 0;
-    padding: 10px;
-    padding-left: 70px;
+    margin-bottom: 1em;
+    padding: 20px;
+    padding-left: 90px;
     background: #FFFFFF;
-    border-bottom: 1px solid #eee; }
+    border: 1px solid #eee;
+    box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08); }
     ul.article-list li.article-item:nth-of-type(1) {
-      padding-top: 0px; }
+      /*    padding-top: 0px; */ }
     ul.article-list li.article-item:nth-last-of-type(1) {
-      border-bottom: 0; }
+      /*    border-bottom: 0; */
+      margin-bottom: 0; }
     ul.article-list li.article-item div.article-left-float {
       float: left;
       margin-left: -70px; }
@@ -345,6 +347,8 @@ ul.article-list {
         display: inline-block;
         float: left;
         margin-left: 5px; }
+        ul.article-list li.article-item ul.article-mentions-people li:nth-of-type(1), ul.article-list li.article-item ul.article-mentions-constituencies li:nth-of-type(1) {
+          margin-left: 0; }
         ul.article-list li.article-item ul.article-mentions-people li a, ul.article-list li.article-item ul.article-mentions-constituencies li a {
           /*display: block;
           margin: 2px;*/
