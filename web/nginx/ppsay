@@ -62,6 +62,29 @@ server {
 
 server {
     listen 80;
+
+    server_name staging.electionmentions.com;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    gzip             on;
+    gzip_min_length  1000;
+    gzip_proxied     any;
+    gzip_comp_level 2;
+    gzip_types       text/plain application/xml application/json;
+
+    location / { try_files $uri @hook; }
+
+    location @hook {
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/ppsay-hook/server.sock;
+    }
+}
+
+
+
+server {
+    listen 80;
     server_name electionmentions.com
                 electionmentions.co.uk
                 electionmentions.uk

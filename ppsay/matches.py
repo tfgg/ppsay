@@ -306,6 +306,9 @@ def add_quotes(matches, texts):
             match_start = 0
             match_end = len(texts[match.match.source])
 
+        match_start = max(spans[max(sub[0] - 10, 0)][0], match_start)
+        match_end = min(spans[min(sub[1] + 10, len(spans)-1)][1], match_end)
+
         quote_doc = {'constituency_ids': [],
                      'party_ids': [],
                      'candidate_ids': [],
@@ -326,8 +329,7 @@ def add_quotes(matches, texts):
     similar_pairs = []
     for i, quote1 in enumerate(quotes):
         for j, quote2 in enumerate(quotes):
-            if quote1['match_text'] == quote2['match_text'] and \
-               range_overlap(quote1['quote_span'], quote2['quote_span']):
+            if quote1['match_text'] == quote2['match_text'] and range_overlap(quote1['quote_span'], quote2['quote_span']):
                 similar_pairs.append((i,j))
 
     groups = []
@@ -340,8 +342,18 @@ def add_quotes(matches, texts):
         else:
             groups.append(set(similar_pair))
 
-    merged_quotes = []
+    # Split up excessively long groups of quotes.
+    split_groups = []
     for group in groups:
+        quote_ids = sorted(list(group))
+
+        for i in range(0,len(quote_ids),10):
+            split_groups.append(quote_ids[i:i + 10])
+
+    print split_groups
+
+    merged_quotes = []
+    for group in split_groups:
         quote = {'constituency_ids': list(set(sum([quotes[i]['constituency_ids'] for i in group], []))),
                  ##'party_ids': list(set(sum([quotes[i]['party_ids'] for i in group], []))),
                  'candidate_ids': list(set(sum([quotes[i]['candidate_ids'] for i in group], []))),
