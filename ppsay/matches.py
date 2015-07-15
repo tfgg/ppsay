@@ -240,7 +240,7 @@ def add_matches(texts, verbose=False):
             match_doc = {'match_party': party_match,
                          'match_constituency': constituency_match,
                          'running_2015': is_running_2015,
-                         'score': score,
+                         #'score': score,
                          'id': candidate['id'],}
 
             possible_candidate_matches[candidate['id']] = match_doc
@@ -328,9 +328,14 @@ def add_quotes(matches, texts):
 
     similar_pairs = []
     for i, quote1 in enumerate(quotes):
-        for j, quote2 in enumerate(quotes):
-            if quote1['match_text'] == quote2['match_text'] and range_overlap(quote1['quote_span'], quote2['quote_span']):
-                similar_pairs.append((i,j))
+        j = i + 1
+
+        if j >= len(quotes): continue
+
+        quote2 = quotes[j]
+
+        if quote1['match_text'] == quote2['match_text'] and range_overlap(quote1['quote_span'], quote2['quote_span']):
+            similar_pairs.append((i,j))
 
     groups = []
     for similar_pair in similar_pairs:
@@ -349,8 +354,6 @@ def add_quotes(matches, texts):
 
         for i in range(0,len(quote_ids),10):
             split_groups.append(quote_ids[i:i + 10])
-
-    print split_groups
 
     merged_quotes = []
     for group in split_groups:
@@ -415,7 +418,7 @@ def resolve_constituencies(doc_user, doc_possible):
         if not any([constituency_id == constituency['id'] for constituency in doc_possible['constituencies']]):
             constituency = constituencies_index[constituency_id]
             constituency['state'] = 'confirmed'
-            constituency['score'] = 1.5
+            #constituency['score'] = 1.5
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
@@ -430,7 +433,7 @@ def resolve_constituencies(doc_user, doc_possible):
         constituency_ = constituencies_index[constituency['id']]
         constituency_['id'] = constituency_['id']
         constituency_['state'] = constituency_state
-        constituency_['score'] = 1.0
+        #constituency_['score'] = 1.0
 
         resolved_constituencies.append(constituency_)
 
