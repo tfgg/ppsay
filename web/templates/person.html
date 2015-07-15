@@ -75,7 +75,12 @@ svg.timeline circle:hover {
     stroke:rgba(128,128,255,1.0);
 }
 
-svg.timeline line {
+svg.timeline line.axis {
+    stroke:rgba(128,128,128,1.0);
+    stroke-width:2;
+}
+
+svg.timeline line.marker {
     stroke:rgba(128,128,128,1.0);
     stroke-width:2;
 }
@@ -83,24 +88,41 @@ svg.timeline line {
 svg.timeline text {
     text-anchor: middle;
 }
+
+svg.timeline line.election-marker {
+}
+
+svg.timeline text.election-text {
+    fill: #999;
+}
 </style>
 
 {% set start_time=articles[-1].order_date %}
 {% set finish_time=articles[0].order_date %}
 {% set interval=finish_time - start_time %}
 
+{% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
+
 <svg width="100%" height="120" class="timeline">
   <text x="5%" y="20">{{ start_time.date() }}</text>
   <text x="95%" y="20">{{ finish_time.date() }}</text>
-  <line x1="5%" y1="60" x2="95%" y2="60"/>
-  <line x1="5%" y1="60" x2="5%" y2="40"/>
-  <line x1="95%" y1="60" x2="95%" y2="40"/>
+
+  <line x1="5%" y1="60" x2="95%" y2="60" class="axis"/>
+
+  <line x1="5%" y1="60" x2="5%" y2="40" class="marker"/>
+  <line x1="95%" y1="60" x2="95%" y2="40" class="marker"/>
+  
+  {% if 1.0 >= election_frac >= 0.0  %}
+      <line x1="{{ election_frac*90 + 5 }}%" y1="60" x2="{{ election_frac*90 + 5 }}%" y2="40" class="marker election-marker"/>
+      <text x="{{ election_frac*90 + 5 }}%" y="30" class="election-text">GE 2015</text>
+  {% endif %}
+
 </svg>
 <script>
     var svg = d3.select("svg.timeline");
 
     function labels(data) {
-        var label = svg.selectAll("text").data(data);
+        var label = svg.selectAll("text.headline").data(data);
         
         label.exit().remove();
 
@@ -109,6 +131,7 @@ svg.timeline text {
 
         label.attr("x", "50%")
              .attr("y", 90)
+             .attr("class", "headline")
              .html(function(d) { return d.title; });
     }
 

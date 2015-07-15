@@ -34,6 +34,7 @@ from ppsay.data import (
     constituencies_names,
     get_candidate,
     get_candidates,
+    elections
 )
 
 from ppsay.db import (
@@ -198,7 +199,8 @@ def person(person_id):
     return render_template('person.html',
                            person=person_doc,
                            quotes=quote_docs,
-                           articles=article_docs)
+                           articles=article_docs,
+                           elections=elections)
 
 @app.route('/constituency/<int:constituency_id>.xml')
 def constituency_rss(constituency_id):
