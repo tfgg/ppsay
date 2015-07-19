@@ -299,7 +299,7 @@ def add_quotes(matches, texts):
                     match_end = eos
                 else:
                     match_start = 0
-                    match_end = parsed_texts[match.match.source].end_of_sentences[0] + 1
+                    match_end = parsed_texts[match.match.source].end_of_sentences[0]
                 break
         else:
             print "Fallthrough"
@@ -363,10 +363,16 @@ def add_quotes(matches, texts):
                  'quote_span': (min(quotes[i]['quote_span'][0] for i in group),
                                 max(quotes[i]['quote_span'][1] for i in group),),
                  'match_text': quotes[i]['match_text'],}
+        
+        eos_left = quote['quote_span'][0] == 0 or (quote['quote_span'][0] - 1) in parsed_texts[quote['match_text']].end_of_sentences
+        eos_right = quote['quote_span'][1] in parsed_texts[quote['match_text']].end_of_sentences
+
+        quote['truncated'] = {'left': not eos_left,
+                              'right': not eos_right,}
  
         merged_quotes.append(quote)
     
-    quotes = merged_quotes 
+    quotes = merged_quotes
 
     print "  Total {} quotes".format(len(quotes))
    
@@ -469,7 +475,7 @@ def resolve_quotes(doc, verbose=False):
         quote_html = add_tags(quote_text, tags)
         quote_doc['tags'] = tags
         quote_doc['html'] = quote_html.strip()
-
+    
     tags = []
 
     doc['tags'] = [MatchTag(*tag) for tag in doc['tags']]

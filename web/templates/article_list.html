@@ -105,7 +105,9 @@
                       {% for candidate in quote.candidates %} quote-candidate-{{ candidate.id }}{% endfor %}
                       {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
                       {% if quotes_closed %} quote-closed{% endif %}'>
-              <p class='quote-text'>&hellip; {{ quote.html|safe }} &hellip; <a href='{{ article.page.urls.0 }}'>read more</a></p>
+              {% if 'truncated' in quote %}
+              <p class='quote-text'>{% if quote.truncated.left %}&hellip; {% endif %}{{ quote.html|safe }}{% if quote.truncated.right %} &hellip;{% endif %} <a href='{{ article.page.urls.0 }}'>read more</a></p>
+              {% endif %}
             </li>
           {% endfor %}
           <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>

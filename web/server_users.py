@@ -1,4 +1,7 @@
-import os, hashlib, base64
+import os
+import hashlib
+import base64
+
 from pymongo import MongoClient
 from bson import ObjectId
 
@@ -19,6 +22,7 @@ login_manager = LoginManager()
 client = MongoClient()
 db_users = client.news.users
 
+
 class User(dict):
     def is_active(self):
         return self['is_active']
@@ -32,9 +36,11 @@ class User(dict):
     def get_id(self):
         return unicode(self['_id'])
 
+
 @users.record_once
 def on_load(state):
     login_manager.init_app(state.app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -45,12 +51,14 @@ def load_user(user_id):
     else:
         return User(doc)
 
+
 def hash_pass(password, salt):
     m = hashlib.sha512()
     m.update(salt)
     m.update(password)
-    #m.update(SECRET_KEY)
+#   m.update(SECRET_KEY)
     return base64.b64encode(m.digest())
+
 
 @users.route("/register", methods=["GET", "POST"])
 def register():
@@ -61,8 +69,10 @@ def register():
         password = request.form.get('password')
         email = request.form.get('email').lower()
 
-        error_context = {'user_name': user_name,
-                         'email': email,}
+        error_context = {
+            'user_name': user_name,
+            'email': email,
+        }
 
         if '@' not in email:
             return render_template("register.html",
@@ -73,7 +83,7 @@ def register():
             return render_template("register.html",
                                    error="You must specify a username.",
                                    **error_context)
-        
+
         if len(password) < 1:
             return render_template("register.html",
                                    error="You must specify a password.",
@@ -85,7 +95,7 @@ def register():
             return render_template("register.html",
                                    error="The email address {} is already registered.".format(email),
                                    **error_context)
-        
+
         doc = db_users.find_one({'user_name': user_name})
 
         if doc is not None:
@@ -108,6 +118,7 @@ def register():
 
         return render_template("register_thankyou.html")
 
+
 @users.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'GET':
@@ -117,16 +128,16 @@ def login():
         password = request.form.get('password')
 
         user_doc = db_users.find_one({'email': email})
-       
+
         if user_doc is None:
             return render_template('login.html', error="Could not find user with email address {}.".format(email))
 
         user = User(user_doc)
-    
+
         salt = base64.b64decode(user['salt'])
         password_hashed = hash_pass(password, salt)
-        
-        if password_hashed == user['hashpass']: 
+
+        if password_hashed == user['hashpass']:
             login_result = login_user(user)
 
             if login_result:
@@ -136,6 +147,7 @@ def login():
 
         else:
             return render_template('login.html', error="Login failed.")
+
 
 @users.route("/logout")
 @login_required
@@ -152,8 +164,7 @@ if __name__ == "__main__":
 
     app = Flask(__name__)
 
-    app.secret_key='DEBUGGING'
+    app.secret_key = 'DEBUGGING'
     app.register_blueprint(users)
 
     app.run("0.0.0.0", debug=True)
-

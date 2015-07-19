@@ -2,7 +2,6 @@
 import requests
 import json
 from urlparse import urlparse
-from datetime import datetime
 from bson import ObjectId
 
 from flask import (
@@ -47,30 +46,39 @@ app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
 
-def get_mapit_area(area_id):
-  req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
 
-  return req.json()
+def get_mapit_area(area_id):
+    req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
+
+    return req.json()
+
 
 @app.route('/')
 def index():
-  article_docs = db_articles.find({'state': 'approved'}) \
-                            .sort([('time_added', -1)]) \
-                            .limit(100)
+    article_docs = db_articles.find({'state': 'approved'}) \
+                              .sort([('time_added', -1)]) \
+                              .limit(100)
 
-  article_docs = [x for x in article_docs if len([y for y in x.get('candidates', []) if y['state'] not in ['removed', 'removed_ml']]) > 0]
-                                          #or len([y for y in x.get('constituencies', []) if y['state'] != 'removed']) > 0]
+    article_docs = [
+        x for x in article_docs
+        if sum(
+            1 for y in x.get('candidates', [])
+            if y['state'] not in ['removed', 'removed_ml']
+        ) > 0
+    ]
 
-  for article_doc in article_docs:
-    article_doc['election'] = 'ge2015'
+    for article_doc in article_docs:
+        article_doc['election'] = 'ge2015'
 
-  return render_template('index.html',
-                         constituencies=constituencies,
-                         articles=article_docs)
+    return render_template('index.html',
+                           constituencies=constituencies,
+                           articles=article_docs)
+
 
 @app.route('/articles')
 def articles():
     return redirect(url_for('.index'))
+
 
 @app.route('/statistics')
 def statistics():
@@ -81,18 +89,32 @@ def statistics():
                            total_candidate_mentions=total_candidate_mentions,
                            last_week_candidate_mentions=last_week_candidate_mentions)
 
+
 @app.route('/statistics.json')
 def statistics_json():
     total_candidate_mentions = list(db_candidates.find().sort([("mentions.total_count", -1)]))
     last_week_candidate_mentions = list(db_candidates.find().sort([("mentions.last_week_count", -1)]))
 
-    total_mentions = sum([x['mentions']['total_count'] for x in total_candidate_mentions if 'mentions' in x])
-    last_week_mentions = sum([x['mentions']['last_week_count'] for x in last_week_candidate_mentions if 'mentions' in x])
-    num_candidates = len([x for x in total_candidate_mentions if 'mentions' in x and x['mentions']['total_count'] > 0])
+    total_mentions = sum(
+        x['mentions']['total_count'] for x in total_candidate_mentions if 'mentions' in x
+    )
 
-    return jsonify({'candidates': {'total_mentions': total_mentions,
-                                   'last_week_mentions': last_week_mentions,
-                                   'num_candidates': num_candidates}})
+    last_week_mentions = sum(
+        x['mentions']['last_week_count'] for x in last_week_candidate_mentions if 'mentions' in x
+    )
+
+    num_candidates = sum(
+        1 for x in total_candidate_mentions if 'mentions' in x and x['mentions']['total_count'] > 0
+    )
+
+    return jsonify({
+        'candidates': {
+            'total_mentions': total_mentions,
+            'last_week_mentions': last_week_mentions,
+            'num_candidates': num_candidates,
+        }
+    })
+
 
 def get_person_articles(person_id):
     person_doc = db_candidates.find_one({'id': person_id})
@@ -132,6 +154,7 @@ def get_person_articles(person_id):
 
     return article_docs
 
+
 @app.route('/person/<int:person_id>/articles')
 def person_articles(person_id):
     person_id = str(person_id)
@@ -142,6 +165,7 @@ def person_articles(person_id):
     return render_template('person.html',
                            articles=article_docs,
                            person=person_doc)
+
 
 def get_person_quotes(person_id):
     article_docs = list(get_articles([person_id]))
@@ -177,6 +201,7 @@ def get_person_quotes(person_id):
 
     return quote_docs
 
+
 @app.route('/person/<int:person_id>/quotes')
 def person_quotes(person_id):
     person_id = str(person_id)
@@ -187,6 +212,7 @@ def person_quotes(person_id):
     return render_template('person_quotes.html',
                            person=person_doc,
                            quotes=quote_docs)
+
 
 @app.route('/person/<int:person_id>')
 def person(person_id):
@@ -202,12 +228,14 @@ def person(person_id):
                            articles=article_docs,
                            elections=elections)
 
+
 @app.route('/constituency/<int:constituency_id>.xml')
 def constituency_rss(constituency_id):
     resp =  make_response(constituency(constituency_id, rss=True))
     resp.headers['Content-Type'] = 'application/atom+xml; charset=utf-8'
     
     return resp
+
 
 @app.route('/constituency/<int:constituency_id>')
 def constituency(constituency_id, rss=False):
@@ -295,6 +323,7 @@ def article(doc_id):
     return render_template('article.html',
                            article=doc)
 
+
 @app.route('/article/<doc_id>/people', methods=['PUT'])
 @login_required
 def article_person_confirm(doc_id):
@@ -321,6 +350,7 @@ def article_person_confirm(doc_id):
     return render_template('article_people_tagged.html',
                            article=doc)
  
+
 @app.route('/article/<doc_id>/people', methods=['DELETE'])
 @login_required
 def article_person_remove(doc_id):
@@ -347,6 +377,7 @@ def article_person_remove(doc_id):
     return render_template('article_people_tagged.html',
                            article=doc)
 
+
 @app.route('/article/<doc_id>/constituencies', methods=['PUT'])
 @login_required
 def article_constituency_confirm(doc_id):
@@ -372,7 +403,8 @@ def article_constituency_confirm(doc_id):
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
- 
+
+
 @app.route('/article/<doc_id>/constituencies', methods=['DELETE'])
 @login_required
 def article_constituency_remove(doc_id):
@@ -399,7 +431,9 @@ def article_constituency_remove(doc_id):
     return render_template('article_constituencies_tagged.html',
                            article=doc)
 
+
 permitted_states = {'approved', 'removed', 'moderated'}
+
 
 @app.route('/article/state', methods=['PUT'])
 @login_required
@@ -438,6 +472,7 @@ def autocomplete_person():
 
     return json.dumps(matches)
 
+
 @app.route('/autocomplete/constituency', methods=['GET'])
 def autocomplete_constituency():
     partial_constituency_name = request.args.get('term')
@@ -449,6 +484,7 @@ def autocomplete_constituency():
                 matches.append({'label': name, 'value': constituency_id})
 
     return json.dumps(matches)
+
 
 dashboard_queries = [{'query': {},
                       'id': 'num_articles',
@@ -470,8 +506,10 @@ dashboard_queries = [{'query': {},
                       'name': 'Number of articles with clashing tags',}
                     ]
 
+
 dashboard_query_index = {q['id']: q for q in dashboard_queries}
           
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -480,6 +518,7 @@ def dashboard():
     return render_template('dashboard.html',
                            queries=dashboard_queries,
                            stats=stats)
+
 
 @app.route('/dashboard/articles/<query_id>')
 @login_required
@@ -491,6 +530,7 @@ def dashboard_article(query_id):
                            query=query,
                            articles=docs)
 
+
 @app.route('/recent')
 def action_log():
     log = db_action_log.find() \
@@ -498,6 +538,7 @@ def action_log():
 
     return render_template('action_log.html',
                            log=log)
+
 
 @app.route('/queue')
 @login_required
@@ -507,4 +548,3 @@ def moderation_queue():
 
     return render_template('moderation_queue.html',
                            articles=articles)
-
