@@ -187,7 +187,7 @@ svg.timeline text.election-text {
         {% if quotes %}
         {% for quote in quotes[:5] %}
             <li class='quote'>
-                <p class='quote-text'>{{ quote.html|safe }}</p>
+                <p class='quote-text'>{% if quote.truncated.left %}&hellip; {% endif %}{{ quote.html|safe }}{% if quote.truncated.right %} &hellip;{% endif %}</p>
                 <p style='float: left;' class='quote-article-link'><a href='{{ url_for("article_report", doc_id=quote.article._id) }}'>report</a></p>
                 <p class='quote-article-link'>
                     {% if quote.article.page.date_published %}
