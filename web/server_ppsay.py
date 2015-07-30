@@ -239,7 +239,8 @@ def person(person_id):
                            articles=article_docs,
                            elections=elections,
                            domains=domains,
-                           weekly_buckets=weekly_buckets)
+                           weekly_buckets=weekly_buckets,
+                           year_2015=datetime(2015,1,1))
 
 
 @app.route('/constituency/<int:constituency_id>.xml')

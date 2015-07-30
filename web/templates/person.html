@@ -75,8 +75,12 @@ svg.timeline circle:hover {
     stroke:rgba(128,128,255,1.0);
 }
 
-svg.timeline rect {
-    fill: rgba(251, 251, 149, 0.5);
+svg.timeline rect.bar {
+    fill: rgba(253, 221, 102, 1.00);
+}
+
+svg.timeline text.bar {
+    text-anchor: middle;
 }
 
 svg.timeline line.axis {
@@ -101,29 +105,33 @@ svg.timeline text.election-text {
 }
 </style>
 
-{% set start_time=articles[-1].order_date %}
+{#{% set start_time=articles[-1].order_date %}#}
+{% set start_time=year_2015 %}
 {% set finish_time=articles[0].order_date %}
 {% set interval=finish_time - start_time %}
 
 {% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
 
 <svg width="100%" height="120" class="timeline">
-  <text x="5%" y="20">{{ start_time.date() }}</text>
-  <text x="95%" y="20">{{ finish_time.date() }}</text>
+  <g class='inner'>
+  </g>
 
-  <line x1="5%" y1="60" x2="95%" y2="60" class="axis"/>
+  <text x="5%" y="110">{{ start_time.date() }}</text>
+  <text x="95%" y="110">{{ finish_time.date() }}</text>
 
-  <line x1="5%" y1="60" x2="5%" y2="40" class="marker"/>
-  <line x1="95%" y1="60" x2="95%" y2="40" class="marker"/>
+  <line x1="5%" y1="70" x2="95%" y2="70" class="axis"/>
+
+  <line x1="5%" y1="70" x2="5%" y2="90" class="marker"/>
+  <line x1="95%" y1="70" x2="95%" y2="90" class="marker"/>
   
   {% if 1.0 >= election_frac >= 0.0  %}
-      <line x1="{{ election_frac*90 + 5 }}%" y1="60" x2="{{ election_frac*90 + 5 }}%" y2="40" class="marker election-marker"/>
-      <text x="{{ election_frac*90 + 5 }}%" y="30" class="election-text">GE 2015</text>
+      <line x1="{{ election_frac*90 + 5 }}%" y1="70" x2="{{ election_frac*90 + 5 }}%" y2="90" class="marker election-marker"/>
+      <text x="{{ election_frac*90 + 5 }}%" y="110" class="election-text">GE 2015</text>
   {% endif %}
 
 </svg>
 <script>
-    var svg = d3.select("svg.timeline");
+    var svg = d3.select("svg.timeline g.inner");
 
     function labels(data) {
         var label = svg.selectAll("text.headline").data(data);
@@ -151,19 +159,30 @@ svg.timeline text.election-text {
         {% if not loop.last %},{% endif %}{% endfor %}
     ]
 
+    var weekly_max = d3.max(weekly_data, function(d) { return d.y });
+
     var circle = svg.selectAll("circle").data(article_data);
-    var rectangle = svg.selectAll("rect").data(weekly_data);
+    var rectangle = svg.selectAll("rect.bar").data(weekly_data);
+    var rectangle_tex = svg.selectAll("text.bar").data(weekly_data);
  
     rectangle.enter().append("rect")
           .attr("x", function(d) { return (d.x1*90 + 5) + "%"; })
-          .attr("y", function(d) { return 60-d.y*10; })
+          .attr("y", function(d) { return 70-(d.y / weekly_max * 50 + 5); })
           .attr("width", function(d) { return ((d.x2 - d.x1)*90) + "%"; })
-          .attr("height", function(d) { return d.y*10; });
+          .attr("height", function(d) { return (d.y / weekly_max * 50 + 5); })
+          .attr("class", "bar");
+    
+    rectangle.enter().append("text")
+          .attr("x", function(d) { return ((d.x1 + d.x2)/2*90 + 5) + "%"; })
+          .attr("y", function(d) { return 70-(d.y / weekly_max * 50) - 10; })
+          .attr("fill-opacity", function(d) { return d.y/weekly_max*0.9 + 0.1 ;})
+          .html(function(d) { return d.y })
+          .attr("class", "bar");
 
     circle.enter().append("circle")
           .attr("cx", function(d) { return (d.x*90 + 5) + "%"; })
-          .attr("cy", 60)
-          .attr("r", 10)
+          .attr("cy", 70)
+          .attr("r", 5)
           .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });
 </script>
     </div>
