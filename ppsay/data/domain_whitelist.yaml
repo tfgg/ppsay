@@ -7,17 +7,19 @@ news:
 - www.independent.co.uk
 - rt.com
 - www.bbc.com
-- mireportz.com
 - www.scotsman.com
 - www.dailyrecord.co.uk
 - www.itv.com
 blogs:
 - www.conservativehome.com
+- mireportz.com
 - www.libdemvoice.org
 - www.labourlist.org
 - labourlist.org
 - www.politicshome.com
 - blogs.spectator.co.uk
+magazines:
+- www.nme.com
 local_news:
 - www.theargus.co.uk
 - www.examiner.co.uk
@@ -165,7 +167,6 @@ local_news:
 - www.morpethherald.co.uk
 - www.oxfordmail.co.uk
 - www.carmarthenjournal.co.uk
-- www.nme.com
 - www.westerndailypress.co.uk
 - www.wattonandswaffhamtimes.co.uk
 - www.sheffieldtelegraph.co.uk

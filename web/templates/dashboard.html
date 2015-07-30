@@ -14,6 +14,7 @@
             {% for query in queries %}
             <li><a href='{{ url_for('.dashboard_article', query_id=query.id) }}'>{{ query.name }}</a> <strong>{{ stats[query.id] }}</strong></li>
             {% endfor %}
+            <li><a href='{{ url_for('.dashboard_domains') }}'>Domains</a></li>
         </ul>
     </div>
   </div>

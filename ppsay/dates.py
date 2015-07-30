@@ -151,7 +151,7 @@ def find_dates_tree(tree):
             dates.append(parsed_time)
         except:
             # 2015-06-17
-            parsed_time = datetime.strptime(date_time_str, "%Y-%m-%d").replace(tzinfo=UTC)
+            parsed_time = datetime.strptime(date_time_str.split('T')[0], "%Y-%m-%d").replace(tzinfo=UTC)
             dates.append(parsed_time)
 
     return dates

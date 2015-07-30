@@ -306,8 +306,9 @@ def add_quotes(matches, texts):
             match_start = 0
             match_end = len(texts[match.match.source])
 
-        match_start = max(spans[max(sub[0] - 10, 0)][0], match_start)
-        match_end = min(spans[min(sub[1] + 10, len(spans)-1)][1], match_end)
+        max_quote_len = 40
+        match_start = max(spans[max(sub[0] - max_quote_len/2, 0)][0], match_start)
+        match_end = min(spans[min(sub[1] + max_quote_len/2, len(spans)-1)][1], match_end)
 
         quote_doc = {'constituency_ids': [],
                      'party_ids': [],

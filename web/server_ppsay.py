@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+
+from datetime import timedelta, datetime
+
+from collections import Counter
 from urlparse import urlparse
 from bson import ObjectId
 
@@ -17,7 +21,7 @@ from flask import (
 from flask.ext.login import login_required, current_user
 
 from ppsay.log import log
-from ppsay.domains import domain_whitelist
+from ppsay.domains import domain_whitelist, get_domain
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
 from ppsay.article import get_articles
@@ -40,6 +44,7 @@ from ppsay.db import (
     db_articles,
     db_candidates,
     db_action_log,
+    db_domains,
 )
 
 app = Blueprint('ppsay',
@@ -222,11 +227,19 @@ def person(person_id):
     quote_docs = get_person_quotes(person_id)
     article_docs = get_person_articles(person_id)
 
+    domains = sorted([(get_domain(domain), count) for domain, count in Counter(doc['domain'] for doc in article_docs).items()], key=lambda x: x[1], reverse=True)
+
+    weekly_buckets = sorted(list(Counter(doc['order_date'].replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=doc['order_date'].weekday()) for doc in article_docs).items()))
+
+    print weekly_buckets
+
     return render_template('person.html',
                            person=person_doc,
                            quotes=quote_docs,
                            articles=article_docs,
-                           elections=elections)
+                           elections=elections,
+                           domains=domains,
+                           weekly_buckets=weekly_buckets)
 
 
 @app.route('/constituency/<int:constituency_id>.xml')
@@ -529,6 +542,30 @@ def dashboard_article(query_id):
     return render_template('dashboard_query.html',
                            query=query,
                            articles=docs)
+
+
+@app.route('/dashboard/domains')
+@login_required
+def dashboard_domains():
+    docs = db_domains.find().sort([('name', 1)])
+
+    return render_template('dashboard_domains.html',
+                           domains=docs)
+
+
+@app.route('/dashboard/domains/<doc_id>', methods=["PUT", "POST"])
+@login_required
+def dashboard_domain(doc_id):
+    doc_id = ObjectId(doc_id)
+    doc = db_domains.find_one({'_id': doc_id})
+
+    name = request.form.get("name")
+
+    doc['name'] = name
+    db_domains.save(doc)
+
+    return render_template('dashboard_domain.html',
+                           domain=doc) 
 
 
 @app.route('/recent')

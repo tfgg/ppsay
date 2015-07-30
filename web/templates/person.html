@@ -75,6 +75,10 @@ svg.timeline circle:hover {
     stroke:rgba(128,128,255,1.0);
 }
 
+svg.timeline rect {
+    fill: rgba(251, 251, 149, 0.5);
+}
+
 svg.timeline line.axis {
     stroke:rgba(128,128,128,1.0);
     stroke-width:2;
@@ -135,16 +139,32 @@ svg.timeline text.election-text {
              .html(function(d) { return d.title; });
     }
 
-    var circle = svg.selectAll("circle").data([
+    var article_data = [
 {% for article in articles %}{"x": {{ (article.order_date - start_time).total_seconds()/interval.total_seconds() }}, "title": "{{ article.page.title }}"}{% if not loop.last %},{% endif %}{% endfor %}
-    ]);
+    ];
+
+    var weekly_data = [
+        {% for bucket in weekly_buckets %}
+            {"x1": {{ (bucket[0] - start_time).total_seconds()/interval.total_seconds() }},
+             "x2": {{ ((bucket[0] - start_time).total_seconds() + 86400*7)/interval.total_seconds() }},
+             "y": {{ bucket[1] }}}
+        {% if not loop.last %},{% endif %}{% endfor %}
+    ]
+
+    var circle = svg.selectAll("circle").data(article_data);
+    var rectangle = svg.selectAll("rect").data(weekly_data);
+ 
+    rectangle.enter().append("rect")
+          .attr("x", function(d) { return (d.x1*90 + 5) + "%"; })
+          .attr("y", function(d) { return 60-d.y*10; })
+          .attr("width", function(d) { return ((d.x2 - d.x1)*90) + "%"; })
+          .attr("height", function(d) { return d.y*10; });
 
     circle.enter().append("circle")
           .attr("cx", function(d) { return (d.x*90 + 5) + "%"; })
           .attr("cy", 60)
           .attr("r", 10)
           .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });
-
 </script>
     </div>
   </div>
@@ -170,6 +190,13 @@ svg.timeline text.election-text {
       {% endfor %}
 
       <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
+
+      <h3>Written about by</h3>
+      <ul class='publications'>
+      {% for domain, count in domains %}
+        <li class='publication'><span class='publication-name'>{{ domain['name'] }}</span> <span class='publication-count'>{{ count }}</span></li>
+      {% endfor %}
+      </ul>
     </div>
     {#<div class='col-md-10'>
       {% include "article_add_form.html" %}
