@@ -235,10 +235,13 @@ svg.timeline text.election-text {
 
       <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
 
-      <h3>Written about by</h3>
+      <h3>Mentioned by</h3>
       <ul class='publications'>
       {% for domain, count in domains %}
-        <li class='publication'><span class='publication-name'>{{ domain['name'] }}</span> <span class='publication-count'>{{ count }}</span></li>
+        <li class='publication'>
+            <div class='publication-name'><a href='http://{{ domain['domains'][0] }}'>{{ domain['name'] }}</a></div>
+            <div class='publication-count'>{% if count!=1 %}{{ count }} times{% else %}Once{% endif %}</div>
+        </li>
       {% endfor %}
       </ul>
     </div>

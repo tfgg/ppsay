@@ -284,6 +284,16 @@ ul.quotes {
   ul.quotes li.quote-closed {
     display: none; }
 
+ul.publications {
+  list-style: none;
+  padding: 0; }
+  ul.publications li.publication {
+    margin-bottom: 1em; }
+    ul.publications li.publication div.publication-name {
+      font-size: 1.1em; }
+    ul.publications li.publication div.publication-count {
+      opacity: 0.5; }
+
 ul.article-list {
   list-style: none;
   margin: 0;

@@ -431,6 +431,22 @@ ul.quotes {
     }
 }
 
+ul.publications {
+    list-style: none;
+    padding: 0;
+
+    li.publication {
+        margin-bottom: 1em;
+
+        div.publication-name {
+            font-size: 1.1em;
+        }
+
+        div.publication-count {
+            opacity: 0.5;
+        }
+    }
+}
 
 ul.article-list {
   list-style:none;
