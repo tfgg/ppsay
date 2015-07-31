@@ -396,3 +396,31 @@ ul.article-list {
         display: none; }
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
+
+svg.timeline circle {
+  fill: rgba(255, 255, 255, 0.5);
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline circle:hover {
+  stroke: #8080ff; }
+svg.timeline rect.bar {
+  fill: #fddd66; }
+svg.timeline rect.bar_hidden {
+  fill: rgba(255, 255, 255, 0); }
+svg.timeline text.bar {
+  fill: black;
+  text-anchor: middle;
+  opacity: 0.1; }
+svg.timeline text.bar_highlight {
+  fill: black;
+  opacity: 1.0; }
+svg.timeline line.axis {
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline line.marker {
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline text {
+  text-anchor: middle; }
+svg.timeline text.election-text {
+  fill: #999; }

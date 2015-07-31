@@ -21,7 +21,22 @@
     {% set person_year="" %}
 {% endif %}
 
+{# For the timeline #}
+{#{% set start_time=articles[-1].order_date %}#}
+{% set start_time=year_2015 %}
+{% set finish_time=articles[0].order_date %}
+{% set interval=finish_time - start_time %}
+{% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
+{% set headspace = 80 %}{# Head space, head space, nothing could possibly go wrong! #}
+
+{% if articles %}
+{% block header %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+{% endblock %}
+{% endif %}
+
 {% block content %}
+
 <div class='container'>
   {% include "header.html" %}
 </div>
@@ -58,93 +73,12 @@
   </div>
 </div>
 
+
+
 {% if articles %}
-<div class='container'>
-  <div class='row'>
-    <div class='col-md-12'>
-<h3>Timeline</h3>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
-<style>
-svg.timeline circle {
-    fill: rgba(255,255,255,0.5);
-    stroke:rgba(128,128,128,1.0);
-    stroke-width:2 
-}
-
-svg.timeline circle:hover {
-    stroke:rgba(128,128,255,1.0);
-}
-
-svg.timeline rect.bar {
-    fill: rgba(253, 221, 102, 1.00);
-}
-
-svg.timeline rect.bar_hidden {
-    fill: rgba(255, 255, 255, 0.0);
-}
-
-svg.timeline text.bar {
-    fill: rgba(0, 0, 0, 1.0);
-    text-anchor: middle;
-    opacity: 0.1;
-}
-
-svg.timeline text.bar_highlight {
-    fill: black;
-    opacity: 1.0;
-}
-
-svg.timeline line.axis {
-    stroke:rgba(128,128,128,1.0);
-    stroke-width:2;
-}
-
-svg.timeline line.marker {
-    stroke:rgba(128,128,128,1.0);
-    stroke-width:2;
-}
-
-svg.timeline text {
-    text-anchor: middle;
-}
-
-svg.timeline line.election-marker {
-}
-
-svg.timeline text.election-text {
-    fill: #999;
-}
-</style>
-
-{#{% set start_time=articles[-1].order_date %}#}
-{% set start_time=year_2015 %}
-{% set finish_time=articles[0].order_date %}
-{% set interval=finish_time - start_time %}
-
-{% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
-{% set headspace = 80 %}{# Head space, head space, nothing could possibly go wrong! #}
-
-<svg width="100%" height="130" class="timeline">
-  <g class='inner'>
-  </g>
-
-  <text x="5%" y="{{ headspace + 40 }}">{{ start_time.date() }}</text>
-  <text x="95%" y="{{ headspace + 40 }}">{{ finish_time.date() }}</text>
-
-  <line x1="5%" y1="{{ headspace }}" x2="95%" y2="{{ headspace }}" class="axis"/>
-
-  <line x1="5%" y1="{{ headspace }}" x2="5%" y2="90" class="marker"/>
-  <line x1="95%" y1="{{ headspace }}" x2="95%" y2="90" class="marker"/>
-  
-  {% if 1.0 >= election_frac >= 0.0  %}
-      <line x1="{{ election_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ election_frac*90 + 5 }}%" y2="{{ headspace + 20 }}" class="marker election-marker"/>
-      <text x="{{ election_frac*90 + 5 }}%" y="{{ headspace + 40 }}" class="election-text">GE 2015</text>
-  {% endif %}
-
-</svg>
 <script>
+    $(document).ready(function(){
     var svg = d3.select("svg.timeline g.inner");
-
 
     function labels(data) {
         var label = svg.selectAll("text.headline").data(data);
@@ -208,11 +142,8 @@ svg.timeline text.election-text {
           .attr("cy", {{ headspace }})
           .attr("r", 5)
           .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });
-    
+    });
 </script>
-    </div>
-  </div>
-</div>
 {% endif %}
 
 <div class='container'>
@@ -233,7 +164,7 @@ svg.timeline text.election-text {
       </p>
       {% endfor %}
 
-      <a href='http://yournextmp.com/person/{{ person.id }}'>View {{ person.name }} on YourNextMP</a>
+      <a href='http://yournextmp.com/person/{{ person.id }}' class='btn' style='white-space:normal;border:1px solid #ccc;'>View {{ person.name }} on YourNextMP</a>
 
       <h3>Mentioned by</h3>
       <ul class='publications'>
@@ -254,6 +185,28 @@ svg.timeline text.election-text {
             <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
         </ul>
     </div>#}
+    {% if articles %}
+    <div class='col-md-10'>
+        <svg width="100%" height="130" class="timeline">
+          <g class='inner'>
+          </g>
+
+          <text x="5%" y="{{ headspace + 40 }}">{{ start_time.date() }}</text>
+          <text x="95%" y="{{ headspace + 40 }}">{{ finish_time.date() }}</text>
+
+          <line x1="5%" y1="{{ headspace }}" x2="95%" y2="{{ headspace }}" class="axis"/>
+
+          <line x1="5%" y1="{{ headspace }}" x2="5%" y2="90" class="marker"/>
+          <line x1="95%" y1="{{ headspace }}" x2="95%" y2="90" class="marker"/>
+          
+          {% if 1.0 >= election_frac >= 0.0  %}
+              <line x1="{{ election_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ election_frac*90 + 5 }}%" y2="{{ headspace + 20 }}" class="marker election-marker"/>
+              <text x="{{ election_frac*90 + 5 }}%" y="{{ headspace + 40 }}" class="election-text">GE 2015</text>
+          {% endif %}
+        </svg>
+    </div>
+    {% endif %}
+
     <div class='col-md-10 col-sm-9'>
         <p class='warning'>These are automatically matched articles and extracted quotes that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
         <h3>Quotes mentioning {{ person.name }}</h3>
