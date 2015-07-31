@@ -1,0 +1,39 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<script>
+function save_domain(domain_id) {
+    var name = $("#name-" + domain_id ).val();
+
+    $.ajax({
+        url: '{{ url_for('.dashboard_domain', doc_id='') }}' + domain_id,
+        type: 'PUT',
+        data: {name : name}
+    }).done(function(data, textStatus, jqXHR) {
+        $('#domain-' + domain_id).html(data);
+    });
+
+    return false; 
+}
+
+</script>
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <a href='{{ url_for(".dashboard") }}' class='link-back'>&lt; dashboard</a>
+      <h1>Domains</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+        <ul>
+          {% for domain in domains %}
+            <li id="domain-{{ domain._id }}">
+                {% include "dashboard_domain.html" %}
+            </li>
+          {% endfor %}
+        </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}
