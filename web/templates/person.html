@@ -79,8 +79,19 @@ svg.timeline rect.bar {
     fill: rgba(253, 221, 102, 1.00);
 }
 
+svg.timeline rect.bar_hidden {
+    fill: rgba(255, 255, 255, 0.0);
+}
+
 svg.timeline text.bar {
+    fill: rgba(0, 0, 0, 1.0);
     text-anchor: middle;
+    opacity: 0.1;
+}
+
+svg.timeline text.bar_highlight {
+    fill: black;
+    opacity: 1.0;
 }
 
 svg.timeline line.axis {
@@ -111,27 +122,29 @@ svg.timeline text.election-text {
 {% set interval=finish_time - start_time %}
 
 {% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
+{% set headspace = 80 %}{# Head space, head space, nothing could possibly go wrong! #}
 
-<svg width="100%" height="120" class="timeline">
+<svg width="100%" height="130" class="timeline">
   <g class='inner'>
   </g>
 
-  <text x="5%" y="110">{{ start_time.date() }}</text>
-  <text x="95%" y="110">{{ finish_time.date() }}</text>
+  <text x="5%" y="{{ headspace + 40 }}">{{ start_time.date() }}</text>
+  <text x="95%" y="{{ headspace + 40 }}">{{ finish_time.date() }}</text>
 
-  <line x1="5%" y1="70" x2="95%" y2="70" class="axis"/>
+  <line x1="5%" y1="{{ headspace }}" x2="95%" y2="{{ headspace }}" class="axis"/>
 
-  <line x1="5%" y1="70" x2="5%" y2="90" class="marker"/>
-  <line x1="95%" y1="70" x2="95%" y2="90" class="marker"/>
+  <line x1="5%" y1="{{ headspace }}" x2="5%" y2="90" class="marker"/>
+  <line x1="95%" y1="{{ headspace }}" x2="95%" y2="90" class="marker"/>
   
   {% if 1.0 >= election_frac >= 0.0  %}
-      <line x1="{{ election_frac*90 + 5 }}%" y1="70" x2="{{ election_frac*90 + 5 }}%" y2="90" class="marker election-marker"/>
-      <text x="{{ election_frac*90 + 5 }}%" y="110" class="election-text">GE 2015</text>
+      <line x1="{{ election_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ election_frac*90 + 5 }}%" y2="{{ headspace + 20 }}" class="marker election-marker"/>
+      <text x="{{ election_frac*90 + 5 }}%" y="{{ headspace + 40 }}" class="election-text">GE 2015</text>
   {% endif %}
 
 </svg>
 <script>
     var svg = d3.select("svg.timeline g.inner");
+
 
     function labels(data) {
         var label = svg.selectAll("text.headline").data(data);
@@ -142,7 +155,7 @@ svg.timeline text.election-text {
              .append("text");
 
         label.attr("x", "50%")
-             .attr("y", 90)
+             .attr("y", 20)
              .attr("class", "headline")
              .html(function(d) { return d.title; });
     }
@@ -162,28 +175,40 @@ svg.timeline text.election-text {
     var weekly_max = d3.max(weekly_data, function(d) { return d.y });
 
     var circle = svg.selectAll("circle").data(article_data);
+    var rectangle_hidden = svg.selectAll("rect.bar_hidden").data(weekly_data);
     var rectangle = svg.selectAll("rect.bar").data(weekly_data);
     var rectangle_tex = svg.selectAll("text.bar").data(weekly_data);
  
     rectangle.enter().append("rect")
           .attr("x", function(d) { return (d.x1*90 + 5) + "%"; })
-          .attr("y", function(d) { return 70-(d.y / weekly_max * 50 + 5); })
+          .attr("y", function(d) { return {{ headspace }}-(d.y / weekly_max * 50 + 5); })
           .attr("width", function(d) { return ((d.x2 - d.x1)*90) + "%"; })
           .attr("height", function(d) { return (d.y / weekly_max * 50 + 5); })
           .attr("class", "bar");
     
     rectangle.enter().append("text")
           .attr("x", function(d) { return ((d.x1 + d.x2)/2*90 + 5) + "%"; })
-          .attr("y", function(d) { return 70-(d.y / weekly_max * 50) - 10; })
-          .attr("fill-opacity", function(d) { return d.y/weekly_max*0.9 + 0.1 ;})
+          .attr("y", function(d) { return {{ headspace }}-(d.y / weekly_max * 50) - 10; })
+          /*.attr("fill-opacity", function(d) { return d.y/weekly_max*0.9 + 0.1 ;})*/
           .html(function(d) { return d.y })
+          .attr("id", function(d,i) { return "text-bar-" + i; })
           .attr("class", "bar");
+
+    rectangle_hidden.enter().append("rect")
+          .attr("x", function(d) { return (d.x1*90 + 5) + "%"; })
+          .attr("y", function(d) { return 0; })
+          .attr("width", function(d) { return ((d.x2 - d.x1)*90) + "%"; })
+          .attr("height", function(d) { return {{ headspace }}; })
+          .attr("class", "bar_hidden")
+          .on("mouseover", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar bar_highlight"); }) /* JQuery can't set classes on SVG */
+          .on("mouseout", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar"); });
 
     circle.enter().append("circle")
           .attr("cx", function(d) { return (d.x*90 + 5) + "%"; })
-          .attr("cy", 70)
+          .attr("cy", {{ headspace }})
           .attr("r", 5)
           .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });
+    
 </script>
     </div>
   </div>
