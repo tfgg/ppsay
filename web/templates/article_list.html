@@ -61,7 +61,7 @@
           <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
          
           {% if current_user.is_authenticated() %}
-          <small><a href='{{ url_for('.article', doc_id=article._id) }}'>edit</a></small>
+          <small><a href='{{ url_for('ppsay.article', doc_id=article._id) }}'>edit</a></small>
           {% endif %}
           </h2>
      
@@ -74,7 +74,7 @@
                 and {{ article.candidates|length - max_candidates }} more
             {% else %}
             <li class='candidate-score-{{ candidate.state }}'>
-                <a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
+                <a href='{{ url_for('ppsay.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
             </li>
             {% endif %}
           {% endfor %}
@@ -88,7 +88,7 @@
                 and {{ article.constituencies|length - max_constituencies }} more
             {% else %}
             <li class='constituency-score-{{ constituency.state }}'>
-                <a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
+                <a href='{{ url_for('ppsay.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
             </li>
             {% endif %}
           {% endfor %}

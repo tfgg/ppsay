@@ -3,13 +3,15 @@
 {% block content %}
 <div class='container'>
   <div class='row'>
-    <div class='col-md-12'>
+    <div class='col-md-12 top-banner'>
       <a href='{{ url_for(".dashboard") }}' class='link-back'>&lt; dashboard</a>
-      <h1>{{ query.name }}</h1>
+      <div class='name'>
+        <h1>{{ query.name }}</h1>
+      </div>
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-6'>
+    <div class='col-md-12'>
        {% include 'article_list.html' %} 
     </div>
   </div>
