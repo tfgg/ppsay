@@ -37,22 +37,24 @@ for doc in docs:
     if doc['state'] not in ['approved', 'whitelisted']:
         continue
 
+    removed_states = ['removed', 'removed_ml']
+
     for candidate in doc['candidates']:
-        if candidate['state'] != 'removed':
+        if candidate['state'] not in removed_states:
             total_candidates[candidate['id']] += 1
     
     for constituency in doc['constituencies']:
-        if constituency['state'] != 'removed':
+        if constituency['state'] not in removed_states:
             total_constituencies[constituency['id']] += 1
 
     if doc['page']['date_published'] is not None and doc['page']['date_published'] >= one_week_ago:
         for candidate in doc['candidates']:
-            if candidate['state'] != 'removed':
+            if candidate['state'] not in removed_states:
                 last_week_candidates[candidate['id']] += 1
     
     if doc['page']['date_published'] is not None and one_week_ago > doc['page']['date_published'] >= two_week_ago:
         for candidate in doc['candidates']:
-            if candidate['state'] != 'removed':
+            if candidate['state'] not in removed_states:
                 last_last_week_candidates[candidate['id']] += 1
 
 total_rank = [cid for cid, c in sorted(total_candidates.items(), key=lambda (candidate_id, count): count, reverse=True)]
