@@ -664,6 +664,10 @@ svg.timeline {
 
     line.election-marker {
     }
+    
+    line.month-marker {
+       opacity: 0.5; 
+    }
 
     text.election-text {
         fill: #999;

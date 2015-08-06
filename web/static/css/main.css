@@ -422,5 +422,7 @@ svg.timeline line.marker {
   stroke-width: 2; }
 svg.timeline text {
   text-anchor: middle; }
+svg.timeline line.month-marker {
+  opacity: 0.5; }
 svg.timeline text.election-text {
   fill: #999; }

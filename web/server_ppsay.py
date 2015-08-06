@@ -231,7 +231,9 @@ def person(person_id):
 
     weekly_buckets = sorted(list(Counter(doc['order_date'].replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=doc['order_date'].weekday()) for doc in article_docs).items()))
 
-    print weekly_buckets
+    months = [datetime(2015,i,1) for i in range(1,datetime.now().month+1)]
+
+    print months
 
     return render_template('person.html',
                            person=person_doc,
@@ -240,7 +242,8 @@ def person(person_id):
                            elections=elections,
                            domains=domains,
                            weekly_buckets=weekly_buckets,
-                           year_2015=datetime(2015,1,1))
+                           year_2015=datetime(2015,1,1),
+                           months=months)
 
 
 @app.route('/constituency/<int:constituency_id>.xml')

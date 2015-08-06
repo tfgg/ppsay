@@ -137,11 +137,11 @@
           .on("mouseover", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar bar_highlight"); }) /* JQuery can't set classes on SVG */
           .on("mouseout", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar"); });
 
-    circle.enter().append("circle")
+    /*circle.enter().append("circle")
           .attr("cx", function(d) { return (d.x*90 + 5) + "%"; })
           .attr("cy", {{ headspace }})
           .attr("r", 5)
-          .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });
+          .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });*/
     });
 </script>
 {% endif %}
@@ -198,6 +198,11 @@
 
           <line x1="5%" y1="{{ headspace }}" x2="5%" y2="90" class="marker"/>
           <line x1="95%" y1="{{ headspace }}" x2="95%" y2="90" class="marker"/>
+          
+          {% for t in months %}
+              {% set month_frac = (t - start_time).total_seconds() / interval.total_seconds() %}
+              <line x1="{{ month_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ month_frac*90 + 5 }}%" y2="{{ headspace + 10 }}" class="marker month-marker"/>
+          {% endfor %}
           
           {% if 1.0 >= election_frac >= 0.0  %}
               <line x1="{{ election_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ election_frac*90 + 5 }}%" y2="{{ headspace + 20 }}" class="marker election-marker"/>
