@@ -17,6 +17,7 @@
             <li><a href='{{ url_for('.dashboard_article', query_id=query.id) }}'>{{ query.name }}</a> <strong>{{ stats[query.id] }}</strong></li>
             {% endfor %}
             <li><a href='{{ url_for('.dashboard_domains') }}'>Domains</a></li>
+            <li><a href='{{ url_for('.dashboard_domains') }}'>Classifier</a></li> {# Show -ve rate over time? Average score over time? #}
         </ul>
     </div>
   </div>
