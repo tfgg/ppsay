@@ -18,7 +18,7 @@ setup(name='#ge2015 mentions',
       description='Mentions',
       author='Timothy Green',
       author_email='timothy.green@gmail.com',
-      packages=['ppsay','ppsay.ml'],
+      packages=['ppsay','ppsay.ml','ppsay.namemunge'],
       package_data = {
         "ppsay": ['data/*'],
       }

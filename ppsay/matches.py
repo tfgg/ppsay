@@ -2,7 +2,7 @@
 
 import sys
 import json
-from itertools import combinations
+from itertools import combinations, chain
 
 from bson import ObjectId
 from ppsay.data import (
@@ -30,7 +30,11 @@ from text import (
 from itertools import chain
 from collections import namedtuple
 
-from ppsay.match_lookup import get_ngrams, index, munge_names
+from match_lookup import get_ngrams, index
+from namemunge.en import (
+    primary_generate_names,
+    secondary_generate_names,
+)
 
 MatchEntity = namedtuple('MatchEntity', ['type', 'id', 'match']) 
 Matches = namedtuple('Matches', ['matches', 'possible'])
@@ -81,42 +85,6 @@ def resolve_overlaps(matches, verbose=False):
             yield match
 
 
-def generate_extra_names(names, gender=None):
-    """
-        Make extra (non-primary) names to match someone.
-
-        These are only used when there's a primary match.
-    """
-    extra_names = []
-
-    # Try to only match gender appropriate titles
-    titles = {'Dr', 'Cllr', 'Sir', 'Prof'}
-
-    if gender and gender.lower() == 'male':
-        titles |= {'Mr'}
-    elif gender and gender.lower() == 'female':
-        titles |= {'Mrs', 'Miss', 'Ms'}
-    else:
-        titles |= {'Mr', 'Mrs', 'Miss', 'Ms'}
-
-    blacklist = {'pub', 'the', 'landlord', 'pub landlord', 'will'}
-
-    for name in names:
-        name_bits = name.split()
-
-        extra_names.append(name_bits[0].lower())
-        extra_names.append(name_bits[-1].lower())
-        extra_names.append(" ".join(name_bits[-2:-1]).lower())
-
-        for title in titles:
-            extra_names.append(u"{} {}".format(title, name).lower())
-            extra_names.append(u"{} {}".format(title, name_bits[-1]).lower())
-
-        extra_names.append(u"Sir {}".format(name_bits[0]).lower())
-    
-    return set(extra_names) - blacklist
-
-
 def add_matches(texts, verbose=False):
     #texts = [doc['page']['text'],
     #         doc['page']['title']]
@@ -148,9 +116,9 @@ def add_matches(texts, verbose=False):
         elif obj_type == 'candidate':
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
-            extra_names = generate_extra_names(names, candidate.get('gender', None))
-            munge_names(names, candidate['incumbent'], candidate['name_prefix'])
-            names = set(names)
+
+            names = set(chain(names, primary_generate_names(names, candidate['incumbent'], candidate['name_prefix'])))
+            extra_names = set(secondary_generate_names(names, candidate.get('gender', None)))
 
         have_matches = False
         for match in find_matches(names, *texts_tokens):
