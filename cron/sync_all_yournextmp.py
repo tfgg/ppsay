@@ -26,29 +26,38 @@ def save_person(person):
     incumbent = 'uk.org.publicwhip' in id_schemes
 
     if person['party_memberships']:
-        candidacies = {year: {'party': {'name': person['party_memberships'][year]['name'],
-                                        'id': person['party_memberships'][year]['id'].split(':')[1],},
-                              'constituency': {'name': person['standing_in'][year]['name'], 
-                                               'id': person['standing_in'][year]['post_id'],},
-                              'year': year,
-                             } 
-                       for year in person['party_memberships'] if
-                         person['party_memberships'][year] is not None
-                           and person['standing_in'][year] is not None}
+        candidacies = {
+            year: {
+                'party': {
+                    'name': person['party_memberships'][year]['name'],
+                    'id': person['party_memberships'][year]['id'].split(':')[1],
+                },
+                'constituency': {
+                    'name': person['standing_in'][year]['name'], 
+                    'id': person['standing_in'][year]['post_id'],
+                },
+                'year': year,
+            } 
+            for year in person['party_memberships']
+            if person['party_memberships'][year] is not None
+               and person['standing_in'][year] is not None
+        }
     else:
         candidacies = {}
 
-    candidate = {'name': person['name'].strip(),
-                 'name_prefix': person.get('honorific_prefix', None),
-                 'name_suffix': person.get('honorific_suffix', None),
-                 'other_names': [x['name'] for x in person['other_names']],
-                 'url': person['url'],
-                 'id': person['id'],
-                 'image': person.get('image', None),
-                 'proxy_image': person.get('proxy_image', None),
-                 'candidacies': candidacies,
-                 'gender': person['gender'],
-                 'incumbent': incumbent}
+    candidate = {
+        'name': person['name'].strip(),
+        'name_prefix': person.get('honorific_prefix', None),
+        'name_suffix': person.get('honorific_suffix', None),
+        'other_names': [x['name'] for x in person['other_names']],
+        'url': person['url'],
+        'id': person['id'],
+        'image': person.get('image', None),
+        'proxy_image': person.get('proxy_image', None),
+        'candidacies': candidacies,
+        'gender': person['gender'],
+        'incumbent': incumbent,
+    }
 
     candidate_doc = db_candidates.find_one({'id': person['id']})
 
