@@ -1,3 +1,4 @@
+from collections import Counter, defaultdict
 
 from bson import ObjectId
 
@@ -88,6 +89,23 @@ def dashboard_domain(doc_id):
                            domain=doc) 
 
 
+@app.route('/dashboard/classifier')
+@login_required
+def dashboard_classifier():
+    docs = list(db_articles.find())
+
+    stats = defaultdict(Counter)
+
+    for doc in docs:
+        for candidate in doc['candidates']:
+            stats[doc['time_added'].date()][candidate['state']] += 1
+
+    stats = sorted(stats.items())
+
+    return render_template('dashboard_classifier.html',
+                           stats=stats) 
+
+
 @app.route('/recent')
 def action_log():
     log = db_action_log.find() \
@@ -105,3 +123,4 @@ def moderation_queue():
 
     return render_template('moderation_queue.html',
                            articles=articles)
+
