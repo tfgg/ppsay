@@ -6,83 +6,30 @@ from collections import Counter
 from pymongo import MongoClient
 from urlparse import urlparse
 
+from ppsay.importers import ynmp
 from ppsay.sources import get_source_whitelist
+from ppsay.db import db_articles, db_candidates
 
 client = MongoClient()
 
-db_articles = client.news.articles
-db_candidates = client.news.candidates
-
 url = "http://yournextmp.popit.mysociety.org/api/v0.1/export.json"
-
-def save_person(person):
-    if 'party_memberships' not in person:
-        print person
-        return
-
-    id_schemes = {ident['scheme'] for ident in person['identifiers']}
-
-    # Not entirely true, might have been in parliament previously but been turfed out?
-    incumbent = 'uk.org.publicwhip' in id_schemes
-
-    if person['party_memberships']:
-        candidacies = {
-            year: {
-                'party': {
-                    'name': person['party_memberships'][year]['name'],
-                    'id': person['party_memberships'][year]['id'].split(':')[1],
-                },
-                'constituency': {
-                    'name': person['standing_in'][year]['name'], 
-                    'id': person['standing_in'][year]['post_id'],
-                },
-                'year': year,
-            } 
-            for year in person['party_memberships']
-            if person['party_memberships'][year] is not None
-               and person['standing_in'][year] is not None
-        }
-    else:
-        candidacies = {}
-
-    candidate = {
-        'name': person['name'].strip(),
-        'name_prefix': person.get('honorific_prefix', None),
-        'name_suffix': person.get('honorific_suffix', None),
-        'other_names': [x['name'] for x in person['other_names']],
-        'url': person['url'],
-        'id': person['id'],
-        'image': person.get('image', None),
-        'proxy_image': person.get('proxy_image', None),
-        'candidacies': candidacies,
-        'gender': person['gender'],
-        'incumbent': incumbent,
-    }
-
-    candidate_doc = db_candidates.find_one({'id': person['id']})
-
-    if candidate_doc is not None:
-        candidate_doc.update(candidate)
-    else:
-        candidate_doc = candidate
-
-    db_candidates.save(candidate_doc)
 
 url_regex = re.compile("(http|https)://([^\s]+)")
 
 sources = []
 
-all_ids = {candidate['id'] for candidate in db_candidates.find()}
+all_ids = {
+    candidate['id'] for candidate in db_candidates.find()
+}
 found_ids = set()
 
 print "Downloading data"
 export_data = requests.get(url).json()
 
-
 print "Updating candidates"
 for i, person in enumerate(export_data['persons']):
     print i, 
-    save_person(person)
+    ynmp.save_person(person)
     found_ids.add(person['id'])
 
     # Look for any new sources
