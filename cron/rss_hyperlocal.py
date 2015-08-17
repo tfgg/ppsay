@@ -1,6 +1,6 @@
 import sys
 from ppsay.sources import get_source_if_matches
-from ppsay.hyperlocal_data import hyperlocal_sites
+from ppsay.data.hyperlocal_data import hyperlocal_sites
 import feedparser
 
 #skip = True
