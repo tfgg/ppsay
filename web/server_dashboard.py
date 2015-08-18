@@ -1,3 +1,5 @@
+import time
+import json
 from collections import Counter, defaultdict
 
 from bson import ObjectId
@@ -92,18 +94,25 @@ def dashboard_domain(doc_id):
 @app.route('/dashboard/classifier')
 @login_required
 def dashboard_classifier():
-    docs = list(db_articles.find())
+    docs = db_articles.find()
 
     stats = defaultdict(Counter)
 
     for doc in docs:
-        for candidate in doc['candidates']:
-            stats[doc['time_added'].date()][candidate['state']] += 1
+        if 'machine' in doc:
+            timestamp = time.mktime(doc['time_added'].date().timetuple())
 
-    stats = sorted(stats.items())
+            stats[timestamp]['remove'] += len(doc['machine']['candidates']['remove'])
+            stats[timestamp]['confirm'] += len(doc['machine']['candidates']['confirm'])
+
+    stats_json = []
+    for day, day_stats in sorted(stats.items()):
+        day_stats = dict(day_stats)
+        day_stats['day'] = day
+        stats_json.append(day_stats)
 
     return render_template('dashboard_classifier.html',
-                           stats=stats) 
+                           stats_json=json.dumps({'stats': stats_json}))
 
 
 @app.route('/recent')

@@ -1,5 +1,9 @@
 {% extends 'page.html' %}
 
+{% block header %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+{% endblock %}
+
 {% block content %}
 <div class='container'>
   <div class='row'>
@@ -8,10 +12,33 @@
       <h1>Classifier performance</h1>
     </div>
   </div>
+  {% set headspace = 350 %}
   <div class='row'>
     <div class='col-md-12'>
-        {{ stats }} 
+      <svg width="100%" height="400" class="timeline">
+        <line x1="5%" y1="{{ headspace }}" x2="95%" y2="{{ headspace }}" class="axis"/>
+      </svg>
     </div>
   </div>
+  <script>
+    $(document).ready(function(){
+
+    var svg = d3.select("svg.timeline");
+
+    console.log("hello");
+
+    var data = {{ stats_json|safe }};
+
+    var start = data['stats'][0]['day'];
+    var end = data['stats'][data['stats'].length-1]['day'];
+
+    var circle = svg.selectAll("circle").data(data['stats']);
+
+    circle.enter().append("circle")
+          .attr("cx", function(d) { return ((d.day - start) / (end-start)*90 + 5) + "%"; })
+          .attr("cy", function(d) { return (d.remove) / (d.confirm + d.remove) * 100; })
+          .attr("r", 5);
+    });
+  </script>
 </div>
 {% endblock content %}
