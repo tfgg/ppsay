@@ -90,29 +90,33 @@ def dashboard_domain(doc_id):
     return render_template('dashboard_domain.html',
                            domain=doc) 
 
+cache = {}
 
 @app.route('/dashboard/classifier')
 @login_required
 def dashboard_classifier():
     docs = db_articles.find()
 
-    stats = defaultdict(Counter)
+    if 'stats' not in cache:
+        stats = defaultdict(Counter)
 
-    for doc in docs:
-        if 'machine' in doc:
-            timestamp = time.mktime(doc['time_added'].date().timetuple())
+        for doc in docs:
+            if 'machine' in doc:
+                timestamp = time.mktime(doc['time_added'].date().timetuple())
 
-            stats[timestamp]['remove'] += len(doc['machine']['candidates']['remove'])
-            stats[timestamp]['confirm'] += len(doc['machine']['candidates']['confirm'])
+                stats[timestamp]['remove'] += len(doc['machine']['candidates']['remove'])
+                stats[timestamp]['confirm'] += len(doc['machine']['candidates']['confirm'])
 
-    stats_json = []
-    for day, day_stats in sorted(stats.items()):
-        day_stats = dict(day_stats)
-        day_stats['day'] = day
-        stats_json.append(day_stats)
+        stats_json = []
+        for day, day_stats in sorted(stats.items()):
+            day_stats = dict(day_stats)
+            day_stats['day'] = day
+            stats_json.append(day_stats)
 
+        cache['stats'] = stats_json
+    
     return render_template('dashboard_classifier.html',
-                           stats_json=json.dumps({'stats': stats_json}))
+                           stats_json=json.dumps(cache))
 
 
 @app.route('/recent')

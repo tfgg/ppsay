@@ -397,6 +397,20 @@ ul.article-list {
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
 
+svg.chart circle {
+  fill: rgba(255, 255, 255, 0.5);
+  stroke: gray;
+  stroke-width: 2; }
+svg.chart text.label-x {
+  text-anchor: middle;
+  alignment-baseline: hanging; }
+svg.chart text.label-y {
+  text-anchor: end;
+  alignment-baseline: middle; }
+svg.chart line.axis-x, svg.chart line.axis-y {
+  stroke: gray;
+  stroke-width: 2; }
+
 svg.timeline circle {
   fill: rgba(255, 255, 255, 0.5);
   stroke: gray;
