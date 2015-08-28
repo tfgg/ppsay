@@ -696,3 +696,17 @@ svg.timeline {
         fill: #999;
     }
 }
+
+table.table-domains {
+    width: 100%;
+
+    tr.table-domains-domain {
+        padding-bottom: 1em;
+        vertical-align: top;
+
+        td {
+            width: 25%;
+        }
+    }
+}
+

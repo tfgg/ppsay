@@ -440,3 +440,11 @@ svg.timeline line.month-marker {
   opacity: 0.5; }
 svg.timeline text.election-text {
   fill: #999; }
+
+table.table-domains {
+  width: 100%; }
+  table.table-domains tr.table-domains-domain {
+    padding-bottom: 1em;
+    vertical-align: top; }
+    table.table-domains tr.table-domains-domain td {
+      width: 25%; }
