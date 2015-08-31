@@ -22,18 +22,18 @@
 
             <table class="table table-striped">
                 <thead>
-                    <th>Rank</th>
+                    <th class='numcol'>Rank</th>
                     <th>Name</th>
-                    <th># mentions</th>
-                    <th>Change</th>
+                    <th class='numcol'># mentions</th>
+                    <th class='numcol'>Change</th>
                 </thead>
                 <tbody>
             {% for candidate in last_week_candidate_mentions %}
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td class='numcol'>{{ loop.index }}</td>
                     <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
-                    <td>{{ candidate.mentions.last_week_count }}</td>
-                    <td>
+                    <td class='numcol'>{{ candidate.mentions.last_week_count }}</td>
+                    <td class='numcol'>
                         {% if candidate.mentions.last_last_week_rank != None %}
                             {% set rank_diff = candidate.mentions.last_last_week_rank - candidate.mentions.last_week_rank %}
 
@@ -61,16 +61,58 @@
 
             <table class="table table-striped">
                 <thead>
-                    <th>Rank</th>
+                    <th class='numcol'>Rank</th>
                     <th>Name</th>
-                    <th># mentions</th>
+                    <th class='numcol'># mentions</th>
                 </thead>
                 <tbody>
             {% for candidate in total_candidate_mentions %}
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td class='numcol'>{{ loop.index }}</td>
                     <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
-                    <td>{{ candidate.mentions.total_count }}</td>
+                    <td class='numcol'>{{ candidate.mentions.total_count }}</td>
+                </tr>
+            {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>
+            <h3>&hellip; in the national press</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <th class='numcol'>Rank</th>
+                    <th>Name</th>
+                    <th class='numcol'># mentions</th>
+                </thead>
+                <tbody>
+            {% for candidate in national_candidate_mentions %}
+                <tr>
+                    <td class='numcol'>{{ loop.index }}</td>
+                    <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
+                    <td class='numcol'>{{ candidate.mentions.national_count }}</td>
+                </tr>
+            {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+        <div class='col-md-6'>
+            <h3>&hellip; in the local press</h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <th class='numcol'>Rank</th>
+                    <th>Name</th>
+                    <th class='numcol'># mentions</th>
+                </thead>
+                <tbody>
+            {% for candidate in local_candidate_mentions %}
+                <tr>
+                    <td class='numcol'>{{ loop.index }}</td>
+                    <td><a href='{{ url_for(".person",person_id=candidate.id) }}'>{{ candidate.name }}</a></td>
+                    <td class='numcol'>{{ candidate.mentions.local_count }}</td>
                 </tr>
             {% endfor %}
                 </tbody>

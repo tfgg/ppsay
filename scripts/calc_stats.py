@@ -1,6 +1,7 @@
 from pymongo import MongoClient
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta
+from ppsay.domains import get_domain
 
 client = MongoClient()
 
@@ -12,6 +13,8 @@ docs = db_articles.find()
 total_candidates = Counter()
 last_week_candidates = Counter()
 last_last_week_candidates = Counter()
+
+domain_candidates = defaultdict(Counter)
 
 total_constituencies = Counter()
 
@@ -39,9 +42,17 @@ for doc in docs:
 
     removed_states = ['removed', 'removed_ml']
 
+    domain = get_domain(doc['domain'])
+
     for candidate in doc['candidates']:
         if candidate['state'] not in removed_states:
             total_candidates[candidate['id']] += 1
+
+            if domain is not None and 'news' in domain['categories']:
+                domain_candidates['national'][candidate['id']] += 1
+
+            if domain is not None and 'local_news' in domain['categories']:
+                domain_candidates['local'][candidate['id']] += 1
     
     for constituency in doc['constituencies']:
         if constituency['state'] not in removed_states:
@@ -58,6 +69,10 @@ for doc in docs:
                 last_last_week_candidates[candidate['id']] += 1
 
 total_rank = [cid for cid, c in sorted(total_candidates.items(), key=lambda (candidate_id, count): count, reverse=True)]
+
+national_rank = [cid for cid, c in sorted(domain_candidates['national'].items(), key=lambda (candidate_id, count): count, reverse=True)]
+local_rank = [cid for cid, c in sorted(domain_candidates['local'].items(), key=lambda (candidate_id, count): count, reverse=True)]
+
 last_week_rank = [cid for cid, c in sorted(last_week_candidates.items(), key=lambda (candidate_id, count): count, reverse=True)]
 last_last_week_rank = [cid for cid, c in sorted(last_last_week_candidates.items(), key=lambda (candidate_id, count): count, reverse=True)]
 
@@ -67,6 +82,8 @@ for candidate in db_candidates.find():
     candidate['mentions'] = {'total_count': 0,
                              'last_week_count': 0,
                              'last_last_week_count': 0,
+                             'national_count': 0,
+                             'local_count': 0,
                              'total_rank': None,
                              'last_week_rank': None,
                              'last_last_week_rank': None,
@@ -75,6 +92,14 @@ for candidate in db_candidates.find():
     if candidate_id in total_candidates:
         candidate['mentions']['total_count'] = total_candidates[candidate_id]
         candidate['mentions']['total_rank'] = total_rank.index(candidate_id)
+    
+    if candidate_id in domain_candidates['national']:
+        candidate['mentions']['national_count'] = domain_candidates['national'][candidate_id]
+        candidate['mentions']['national_rank'] = national_rank.index(candidate_id)
+    
+    if candidate_id in domain_candidates['local']:
+        candidate['mentions']['local_count'] = domain_candidates['local'][candidate_id]
+        candidate['mentions']['local_rank'] = local_rank.index(candidate_id)
     
     if candidate_id in last_week_candidates:
         candidate['mentions']['last_week_count'] = last_week_candidates[candidate_id]

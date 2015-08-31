@@ -60,6 +60,10 @@ div.header {
     }
 }
 
+th.numcol, td.numcol {
+    text-align: right;
+}
+
 span.stats-red {
     color: #CC0000;
 }
@@ -119,13 +123,28 @@ form.add-article-form {
     color: white;
     padding: 2em;
 
-    /*padding: 10px;
-    border: 1px solid rgba(70, 101, 255, 0.24);*/
+    p {
+        font-size: 1.1em;
+        line-height: 1.5em;
+        font-family: "Droid Serif";
+    }
+}
+
+.intro-stats {
+    color: white;
 
     p {
         font-size: 1.1em;
         line-height: 1.5em;
         font-family: "Droid Serif";
+    }
+
+    a {
+        text-decoration: underline;
+
+        &:link, &:visited {
+            color: white;
+        }
     }
 }
 

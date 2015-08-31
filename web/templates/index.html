@@ -20,7 +20,16 @@
         </div>
     </div>
     <div class='col-md-6'>
+        <div class='intro-stats'>
+        <h3>&hellip; in the last week</h2>
 
+        <p>
+            <a href='{{ url_for('.person', person_id=last_week_candidate_mentions[0].id) }}'>{{ last_week_candidate_mentions[0].name }}</a> was the most mentioned person, with {{ last_week_candidate_mentions[0].mentions.last_week_count }} mentions.
+        </p>
+        <p>
+            <a href='{{ url_for('.statistics') }}'>See more statistics</a>
+        </p>
+        </div>
     </div>
   </div>
 </div>

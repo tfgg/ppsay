@@ -137,3 +137,27 @@ def moderation_queue():
     return render_template('moderation_queue.html',
                            articles=articles)
 
+permitted_states = {'approved', 'removed', 'moderated'}
+
+
+@app.route('/article/state', methods=['PUT'])
+@login_required
+def article_update_state():
+    doc_id = ObjectId(request.form.get('doc_id'))
+    doc = db_articles.find_one({'_id': doc_id})
+
+    state = request.form.get('state', None)
+    state_old = doc['state']
+
+    if state in permitted_states:
+        doc['state'] = state
+        db_articles.save(doc)
+
+        log(
+            'update_state',
+            url_for('.article', doc_id=str(doc_id)),
+            {
+                'state': state,
+                'state_old': state_old
+            }
+        )

@@ -22,9 +22,14 @@
 {% endif %}
 
 {# For the timeline #}
-{#{% set start_time=articles[-1].order_date %}#}
 {% set start_time=year_2015 %}
-{% set finish_time=articles[0].order_date %}
+
+{% if articles|length > 0 %}
+    {% set finish_time=articles[0].order_date %}
+{% else %}
+    {% set finish_time=today %}
+{% endif %}
+
 {% set interval=finish_time - start_time %}
 {% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
 {% set headspace = 80 %}{# Head space, head space, nothing could possibly go wrong! #}

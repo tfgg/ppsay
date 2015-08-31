@@ -73,9 +73,12 @@ def index():
     for article_doc in article_docs:
         article_doc['election'] = 'ge2015'
 
+    last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(5)
+
     return render_template('index.html',
                            constituencies=get_constituencies(),
-                           articles=article_docs)
+                           articles=article_docs,
+                           last_week_candidate_mentions=last_week_candidate_mentions)
 
 
 @app.route('/articles')
@@ -88,9 +91,16 @@ def statistics():
     total_candidate_mentions = db_candidates.find().sort([("mentions.total_count", -1)]).limit(50)
     last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(50)
 
-    return render_template('statistics.html',
-                           total_candidate_mentions=total_candidate_mentions,
-                           last_week_candidate_mentions=last_week_candidate_mentions)
+    national_candidate_mentions = db_candidates.find().sort([("mentions.national_count", -1)]).limit(50)
+    local_candidate_mentions = db_candidates.find().sort([("mentions.local_count", -1)]).limit(50)
+
+    return render_template(
+        'statistics.html',
+        total_candidate_mentions=total_candidate_mentions,
+        last_week_candidate_mentions=last_week_candidate_mentions,
+        national_candidate_mentions=national_candidate_mentions,
+        local_candidate_mentions=local_candidate_mentions
+    )
 
 
 @app.route('/statistics.json')
@@ -241,6 +251,7 @@ def person(person_id):
                            domains=domains,
                            weekly_buckets=weekly_buckets,
                            year_2015=datetime(2015,1,1),
+                           today=datetime.now(),
                            months=months)
 
 
@@ -458,25 +469,6 @@ def article_constituency_remove(doc_id):
     return render_template('article_constituencies_tagged.html',
                            article=doc)
 
-
-permitted_states = {'approved', 'removed', 'moderated'}
-
-
-@app.route('/article/state', methods=['PUT'])
-@login_required
-def article_update_state():
-    doc_id = ObjectId(request.form.get('doc_id'))
-    doc = db_articles.find_one({'_id': doc_id})
-
-    state = request.form.get('state', None)
-    state_old = doc['state']
-
-    if state in permitted_states:
-        doc['state'] = state
-        db_articles.save(doc)
-
-        log('update_state', url_for('.article', doc_id=str(doc_id)), {'state': state,
-                                                                     'state_old': state_old})
 
 @app.route('/autocomplete/person', methods=['GET'])
 def autocomplete_person():

@@ -37,6 +37,9 @@ div.header .header-title {
     top: -0.2em;
     display: inline-block; }
 
+th.numcol, td.numcol {
+  text-align: right; }
+
 span.stats-red {
   color: #CC0000; }
 
@@ -77,13 +80,22 @@ form.add-article-form {
 .intro {
   background: #4564fd;
   color: white;
-  padding: 2em;
-  /*padding: 10px;
-  border: 1px solid rgba(70, 101, 255, 0.24);*/ }
+  padding: 2em; }
   .intro p {
     font-size: 1.1em;
     line-height: 1.5em;
     font-family: "Droid Serif"; }
+
+.intro-stats {
+  color: white; }
+  .intro-stats p {
+    font-size: 1.1em;
+    line-height: 1.5em;
+    font-family: "Droid Serif"; }
+  .intro-stats a {
+    text-decoration: underline; }
+    .intro-stats a:link, .intro-stats a:visited {
+      color: white; }
 
 p.warning {
   padding: 10px;
