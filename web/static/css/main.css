@@ -397,6 +397,14 @@ ul.article-list {
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
 
+table.table-domains {
+  width: 100%; }
+  table.table-domains tr.table-domains-domain {
+    padding-bottom: 1em;
+    vertical-align: top; }
+    table.table-domains tr.table-domains-domain td {
+      width: 25%; }
+
 svg.chart circle {
   fill: rgba(255, 255, 255, 0.5);
   stroke: gray;
@@ -440,11 +448,3 @@ svg.timeline line.month-marker {
   opacity: 0.5; }
 svg.timeline text.election-text {
   fill: #999; }
-
-table.table-domains {
-  width: 100%; }
-  table.table-domains tr.table-domains-domain {
-    padding-bottom: 1em;
-    vertical-align: top; }
-    table.table-domains tr.table-domains-domain td {
-      width: 25%; }

@@ -78,26 +78,44 @@
 {% if articles %}
 <script>
     $(document).ready(function(){
-    var svg = d3.select("svg.timeline g.inner");
+    var headspace = {{ headspace }};
+    var svg = d3.select("svg.timeline");
+    
+    /** Add frame around graph */      
+    var svg_frame = svg.select("g.frame");
 
-    function labels(data) {
-        var label = svg.selectAll("text.headline").data(data);
-        
-        label.exit().remove();
-
-        label.enter()
-             .append("text");
-
-        label.attr("x", "50%")
-             .attr("y", 20)
-             .attr("class", "headline")
-             .html(function(d) { return d.title; });
-    }
-
-    var article_data = [
-{% for article in articles %}{"x": {{ (article.order_date - start_time).total_seconds()/interval.total_seconds() }}, "title": "{{ article.page.title }}"}{% if not loop.last %},{% endif %}{% endfor %}
+    /* Add ticks to x axis */
+    var xtics = [
+        {x1: "5%", y1: headspace, x2: "95%", y2: headspace, class: "axis"},
+        {x1: "5%", y1: headspace, x2: "5%", y2: headspace + 10, class: "marker"},
+        {x1: "95%", y1: headspace, x2: "95%", y2: headspace + 10, class: "marker"},
+        {x1: "{{ election_frac*90 + 5 }}%", y1: headspace, x2: "{{ election_frac*90 + 5 }}%", y2: headspace + 20, class: "marker election-marker"}
     ];
 
+    var line_xtics = svg_frame.selectAll('line.xtic').data(xtics);
+    line_xtics.enter().append('line')
+              .attr("x1", function(d) { return d.x1; })
+              .attr("x2", function(d) { return d.x2; })
+              .attr("y1", function(d) { return d.y1; })
+              .attr("y2", function(d) { return d.y2; })
+              .attr("class", function(d) { return "xtic " + d.class; });
+
+    /* Add labels to x axis */
+    var xlabels = [
+        {text: '{{ start_time.date() }}', x: '5%', y: headspace + 40, class: 'date'},
+        {text: '{{ finish_time.date() }}', x: '95%', y: headspace + 40, class: 'date'},
+        {text: 'GE 2015', x: '{{ election_frac*90 + 5 }}%', y: headspace + 40, class: 'election-text'}
+    ];
+
+    var text_xlabels = svg.selectAll('text.xlabel').data(xlabels);
+    text_xlabels.enter().append('text')
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y; })
+                .html(function(d) { return d.text })
+                .attr("class", function(d) { return "xlabel " + d.class; });
+
+    /** Add weekly data bars */
+    var svg_bars = svg.select("g.inner");
     var weekly_data = [
         {% for bucket in weekly_buckets %}
             {"x1": {{ (bucket[0] - start_time).total_seconds()/interval.total_seconds() }},
@@ -108,10 +126,9 @@
 
     var weekly_max = d3.max(weekly_data, function(d) { return d.y });
 
-    var circle = svg.selectAll("circle").data(article_data);
-    var rectangle_hidden = svg.selectAll("rect.bar_hidden").data(weekly_data);
-    var rectangle = svg.selectAll("rect.bar").data(weekly_data);
-    var rectangle_tex = svg.selectAll("text.bar").data(weekly_data);
+    var rectangle_hidden = svg_bars.selectAll("rect.bar_hidden").data(weekly_data);
+    var rectangle = svg_bars.selectAll("rect.bar").data(weekly_data);
+    var rectangle_tex = svg_bars.selectAll("text.bar").data(weekly_data);
  
     rectangle.enter().append("rect")
           .attr("x", function(d) { return (d.x1*90 + 5) + "%"; })
@@ -137,11 +154,6 @@
           .on("mouseover", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar bar_highlight"); }) /* JQuery can't set classes on SVG */
           .on("mouseout", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar"); });
 
-    /*circle.enter().append("circle")
-          .attr("cx", function(d) { return (d.x*90 + 5) + "%"; })
-          .attr("cy", {{ headspace }})
-          .attr("r", 5)
-          .on("mouseover", function(d,i) { labels([{"x": (d.x*90 + 5) + "%", "title": d.title}]); });*/
     });
 </script>
 {% endif %}
@@ -191,23 +203,12 @@
           <g class='inner'>
           </g>
 
-          <text x="5%" y="{{ headspace + 40 }}">{{ start_time.date() }}</text>
-          <text x="95%" y="{{ headspace + 40 }}">{{ finish_time.date() }}</text>
-
-          <line x1="5%" y1="{{ headspace }}" x2="95%" y2="{{ headspace }}" class="axis"/>
-
-          <line x1="5%" y1="{{ headspace }}" x2="5%" y2="90" class="marker"/>
-          <line x1="95%" y1="{{ headspace }}" x2="95%" y2="90" class="marker"/>
-          
+          <g class='frame'>
           {% for t in months %}
               {% set month_frac = (t - start_time).total_seconds() / interval.total_seconds() %}
               <line x1="{{ month_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ month_frac*90 + 5 }}%" y2="{{ headspace + 10 }}" class="marker month-marker"/>
           {% endfor %}
-          
-          {% if 1.0 >= election_frac >= 0.0  %}
-              <line x1="{{ election_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ election_frac*90 + 5 }}%" y2="{{ headspace + 20 }}" class="marker election-marker"/>
-              <text x="{{ election_frac*90 + 5 }}%" y="{{ headspace + 40 }}" class="election-text">GE 2015</text>
-          {% endif %}
+          </g>
         </svg>
     </div>
     {% endif %}
