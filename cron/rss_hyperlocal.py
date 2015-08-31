@@ -1,4 +1,3 @@
-import sys
 from ppsay.sources import get_source_if_matches
 from ppsay.data.hyperlocal_data import hyperlocal_sites
 import feedparser
@@ -32,10 +31,12 @@ for site in hyperlocal_sites:
         for item in feed['items']:
             url = clean_link(item['link'])
             print url
-            get_source_if_matches(url,
-                                  'rss/hyperlocal',
-                                  'approved',
-                                  min_candidates=1,
-                                  min_parties=1,
-                                  min_constituencies=0)
+            result = get_source_if_matches(
+                url,
+                'rss/hyperlocal',
+                'approved',
+                min_candidates=1,
+                min_parties=1,
+                min_constituencies=0
+            )
 

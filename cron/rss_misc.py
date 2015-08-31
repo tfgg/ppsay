@@ -14,5 +14,5 @@ for url, key in feeds:
     for item in feed['items']:
         url = clean_link(item[key])
         print url
-        get_source_if_matches(url, 'rss', 'approved')
+        get_source_if_matches(url, 'rss/misc', 'approved')
 

@@ -1,3 +1,4 @@
+import sys
 from urlparse import urlparse
 from datetime import datetime
 
@@ -72,48 +73,75 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
 
     page = WebPage(source_url)
 
+    result = {
+        'url': source_url,
+        'source': source,
+        'state': state
+    }
+
     try:
         page.fetch()
     except WebPage.FailedToFetch, e:
+        result['error'] = {
+            'type': 'WebPage.FailedToFetch',
+            'text': str(e),
+        }
         print "FAILED", e
-        return None
-        
-
-    if page.is_local:
+     
+    if 'error' not in result and page.is_local:
         print "Already in cache, skipping"
-        return None
+        result['skip'] = {
+            'text': 'Already in cache'
+        }
 
-    try:
-        new, doc = get_or_create_doc(page, source)
-    except Article.FetchError, e:
-        print "FAILED", e
-        return None
+    if 'error' not in result and 'skip' not in result:
+        try:
+            new, doc = get_or_create_doc(page, source)
+        except Article.FetchError, e:
+            print "FAILED", e
+            result['error'] = {
+                'type': 'Article.FetchError',
+                'text': str(e),
+            }
 
-    if new and doc['page'] is not None:
-        print "  New"
+    if 'error' not in result and 'skip' not in result:
+        if new and doc['page'] is not None:
+            print "  New"
 
-        process_doc(doc) 
+            process_doc(doc) 
 
-        # Only save if it has matches
-        has_matches = False
+            # Only save if it has matches
+            has_matches = False
 
-        for min_candidates, min_constituencies, min_parties in conditions:            
-            if len(doc['possible']['candidates']) >= min_candidates and \
-               len(doc['possible']['constituencies']) >= min_constituencies and \
-               len(doc['possible']['parties']) >= min_parties:
-                has_matches = True
+            for min_candidates, min_constituencies, min_parties in conditions:            
+                if len(doc['possible']['candidates']) >= min_candidates and \
+                   len(doc['possible']['constituencies']) >= min_constituencies and \
+                   len(doc['possible']['parties']) >= min_parties:
+                    has_matches = True
 
-        if has_matches:
-            print "    Matches"
-    
-            doc['state'] = state
-            doc['_id'] = db_articles.save(doc)
+            if has_matches:
+                print "    Matches"
+                result['success'] = {
+                    'text': 'Matches'
+                }
+                
+                doc['state'] = state
+                doc['_id'] = db_articles.save(doc)
+            else:
+                print "    No matches"
+                result['skip'] = {
+                    'text': 'No matches'
+                }
         else:
-            print "    No matches"
-    else:
-        print "  Not new"
+            result['skip'] = {
+                'text': 'Not new'
+            }
+            print "  Not new"
 
-    return doc
+    if 'error' in result:
+        print >>sys.stderr, result
+
+    return result
 
 def get_source(source_url, source, state):
     """

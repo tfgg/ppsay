@@ -51,7 +51,7 @@ for feed_url in feeds:
     for item in feed['items']:
         url = item['link']
         get_source_if_matches(url,
-                              'rss',
+                              'rss/trinitymirror',
                               'approved',
                               [(1,0,1), # candidates, constituencies, parties
                                (3,0,0),

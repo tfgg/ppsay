@@ -9,5 +9,5 @@ def clean_link(x):
 for item in feed['items']:
     url = clean_link(item['id'])
     print url
-    get_source_if_matches(url, 'rss', 'approved')
+    result = get_source_if_matches(url, 'rss/independent', 'approved')
 

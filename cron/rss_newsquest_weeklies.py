@@ -141,6 +141,6 @@ for url in weeklies + sundays:
     for item in feed['items']:
         url = clean_link(item['link'])
         print url
-        get_source_if_matches(url, 'rss', 'approved', [(1,0,1),])
-
+        
+        result = get_source_if_matches(url, 'rss/newsquest_weeklies', 'approved', [(1,0,1),])
 
