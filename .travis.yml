@@ -5,6 +5,7 @@ python:
 addons:
   apt:
     packages:
+      - gfortran
       - liblapack-dev
       - libblas-dev
 # command to install dependencies
