@@ -2,7 +2,7 @@
 import sys
 from itertools import chain
 from text import get_tokens
-from ppsay.data import constituencies, constituencies_names, parties, get_candidates
+from ppsay.data import get_constituencies, parties, get_candidates
 from namemunge.en import primary_generate_names
 
 def get_ngrams(tokens, n):
@@ -22,8 +22,8 @@ def update_index(index, names, tag, id):
             else:
                 index[ngram] = [(tag, id)]
 
-for constituency in constituencies:
-    names = set([constituency['name']] + constituencies_names[constituency['id']])
+for constituency in get_constituencies():
+    names = set([constituency['name']] + constituency['other_names'])
     update_index(index, names, 'constituency', constituency['id'])
 
 for party_id, party in parties.items():

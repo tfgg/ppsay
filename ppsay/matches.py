@@ -6,12 +6,9 @@ from itertools import combinations, chain
 
 from bson import ObjectId
 from ppsay.data import (
-    constituencies,
-    constituencies_index,
-    constituencies_names,
-    parties,
+    get_constituency,
     get_candidate,
-    get_candidates,
+    parties,
     squish_constituencies,
 )
 from ml.assign import get_machine
@@ -86,9 +83,6 @@ def resolve_overlaps(matches, verbose=False):
 
 
 def add_matches(texts, verbose=False):
-    #texts = [doc['page']['text'],
-    #         doc['page']['title']]
-
     texts_tokens = [get_tokens(text.lower()) for text in texts]
 
     # Pre-screen with an n-gram match
@@ -110,8 +104,8 @@ def add_matches(texts, verbose=False):
             names = set([party['name']] + parties[obj_index]['other_names'])
 
         elif obj_type == 'constituency':
-            constituency = constituencies_index[obj_index]
-            names = set([constituency['name']] + constituencies_names[constituency['id']])
+            constituency = get_constituency(obj_index)
+            names = set([constituency['name']] + constituency['other_names'])
 
         elif obj_type == 'candidate':
             candidate = get_candidate(obj_index)
@@ -175,7 +169,7 @@ def add_matches(texts, verbose=False):
     possible_constituency_matches = {}
     for match_entity in match_entities:
         if match_entity.type == 'constituency':
-            possible_constituency_matches[match_entity.id] = {'id': constituencies_index[match_entity.id]['id']}
+            possible_constituency_matches[match_entity.id] = {'id': get_constituency(match_entity.id)['id']}
 
     possible_candidate_matches = {}
     for match_entity in match_entities:
@@ -208,7 +202,6 @@ def add_matches(texts, verbose=False):
             match_doc = {'match_party': party_match,
                          'match_constituency': constituency_match,
                          'running_2015': is_running_2015,
-                         #'score': score,
                          'id': candidate['id'],}
 
             possible_candidate_matches[candidate['id']] = match_doc
@@ -391,9 +384,8 @@ def resolve_constituencies(doc_user, doc_possible):
     # Add constituencies that users have added that the machine didn't find.
     for constituency_id in doc_user['constituencies']['confirm']:
         if not any([constituency_id == constituency['id'] for constituency in doc_possible['constituencies']]):
-            constituency = constituencies_index[constituency_id]
+            constituency = get_constituency(constituency_id)
             constituency['state'] = 'confirmed'
-            #constituency['score'] = 1.5
             resolved_constituencies.append(constituency)
 
     # Add constituencies that the machine found.
@@ -405,10 +397,9 @@ def resolve_constituencies(doc_user, doc_possible):
         elif constituency['id'] in doc_user['constituencies']['remove']:
             constituency_state = 'removed'
 
-        constituency_ = constituencies_index[constituency['id']]
+        constituency_ = get_constituency(constituency['id'])
         constituency_['id'] = constituency_['id']
         constituency_['state'] = constituency_state
-        #constituency_['score'] = 1.0
 
         resolved_constituencies.append(constituency_)
 

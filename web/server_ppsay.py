@@ -32,9 +32,7 @@ from ppsay.constituency import (
 )
 
 from ppsay.data import (
-    constituencies,
-    constituencies_index,
-    constituencies_names,
+    get_constituencies,
     get_candidate,
     get_candidates,
     elections
@@ -76,7 +74,7 @@ def index():
         article_doc['election'] = 'ge2015'
 
     return render_template('index.html',
-                           constituencies=constituencies,
+                           constituencies=get_constituencies(),
                            articles=article_docs)
 
 
@@ -415,8 +413,14 @@ def article_constituency_confirm(doc_id):
 
     db_articles.save(doc)
     
-    log('constituency_confirm', url_for('.article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
-                                                                         'constituency_name': constituencies_index[constituency_id]['name']})
+    log(
+        'constituency_confirm',
+        url_for('.article', doc_id=str(doc_id)),
+        {
+            'constituency_id': constituency_id,
+            'constituency_name': get_constituency(constituency_id)['name'],
+        }
+    )
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
@@ -442,8 +446,14 @@ def article_constituency_remove(doc_id):
 
     db_articles.save(doc)
     
-    log('constituency_remove', url_for('.article', doc_id=str(doc_id)), {'constituency_id': constituency_id,
-                                                                        'constituency_name': constituencies_index[constituency_id]['name']})
+    log(
+        'constituency_remove', 
+        url_for('.article', doc_id=str(doc_id)), 
+        {
+            'constituency_id': constituency_id,
+            'constituency_name': constituencies_index[constituency_id]['name'],
+        }
+    )
  
     return render_template('article_constituencies_tagged.html',
                            article=doc)
@@ -495,12 +505,10 @@ def autocomplete_constituency():
     partial_constituency_name = request.args.get('term')
 
     matches = []
-    for constituency_id, names in constituencies_names.items():
-        for name in names:
+    for constituency in get_constituencies():
+        for name in [constituency['name']] + constituency['other_names']:
             if name.lower().startswith(partial_constituency_name.lower()):
-                matches.append({'label': name, 'value': constituency_id})
+                matches.append({'label': name, 'value': constituency['id']})
 
     return json.dumps(matches)
-
-
 

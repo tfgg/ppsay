@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from os.path import realpath, join, dirname
-from db import db_candidates
+from db import db_candidates, db_areas
 
 BASE_PATH = dirname(realpath(__file__))
 
@@ -21,6 +21,19 @@ try:
     squish_constituencies = json.load(open(x('data/squish_constituencies.json')))
 except ValueError:
     squish_constituencies = {}
+
+def get_constituency(area_id):
+    doc = db_areas.find_one({'id': area_id})
+
+    del doc['_id']
+
+    return doc
+
+def get_constituencies():
+    for area in db_areas.find():
+        del area['_id']
+
+        yield area
 
 def get_candidate(candidate_id):
     doc = db_candidates.find_one({'id': candidate_id})
