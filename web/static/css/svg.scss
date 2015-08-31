@@ -1,0 +1,79 @@
+svg.chart {
+    circle {
+        fill: rgba(255,255,255,0.5);
+        stroke:rgba(128,128,128,1.0);
+        stroke-width:2 
+    }
+    
+    text.label-x {
+        text-anchor: middle;
+        alignment-baseline: hanging;
+    }
+
+    text.label-y {
+        text-anchor: end;
+        alignment-baseline: middle;
+    }
+    
+    line.axis-x, line.axis-y {
+        stroke:rgba(128,128,128,1.0);
+        stroke-width:2;
+    }
+}
+
+svg.timeline {
+    circle {
+        fill: rgba(255,255,255,0.5);
+        stroke:rgba(128,128,128,1.0);
+        stroke-width:2 
+    }
+
+    circle:hover {
+        stroke:rgba(128,128,255,1.0);
+    }
+
+    rect.bar {
+        fill: rgba(253, 221, 102, 1.00);
+    }
+
+    rect.bar_hidden {
+        fill: rgba(255, 255, 255, 0.0);
+    }
+
+    text.bar {
+        fill: rgba(0, 0, 0, 1.0);
+        text-anchor: middle;
+        opacity: 0.1;
+    }
+
+    text.bar_highlight {
+        fill: black;
+        opacity: 1.0;
+    }
+
+    line.axis {
+        stroke:rgba(128,128,128,1.0);
+        stroke-width:2;
+    }
+
+    line.marker {
+        stroke:rgba(128,128,128,1.0);
+        stroke-width:2;
+    }
+
+    text {
+        text-anchor: middle;
+    }
+
+    line.election-marker {
+    }
+    
+    line.month-marker {
+       opacity: 0.5; 
+    }
+
+    text.election-text {
+        fill: #999;
+    }
+}
+
