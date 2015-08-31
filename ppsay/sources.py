@@ -139,7 +139,7 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
             print "  Not new"
 
     if 'error' in result:
-        print >>sys.stderr, result
+        print >>sys.stderr, datetime.now(), result
 
     return result
 
