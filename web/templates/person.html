@@ -186,10 +186,12 @@
       <h3>Mentioned by</h3>
       <ul class='publications'>
       {% for domain, count in domains %}
+        {% if domain %}
         <li class='publication'>
             <div class='publication-name'><a href='http://{{ domain['domains'][0] }}'>{{ domain['name'] }}</a></div>
             <div class='publication-count'>{% if count!=1 %}{{ count }} times{% else %}Once{% endif %}</div>
         </li>
+        {% endif %}
       {% endfor %}
       </ul>
     </div>

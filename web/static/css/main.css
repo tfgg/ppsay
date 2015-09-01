@@ -96,6 +96,11 @@ form.add-article-form {
     text-decoration: underline; }
     .intro-stats a:link, .intro-stats a:visited {
       color: white; }
+  .intro-stats img.person-image {
+    float: left;
+    height: 100px;
+    margin-right: 10px;
+    border: 5px solid white; }
 
 p.warning {
   padding: 10px;

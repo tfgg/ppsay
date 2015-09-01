@@ -22,6 +22,12 @@
     <div class='col-md-6'>
         <div class='intro-stats'>
         <h3>&hellip; in the last week</h2>
+            
+        {% if last_week_candidate_mentions[0].image %}
+            <a href='{{ url_for('.person', person_id=last_week_candidate_mentions[0].id) }}'>
+                <img src='{{ last_week_candidate_mentions[0].proxy_image }}/100/0' alt='Photo of {{ last_week_candidate_mentions[0].name }}' class='person-image'/>
+            </a>
+        {% endif %}
 
         <p>
             <a href='{{ url_for('.person', person_id=last_week_candidate_mentions[0].id) }}'>{{ last_week_candidate_mentions[0].name }}</a> was the most mentioned person, with {{ last_week_candidate_mentions[0].mentions.last_week_count }} mentions.
