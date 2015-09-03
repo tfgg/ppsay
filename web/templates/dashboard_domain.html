@@ -1,22 +1,22 @@
 <form method='POST' action='{{ url_for(".dashboard_domain", doc_id=domain._id) }}' class='form form-inline' style='width:100%;' onsubmit='return save_domain("{{ domain._id }}");'>
-    <td>
+    <span>
         <input type='text' value='{{ domain.name }}' name='name' class='form-control' id='name-{{ domain._id }}'/>
-    </td>
-    <td>
+    </span>
+    <span>
         <ul>
           {% for domain in domain.domains %}
             <li>{{ domain }}</li>
           {% endfor %}
         </ul>
-    </td>
-    <td>
+    </span>
+    <span>
         <select name="category" multiple>
             <option value="news"{% if 'news' in domain.categories %} selected{% endif %}>News</option>
             <option value="local_news"{% if 'local_news' in domain.categories %} selected{% endif %}>Local news</option>
             <option value="blog"{% if 'blog' in domain.categories %} selected{% endif %}>Blog</option>
         </select>
-    </td>
-    <td>
+    </span>
+    <span>
         <input type='submit' value='save'/>
-    </td>
+    </span>
 </form>

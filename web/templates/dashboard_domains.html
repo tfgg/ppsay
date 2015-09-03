@@ -26,11 +26,11 @@ function save_domain(domain_id) {
   </div>
   <div class='row'>
     <div class='col-md-12'>
-        <table class='table-domains'>
+        <ul class='table-domains'>
           {% for domain in domains %}
-            <tr id="domain-{{ domain._id }}" class='table-domains-domain'>
+            <li id="domain-{{ domain._id }}" class='table-domains-domain'>
                 {% include "dashboard_domain.html" %}
-            </tr>
+            </li>
           {% endfor %}
         </ul>
     </div>

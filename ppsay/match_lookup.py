@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
+from collections import defaultdict
 from itertools import chain
+
 from text import get_tokens
 from ppsay.data import get_constituencies, parties, get_candidates
 from namemunge.en import primary_generate_names
@@ -10,17 +12,14 @@ def get_ngrams(tokens, n):
     for i in range(len(tokens) + 1 - n):
         yield tuple(tokens[i:i+n])
 
-index = {}
+index = defaultdict(list)
 
 def update_index(index, names, tag, id):
     for name in names:
         tokens, _ = get_tokens(name.lower())
 
         for ngram in get_ngrams(tokens, 3):
-            if ngram in index:
-                index[ngram].append((tag, id))
-            else:
-                index[ngram] = [(tag, id)]
+            index[ngram].append((tag, id))
 
 for constituency in get_constituencies():
     names = set([constituency['name']] + constituency['other_names'])

@@ -97,31 +97,31 @@ def add_matches(texts, verbose=False):
 
     # Take candidate matches and refine match
     for obj_type, obj_index in poss_matches:
-        extra_names = []
+        secondary_names = []
 
         if obj_type == 'party':
             party = parties[obj_index]
-            names = set([party['name']] + parties[obj_index]['other_names'])
+            primary_names = set([party['name']] + parties[obj_index]['other_names'])
 
         elif obj_type == 'constituency':
             constituency = get_constituency(obj_index)
-            names = set([constituency['name']] + constituency['other_names'])
+            primary_names = set([constituency['name']] + constituency['other_names'])
 
         elif obj_type == 'candidate':
             candidate = get_candidate(obj_index)
             names = [candidate['name']] + candidate['other_names']
 
-            names = set(chain(names, primary_generate_names(names, candidate['incumbent'], candidate['name_prefix'])))
-            extra_names = set(secondary_generate_names(names, candidate.get('gender', None)))
+            primary_names = set(chain(names, primary_generate_names(names, candidate['incumbent'], candidate['name_prefix'])))
+            secondary_names = set(secondary_generate_names(names, candidate.get('gender', None)))
 
         have_matches = False
-        for match in find_matches(names, *texts_tokens):
+        for match in find_matches(primary_names, *texts_tokens):
             match_entities.append(MatchEntity(type=obj_type, id=obj_index, match=match))
             have_matches = True
 
         # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
-        if have_matches:
-            for match in find_matches(extra_names, *texts_tokens):
+        if have_matches and len(secondary_names) > 0:
+            for match in find_matches(secondary_names, *texts_tokens):
                 match_entities.append(MatchEntity(type=obj_type + "_extra", id=obj_index, match=match))
             
 
@@ -129,9 +129,10 @@ def add_matches(texts, verbose=False):
     candidate_ids = {x[1] for x in match_entities if x.type == 'candidate'}
     constituency_ids = {x[1] for x in match_entities if x.type == 'constituency'}
 
-    print "  Found {} parties".format(len(party_ids))
-    print "  Found {} candidates".format(len(candidate_ids))
-    print "  Found {} constituencies".format(len(constituency_ids))
+    if verbose:
+        print "  Found {} parties".format(len(party_ids))
+        print "  Found {} candidates".format(len(candidate_ids))
+        print "  Found {} constituencies".format(len(constituency_ids))
     
     # Load in squish phrases for matched constituencies, e.g. Gordon Ramsay for Gordon.
 
@@ -149,9 +150,9 @@ def add_matches(texts, verbose=False):
         match_entities.append(MatchEntity(type='squish', id=None, match=match))
         num_squish += 1
 
-
-    print "  Found {} squishes".format(num_squish)
-    print "  Total {} matches".format(len(match_entities))
+    if verbose:
+        print "  Found {} squishes".format(num_squish)
+        print "  Total {} matches".format(len(match_entities))
 
     if verbose:
         for match_entity in match_entities:
@@ -159,7 +160,8 @@ def add_matches(texts, verbose=False):
 
     match_entities = list(resolve_overlaps(match_entities, verbose))
 
-    print "  Total {} matches remaining".format(len(match_entities))
+    if verbose:
+        print "  Total {} matches remaining".format(len(match_entities))
     
     possible_party_matches = {}
     for match_entity in match_entities:
@@ -188,17 +190,6 @@ def add_matches(texts, verbose=False):
 
             is_running_2015 = '2015' in candidate['candidacies']
 
-            score = 0.0
-
-            if party_match:
-                score += 0.5
-
-            if constituency_match:
-                score += 0.5
-
-            if is_running_2015:
-                score += 0.5
-
             match_doc = {'match_party': party_match,
                          'match_constituency': constituency_match,
                          'running_2015': is_running_2015,
@@ -213,7 +204,6 @@ def add_matches(texts, verbose=False):
                 print match_entity, "not got parent"
                 return False
         return True
-
 
     possible = {}
     possible['candidates'] = possible_candidate_matches.values()
