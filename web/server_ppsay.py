@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import math
 
 from datetime import timedelta, datetime
 
@@ -91,8 +92,15 @@ def statistics():
     total_candidate_mentions = db_candidates.find().sort([("mentions.total_count", -1)]).limit(50)
     last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(50)
 
-    national_candidate_mentions = db_candidates.find().sort([("mentions.national_count", -1)]).limit(50)
-    local_candidate_mentions = db_candidates.find().sort([("mentions.local_count", -1)]).limit(50)
+    loc_nat_candidates = list(db_candidates.find())
+
+    for candidate in loc_nat_candidates:
+        total = float(candidate['mentions']['national_count'] + candidate['mentions']['local_count'])
+        candidate['mentions']['nat_ratio'] = (candidate['mentions']['national_count'] / (total + 1) - 0.5) * math.sqrt(total)
+        candidate['mentions']['loc_ratio'] = (candidate['mentions']['local_count'] / (total + 1) - 0.5) * math.sqrt(total)
+
+    local_candidate_mentions = sorted(loc_nat_candidates, key=lambda x: x['mentions']['loc_ratio'], reverse=True)[:50] 
+    national_candidate_mentions = sorted(loc_nat_candidates, key=lambda x: x['mentions']['nat_ratio'], reverse=True)[:50] 
 
     return render_template(
         'statistics.html',
