@@ -84,6 +84,11 @@ def find_dates_tree(tree):
 
             dates.append(parsed_time)
 
+    # BBC
+    for el in tree.xpath('//div[@class="story-body"]//div/@data-seconds'):
+        parsed_time = datetime.fromtimestamp(int(el)).replace(tzinfo=UTC)
+        dates.append(parsed_time)
+    
     # Northern echo etc
     for el in tree.xpath('//span[@itemprop="datePublished"]/@data-timestamp'):
         parsed_time = datetime.fromtimestamp(int(el)).replace(tzinfo=UTC)
@@ -159,9 +164,10 @@ def find_dates_tree(tree):
 if __name__ == "__main__":
     url = sys.argv[1]
     web_cache_doc = db_web_cache.find_one({'url': url})
-    
-    if web_cache_doc['html']:
-        dates = find_dates(web_cache_doc['html']) 
+   
+    if web_cache_doc['html_compressed']:
+        html = bz2.decompress(web_cache_doc['html_compressed']).decode('utf-8')
+        dates = find_dates(html)
 
         print dates
 
