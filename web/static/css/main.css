@@ -112,25 +112,63 @@ p.success {
   color: #5D8B00;
   background: rgba(97, 153, 0, 0.06); }
 
-img.person-image {
-  margin-bottom: 20px; }
+ul.constituencies {
+  list-style: none;
+  padding: 0; }
+  ul.constituencies li {
+    padding: 5px; }
 
-p.person-candidacy {
-  font-size: 1.0em;
-  color: #666;
-  margin-bottom: 20px;
-  background: #f7f7f7;
-  padding: 10px; }
-  p.person-candidacy .year {
-    display: block;
-    font-size: 0.9em;
-    color: #999; }
-  p.person-candidacy .party {
-    display: block;
-    font-size: 1.2em; }
-  p.person-candidacy .constituency {
-    display: block;
-    color: #333; }
+table.table-domains {
+  width: 100%; }
+  table.table-domains tr.table-domains-domain {
+    padding-bottom: 1em;
+    vertical-align: top; }
+    table.table-domains tr.table-domains-domain td {
+      width: 25%; }
+
+svg.chart circle {
+  fill: rgba(255, 255, 255, 0.5);
+  stroke: gray;
+  stroke-width: 2; }
+svg.chart text.label-x {
+  text-anchor: middle;
+  alignment-baseline: hanging; }
+svg.chart text.label-y {
+  text-anchor: end;
+  alignment-baseline: middle; }
+svg.chart line.axis-x, svg.chart line.axis-y {
+  stroke: gray;
+  stroke-width: 2; }
+
+svg.timeline circle {
+  fill: rgba(255, 255, 255, 0.5);
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline circle:hover {
+  stroke: #8080ff; }
+svg.timeline rect.bar {
+  fill: #fddd66; }
+svg.timeline rect.bar_hidden {
+  fill: rgba(255, 255, 255, 0); }
+svg.timeline text.bar {
+  fill: black;
+  text-anchor: middle;
+  opacity: 0.1; }
+svg.timeline text.bar_highlight {
+  fill: black;
+  opacity: 1.0; }
+svg.timeline line.axis {
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline line.marker {
+  stroke: gray;
+  stroke-width: 2; }
+svg.timeline text {
+  text-anchor: middle; }
+svg.timeline line.month-marker {
+  opacity: 0.5; }
+svg.timeline text.election-text {
+  fill: #999; }
 
 ul.candidates {
   list-style: none;
@@ -173,93 +211,25 @@ ul.candidates {
       display: block;
       padding-left: 50px; }
 
-ul.people-tagged {
-  list-style: none;
-  padding: 0;
-  margin: 0; }
-  ul.people-tagged li.person-tagged {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd; }
-    ul.people-tagged li.person-tagged .name {
-      font-size: 1.2em; }
-    ul.people-tagged li.person-tagged .candidacies {
-      font-size: 0.9em;
-      background: rgba(255, 255, 255, 0.5);
-      padding: 10px;
-      margin: 5px; }
-      ul.people-tagged li.person-tagged .candidacies .candidacy {
-        margin-bottom: 10px; }
-        ul.people-tagged li.person-tagged .candidacies .candidacy .year {
-          display: block;
-          font-size: 1.1em;
-          color: #666; }
-        ul.people-tagged li.person-tagged .candidacies .candidacy .party {
-          display: block;
-          font-size: 1.2em; }
-        ul.people-tagged li.person-tagged .candidacies .candidacy .constituency {
-          display: block;
-          color: #333; }
-  ul.people-tagged li.person-tagged-confirmed_ml {
-    background: #ffc;
-    border: 0; }
-  ul.people-tagged li.person-tagged-removed_ml {
-    background: #fee;
-    border: 0; }
-  ul.people-tagged li.person-tagged-confirmed {
-    background: #dfd;
-    border: 0; }
-  ul.people-tagged li.person-tagged-removed {
-    background: #fdd;
-    border: 0; }
+p.person-candidacy {
+  font-size: 1.0em;
+  color: #666;
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 10px; }
+  p.person-candidacy .year {
+    display: block;
+    font-size: 0.9em;
+    color: #999; }
+  p.person-candidacy .party {
+    display: block;
+    font-size: 1.2em; }
+  p.person-candidacy .constituency {
+    display: block;
+    color: #333; }
 
-ul.constituencies-tagged {
-  list-style: none;
-  padding: 0;
-  margin: 0; }
-  ul.constituencies-tagged li.constituency-tagged {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd; }
-    ul.constituencies-tagged li.constituency-tagged .name {
-      font-size: 1.2em; }
-  ul.constituencies-tagged li.constituency-tagged-confirmed {
-    background: #dfd;
-    border: 0; }
-  ul.constituencies-tagged li.constituency-tagged-removed {
-    background: #fdd;
-    border: 0; }
-
-ul.constituencies {
-  list-style: none;
-  padding: 0; }
-  ul.constituencies li {
-    padding: 5px; }
-
-div.article-text a.quote-candidate-highlight {
-  background: rgba(255, 255, 128, 0.75);
-  color: #333;
-  padding: 5px; }
-div.article-text a.quote-constituency-highlight {
-  background: rgba(200, 200, 255, 0.75);
-  color: #333;
-  padding: 5px; }
-
-ul.tab-nav {
-  list-style: none;
-  padding: 0; }
-  ul.tab-nav li {
-    float: left;
-    margin-right: 0.5rem;
-    margin-bottom: 1rem; }
-    ul.tab-nav li a {
-      display: block;
-      border: 1px solid #eee;
-      border-bottom: 0;
-      padding: 1rem; }
-      ul.tab-nav li a:link, ul.tab-nav li a:visited, ul.tab-nav li a:hover {
-        text-decoration: none;
-        color: #666; }
+img.person-image {
+  margin-bottom: 20px; }
 
 ul.quotes {
   clear: both;
@@ -428,54 +398,84 @@ ul.article-list {
       ul.article-list li.article-item ul.article-mentions-people li a {
         color: #191966; }
 
-table.table-domains {
-  width: 100%; }
-  table.table-domains tr.table-domains-domain {
-    padding-bottom: 1em;
-    vertical-align: top; }
-    table.table-domains tr.table-domains-domain td {
-      width: 25%; }
+ul.people-tagged {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+  ul.people-tagged li.person-tagged {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd; }
+    ul.people-tagged li.person-tagged .name {
+      font-size: 1.2em; }
+    ul.people-tagged li.person-tagged .candidacies {
+      font-size: 0.9em;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px;
+      margin: 5px; }
+      ul.people-tagged li.person-tagged .candidacies .candidacy {
+        margin-bottom: 10px; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .year {
+          display: block;
+          font-size: 1.1em;
+          color: #666; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .party {
+          display: block;
+          font-size: 1.2em; }
+        ul.people-tagged li.person-tagged .candidacies .candidacy .constituency {
+          display: block;
+          color: #333; }
+  ul.people-tagged li.person-tagged-confirmed_ml {
+    background: #ffc;
+    border: 0; }
+  ul.people-tagged li.person-tagged-removed_ml {
+    background: #fee;
+    border: 0; }
+  ul.people-tagged li.person-tagged-confirmed {
+    background: #dfd;
+    border: 0; }
+  ul.people-tagged li.person-tagged-removed {
+    background: #fdd;
+    border: 0; }
 
-svg.chart circle {
-  fill: rgba(255, 255, 255, 0.5);
-  stroke: gray;
-  stroke-width: 2; }
-svg.chart text.label-x {
-  text-anchor: middle;
-  alignment-baseline: hanging; }
-svg.chart text.label-y {
-  text-anchor: end;
-  alignment-baseline: middle; }
-svg.chart line.axis-x, svg.chart line.axis-y {
-  stroke: gray;
-  stroke-width: 2; }
+ul.constituencies-tagged {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+  ul.constituencies-tagged li.constituency-tagged {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd; }
+    ul.constituencies-tagged li.constituency-tagged .name {
+      font-size: 1.2em; }
+  ul.constituencies-tagged li.constituency-tagged-confirmed {
+    background: #dfd;
+    border: 0; }
+  ul.constituencies-tagged li.constituency-tagged-removed {
+    background: #fdd;
+    border: 0; }
 
-svg.timeline circle {
-  fill: rgba(255, 255, 255, 0.5);
-  stroke: gray;
-  stroke-width: 2; }
-svg.timeline circle:hover {
-  stroke: #8080ff; }
-svg.timeline rect.bar {
-  fill: #fddd66; }
-svg.timeline rect.bar_hidden {
-  fill: rgba(255, 255, 255, 0); }
-svg.timeline text.bar {
-  fill: black;
-  text-anchor: middle;
-  opacity: 0.1; }
-svg.timeline text.bar_highlight {
-  fill: black;
-  opacity: 1.0; }
-svg.timeline line.axis {
-  stroke: gray;
-  stroke-width: 2; }
-svg.timeline line.marker {
-  stroke: gray;
-  stroke-width: 2; }
-svg.timeline text {
-  text-anchor: middle; }
-svg.timeline line.month-marker {
-  opacity: 0.5; }
-svg.timeline text.election-text {
-  fill: #999; }
+div.article-text a.quote-candidate-highlight {
+  background: rgba(255, 255, 128, 0.75);
+  color: #333;
+  padding: 5px; }
+div.article-text a.quote-constituency-highlight {
+  background: rgba(200, 200, 255, 0.75);
+  color: #333;
+  padding: 5px; }
+
+ul.tab-nav {
+  list-style: none;
+  padding: 0; }
+  ul.tab-nav li {
+    float: left;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem; }
+    ul.tab-nav li a {
+      display: block;
+      border: 1px solid #eee;
+      border-bottom: 0;
+      padding: 1rem; }
+      ul.tab-nav li a:link, ul.tab-nav li a:visited, ul.tab-nav li a:hover {
+        text-decoration: none;
+        color: #666; }

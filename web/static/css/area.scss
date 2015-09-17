@@ -1,0 +1,55 @@
+ul.candidates {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.candidate {
+        padding: 10px;
+        margin-right: 1%;
+        margin-bottom: 10px;
+        display: block;
+        float: left;
+        width: 32%;
+        background: #FFFFFF;
+        border: 1px solid #eee;
+        box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08);
+
+        @media screen and (max-width: 1000px) {
+            width: 49%;
+        }
+        
+        @media screen and (max-width: 700px) {
+            width: 100%;
+            margin-right: 0;
+        }
+        
+        div.candidate-count {
+            float: right;
+            background: #EFEFEF;
+            padding: 5px;
+        }
+
+        div.candidate-photo {
+            display: block;
+            width: 40px;
+            float: left;
+            background: #999;
+
+            img {
+                width: 40px;
+            }
+        }
+
+        div.candidate-name {
+            font-weight: bold;
+            display: block;
+            padding-left: 50px;
+        }
+
+        div.candidate-party {
+            font-style: italic;
+            display: block;
+            padding-left: 50px;
+        }
+    }
+}

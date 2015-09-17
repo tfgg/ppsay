@@ -1,0 +1,125 @@
+ul.people-tagged {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.person-tagged {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+
+
+        .name {
+            font-size: 1.2em;
+        }
+
+        .candidacies {
+            font-size: 0.9em;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            margin: 5px;
+
+            .candidacy {
+                margin-bottom:10px;
+
+                .year {
+                    display: block;
+                    font-size: 1.1em;
+                    color: #666;
+                }
+
+                .party {
+                    display: block;
+                    font-size: 1.2em;
+                }
+
+                .constituency {
+                    display: block;
+                    color: #333;
+                }  
+            }
+        }
+    }
+
+    li.person-tagged-confirmed_ml {
+        background: #ffc;
+        border: 0;
+    }
+    
+    li.person-tagged-removed_ml {
+        background: #fee;
+        border: 0;
+    }
+
+    li.person-tagged-confirmed {
+        background: #dfd;
+        border: 0;
+    }
+    
+    li.person-tagged-removed {
+        background: #fdd;
+        border: 0;
+    }
+}
+
+ul.constituencies-tagged {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li.constituency-tagged {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+
+        .name {
+            font-size: 1.2em;
+        }
+    }
+
+    li.constituency-tagged-confirmed {
+        background: #dfd;
+        border: 0;
+    }
+    
+    li.constituency-tagged-removed {
+        background: #fdd;
+        border: 0;
+    }
+}
+
+div.article-text {
+    a.quote-candidate-highlight {
+        background: rgba(255,255,128,0.75);
+        color: #333;
+        padding: 5px;
+    }
+    
+    a.quote-constituency-highlight {
+        background: rgba(200,200,255,0.75);
+        color: #333;
+        padding: 5px;
+    }
+}
+
+ul.tab-nav {
+    list-style: none;
+    padding: 0;
+
+    li {
+        float: left;
+        a {
+            display: block;
+            border: 1px solid #eee;
+            border-bottom: 0;
+            padding: 1rem;
+
+            &:link, &:visited, &:hover {
+                text-decoration: none;
+                color: #666;
+            }
+        }
+        margin-right: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
