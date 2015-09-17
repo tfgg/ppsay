@@ -137,27 +137,41 @@ ul.candidates {
   padding: 0;
   margin: 0; }
   ul.candidates li.candidate {
-    padding: 0;
-    margin: 0;
-    margin-bottom: 10px; }
+    padding: 10px;
+    margin-right: 1%;
+    margin-bottom: 10px;
+    display: block;
+    float: left;
+    width: 32%;
+    background: #FFFFFF;
+    border: 1px solid #eee;
+    box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08); }
+    @media screen and (max-width: 1000px) {
+      ul.candidates li.candidate {
+        width: 49%; } }
+    @media screen and (max-width: 700px) {
+      ul.candidates li.candidate {
+        width: 100%;
+        margin-right: 0; } }
+    ul.candidates li.candidate div.candidate-count {
+      float: right;
+      background: #EFEFEF;
+      padding: 5px; }
     ul.candidates li.candidate div.candidate-photo {
-      display: inline;
-      width: 20px;
-      margin-right: 2px;
+      display: block;
+      width: 40px;
+      float: left;
       background: #999; }
       ul.candidates li.candidate div.candidate-photo img {
-        width: 20px; }
+        width: 40px; }
     ul.candidates li.candidate div.candidate-name {
       font-weight: bold;
-      display: inline; }
-    ul.candidates li.candidate div.candidate-num-mentions {
-      display: inline;
-      border: 1px solid rgba(211, 219, 255, 0.99);
-      text-align: center;
-      color: #4564fd; }
+      display: block;
+      padding-left: 50px; }
     ul.candidates li.candidate div.candidate-party {
       font-style: italic;
-      clear: both; }
+      display: block;
+      padding-left: 50px; }
 
 ul.people-tagged {
   list-style: none;

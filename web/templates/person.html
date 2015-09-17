@@ -8,11 +8,13 @@
     {% set person_party=person.candidacies['ge2015'].party.name %}
     {% set person_constituency=person.candidacies['ge2015'].constituency.name %}
     {% set person_constituency_id=person.candidacies['ge2015'].constituency.id %}
+    {% set person_election="GE" %}
     {% set person_year="2015" %}
 {% elif 'ge2010' in person.candidacies %}
     {% set person_party=person.candidacies['ge2010'].party.name %}
     {% set person_constituency=person.candidacies['ge2010'].constituency.name %}
     {% set person_constituency_id=person.candidacies['ge2010'].constituency.id %}
+    {% set person_election="GE" %}
     {% set person_year="2010" %}
 {% else %}
     {% set person_party="" %}
@@ -62,7 +64,7 @@
       <div class='col-md-12 top-banner'>
       {% if person_party %}
       <div class='party-and-constituency'>
-          <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>(GE {{ person_year }})</small></h2>
+          <h2>{{ person_party }} &mdash; <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a> <small>({{ person_election }} {{ person_year }})</small></h2>
       </div>
       {% else %}
       <div class='party-and-constituency'>
@@ -221,8 +223,8 @@
     {% endif %}
 
     <div class='col-md-10 col-sm-9'>
-        <p class='warning'>These are automatically matched articles and extracted quotes that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
-        <h3>Quotes mentioning {{ person.name }}</h3>
+        <p class='warning'><i class="fa fa-info-circle"></i> These are automatically matched articles and extracted quotes that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>
+        <h3 style='margin-top: 3em;'><i class="fa fa-quote-left"></i> Quotes mentioning {{ person.name }}</h3>
         <ul class='quotes'>
         {% if quotes %}
         {% for quote in quotes[:5] %}
@@ -239,13 +241,13 @@
         </ul>
         <a href='{{ url_for('.person_quotes', person_id=person.id) }}' class='btn btn-default'>see all quotes mentioning {{ person.name }}</a>
         {% else %}
-        <p class='warning'>We don't know of any quotes mentioning {{ person.name }}.</p>
+        <p class='warning'><i class="fa fa-question-circle"></i> We don't know of any quotes mentioning {{ person.name }}.</p>
         {% endif %}
 
-        <h3>Articles mentioning {{ person.name }}</h3>
+        <h3 style='margin-top: 3em;'><i class="fa fa-newspaper-o"></i> Articles mentioning {{ person.name }}</h3>
         {% set num_articles=articles|length %}
         {% if num_articles == 0 %}
-        <p class='warning'>We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
+        <p class='warning'><i class="fa fa-question-circle"></i> We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
         {% include "article_add_form.html" %}
         {% else %}
         {#<p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>#}
