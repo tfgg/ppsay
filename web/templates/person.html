@@ -169,9 +169,9 @@
       {% if person.image %}
         <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
       {% endif %}
-      {% for year, candidacy in person.candidacies.items() %}
+      {% for election_id, candidacy in person.candidacies.items() %}
       <p class='person-candidacy'>
-          <span class='year'>GE {{ year }}</span>
+          <span class='year'>{{ elections[election_id].type|upper }} {{ candidacy.year }}</span>
           {% if candidacy.party %}
           <span class='party'>{{ candidacy.party.name }}</span>
           {% endif %}

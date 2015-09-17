@@ -249,8 +249,6 @@ def person(person_id):
 
     months = [datetime(2015,i,1) for i in range(1,datetime.now().month+1)]
 
-    print months
-
     return render_template('person.html',
                            person=person_doc,
                            quotes=quote_docs,

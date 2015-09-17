@@ -52,6 +52,12 @@ def get_candidates():
         yield candidate
 
 elections = {
-    'ge2010': {'date': datetime(2010, 5, 6),},
-    'ge2015': {'date': datetime(2015, 5, 7),},
+    'ge2010': {
+        'date': datetime(2010, 5, 6),
+        'type': 'ge'
+    },
+    'ge2015': {
+        'date': datetime(2015, 5, 7),
+        'type': 'ge'
+    },
 }
