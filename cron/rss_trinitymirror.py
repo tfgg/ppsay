@@ -1,6 +1,11 @@
+import sys
 import feedparser
 from lxml.html import parse
 from ppsay.sources import get_source_if_matches
+
+fresh = False
+if len(sys.argv) > 1:
+    fresh = (sys.argv[1] == "fresh")
 
 url = "http://www.accringtonobserver.co.uk/all-about/politics"
 
@@ -55,5 +60,6 @@ for feed_url in feeds:
                               'approved',
                               [(1,0,1), # candidates, constituencies, parties
                                (3,0,0),
-                               (2,0,1),],)
+                               (2,0,1),],
+                              fresh=fresh)
 

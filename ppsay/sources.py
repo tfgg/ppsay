@@ -64,7 +64,7 @@ def get_source_whitelist(source_url, source):
     else:
         return None
 
-def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
+def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fresh=False):
     """
         Get a source and save it if there are matches.
 
@@ -88,11 +88,13 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
         }
         print "FAILED", e
      
-    if 'error' not in result and page.is_local:
+    if not fresh and 'error' not in result and page.is_local:
         print "Already in cache, skipping"
         result['skip'] = {
             'text': 'Already in cache'
         }
+    else:
+        print "Enforced fresh run"
 
     if 'error' not in result and 'skip' not in result:
         try:
@@ -105,7 +107,7 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
             }
 
     if 'error' not in result and 'skip' not in result:
-        if new and doc['page'] is not None:
+        if fresh or new and doc['page'] is not None:
             print "  New"
 
             process_doc(doc) 
@@ -126,7 +128,11 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)]):
                 }
                 
                 doc['state'] = state
-                doc['_id'] = db_articles.save(doc)
+
+                try:
+                    doc['_id'] = db_articles.save(doc)
+                except RuntimeError, e:
+                    result['error'] = "RuntimeError: {}".format(str(e))
             else:
                 print "    No matches"
                 result['skip'] = {

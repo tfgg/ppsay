@@ -17,7 +17,7 @@ domain_whitelist = [x for y in full_whitelist.values() for x in y]
 def get_domain(domain):
     return db_domains.find_one({'domains': domain})
 
-def add_domain(domain):
+def new_domain(domain):
     domain_doc = {
         'domains': [domain],
         'name': domain,

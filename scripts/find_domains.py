@@ -1,4 +1,4 @@
-from ppsay.domains import get_domain, add_domain
+from ppsay.domains import get_domain, new_domain
 from ppsay.db import db_articles
 
 for article in db_articles.find({'state': 'approved'}):
@@ -8,6 +8,6 @@ for article in db_articles.find({'state': 'approved'}):
         domain = get_domain(article_domain)
 
         if domain is None:
-            new_domain = add_domain(article_domain)
+            new_domain = new_domain(article_domain)
             print new_domain
 

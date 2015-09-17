@@ -140,13 +140,13 @@ def statistics_json():
 def get_person_articles(person_id):
     person_doc = db_candidates.find_one({'id': person_id})
 
-    if '2015' in person_doc['candidacies']:
-        current_party_id = person_doc['candidacies']['2015']['party']['id']
-        current_constituency_id = person_doc['candidacies']['2015']['constituency']['id']
+    if 'ge2015' in person_doc['candidacies']:
+        current_party_id = person_doc['candidacies']['ge2015']['party']['id']
+        current_constituency_id = person_doc['candidacies']['ge2015']['constituency']['id']
 
-    elif '2010' in person_doc['candidacies']:
-        current_party_id = person_doc['candidacies']['2010']['party']['id']
-        current_constituency_id = person_doc['candidacies']['2010']['constituency']['id']
+    elif 'ge2010' in person_doc['candidacies']:
+        current_party_id = person_doc['candidacies']['ge2010']['party']['id']
+        current_constituency_id = person_doc['candidacies']['ge2010']['constituency']['id']
 
     else:
         current_party_id = None
@@ -487,12 +487,12 @@ def autocomplete_person():
         if candidate['name'].lower().startswith(partial_person_name.lower()):
             party = constituency = 'Unknown'
 
-            if '2015' in candidate['candidacies']:
-                party = candidate['candidacies']['2015']['party']['name']
-                constituency = candidate['candidacies']['2015']['constituency']['name']
-            elif '2010' in candidate['candidacies']:
-                party = candidate['candidacies']['2010']['party']['name']
-                constituency = candidate['candidacies']['2010']['constituency']['name']
+            if 'ge2015' in candidate['candidacies']:
+                party = candidate['candidacies']['ge2015']['party']['name']
+                constituency = candidate['candidacies']['ge2015']['constituency']['name']
+            elif 'ge2010' in candidate['candidacies']:
+                party = candidate['candidacies']['ge2010']['party']['name']
+                constituency = candidate['candidacies']['ge2010']['constituency']['name']
 
             label = u"{} ({}) - {}".format(candidate['name'], party, constituency)
             matches.append({'label': label, 'value': candidate['id']})

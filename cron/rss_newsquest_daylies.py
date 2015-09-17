@@ -1,3 +1,4 @@
+import sys
 from ppsay.sources import get_source_if_matches
 import socket
 import feedparser
@@ -22,6 +23,10 @@ daylies = ['http://www.echo-news.co.uk',
 
 sundays = ['http://www.sundayherald.com']
 
+fresh = False
+if len(sys.argv) > 1:
+    fresh = (sys.argv[1] == "fresh")
+
 for url in daylies:
     print url
     feed = feedparser.parse(url + '/news/rss/')
@@ -32,6 +37,6 @@ for url in daylies:
     for item in feed['items']:
         url = clean_link(item['link'])
         print url
-        result = get_source_if_matches(url, 'rss/newsquest_daylies', 'approved', [(1,0,1),])
+        result = get_source_if_matches(url, 'rss/newsquest_daylies', 'approved', [(1,0,1),], fresh=fresh)
 
 
