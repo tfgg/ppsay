@@ -15,27 +15,30 @@ def try_date_issued(s):
     except iso8601.iso8601.ParseError:
         return datetime(*map(int, s.split('-')),tzinfo=UTC)
 
-time_names = {'DC.date.issued': try_date_issued,
-              'DCTERMS.created': parse_date,
-              'OriginalPublicationDate': lambda s: parse_date(s.replace('/', '-')),
-              'DCTERMS.modified': parse_date,
-              'published-date': lambda s: datetime.strptime(" ".join(s.split()[:-1]), "%a, %d %b %Y %H:%M:%S").replace(tzinfo=UTC), # Sat, 22 Nov 2014 11:15:00 GMT
-              'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8]), tzinfo=UTC),
-              'article:published_time': parse_date,
-             }
+time_names = {
+    'DC.date.issued': try_date_issued,
+    'DCTERMS.created': parse_date,
+    'OriginalPublicationDate': lambda s: parse_date(s.replace('/', '-')),
+    'DCTERMS.modified': parse_date,
+    'published-date': lambda s: datetime.strptime(" ".join(s.split()[:-1]), "%a, %d %b %Y %H:%M:%S").replace(tzinfo=UTC), # Sat, 22 Nov 2014 11:15:00 GMT
+    'pubdate': lambda s: datetime(int(s[0:4]), int(s[4:6]), int(s[6:8]), tzinfo=UTC),
+    'article:published_time': parse_date,
+}
 
-months = {'January': 1,
-          'February': 2,
-          'March': 3,
-          'April': 4,
-          'May': 5,
-          'June': 6,
-          'July': 7,
-          'August': 8,
-          'September': 9,
-          'October': 10,
-          'November': 11,
-          'December': 12,}
+months = {
+    'January': 1,
+    'February': 2,
+    'March': 3,
+    'April': 4,
+    'May': 5,
+    'June': 6,
+    'July': 7,
+    'August': 8,
+    'September': 9,
+    'October': 10,
+    'November': 11,
+    'December': 12,
+}
 
 def add_date(doc):
     url = doc['page']['urls'][0]
@@ -66,8 +69,11 @@ def find_dates_tree(tree):
         if 'name' in meta.attrib and meta.attrib['name'] in time_names:
             try:
                 parsed_time = time_names[meta.attrib['name']](meta.attrib['content'])
-            except iso8601.iso8601.ParseError:
-                print "No clue."
+            except iso8601.iso8601.ParseError, e:
+                print e
+                continue
+            except Exception, e:
+                print e
                 continue
 
             dates.append(parsed_time)
@@ -78,9 +84,15 @@ def find_dates_tree(tree):
             except iso8601.iso8601.ParseError:
                 try:
                     parsed_time = time_names[meta.attrib['property']](meta.attrib['content'].split('+')[0].split('.')[0].replace('Z','T'))
-                except iso8601.iso8601.ParseError:
-                    print "No clue."
+                except iso8601.iso8601.ParseError, e:
+                    print e
                     continue
+                except Exception, e:
+                    print e
+                    continue
+            except Exception, e:
+                print e
+                continue
 
             dates.append(parsed_time)
 
@@ -156,7 +168,11 @@ def find_dates_tree(tree):
             dates.append(parsed_time)
         except:
             # 2015-06-17
-            parsed_time = datetime.strptime(date_time_str.split('T')[0], "%Y-%m-%d").replace(tzinfo=UTC)
+            try:
+                parsed_time = datetime.strptime(date_time_str.split('T')[0], "%Y-%m-%d").replace(tzinfo=UTC)
+            except:
+                parsed_time = datetime.strptime(date_time_str.split('T')[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
+
             dates.append(parsed_time)
 
     return dates

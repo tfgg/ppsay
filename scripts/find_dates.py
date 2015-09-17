@@ -1,4 +1,4 @@
-from ppsay.dates import find_dates
+from ppsay.dates import add_date
 import re
 from pymongo import MongoClient
 import lxml.html
@@ -19,17 +19,7 @@ for doc in docs:
     if doc['page']['date_published']:
         continue
 
-    url = doc['page']['urls'][0]
-    web_cache_doc = db_web_cache.find_one({'url': url})
-    
-    if web_cache_doc['html']:
-        dates = find_dates(web_cache_doc['html']) 
+    doc['page']['date_published'] = add_date(doc)
 
-        if dates:
-            earliest_date = min(dates)
-
-            doc['page']['date_published'] = earliest_date
-
-            db_articles.save(doc)
-
+    db_articles.save(doc)
 
