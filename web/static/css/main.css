@@ -309,43 +309,31 @@ ul.article-list {
   ul.article-list li.article-item {
     margin-bottom: 1em;
     padding: 20px;
-    padding-left: 90px;
     background: #FFFFFF;
     border: 1px solid #eee;
     box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08); }
+    @media screen and (max-width: 1400px) {
+      ul.article-list li.article-item {
+        margin-top: 50px; } }
     ul.article-list li.article-item:nth-of-type(1) {
       /*    padding-top: 0px; */ }
     ul.article-list li.article-item:nth-last-of-type(1) {
       /*    border-bottom: 0; */
       margin-bottom: 0; }
-    ul.article-list li.article-item div.article-left-float {
-      float: left;
-      margin-left: -70px; }
-      ul.article-list li.article-item div.article-left-float div.article-date {
-        background-color: #e8e8e8;
-        color: #333;
-        width: 60px;
-        padding: 5px;
-        text-align: right; }
-      ul.article-list li.article-item div.article-left-float div.article-num-quotes {
-        background: url("/static/images/quotes.png") no-repeat #e8e8e8;
-        background-size: contain;
-        background-position: left;
-        color: #333;
-        width: 60px;
-        padding: 5px;
-        text-align: center;
-        vertical-align: center;
-        margin-top: 5px; }
-    ul.article-list li.article-item div.article-right-float {
+    ul.article-list li.article-item div.article-by div.article-date {
+      color: #333;
+      font-size: small;
       float: left; }
-    ul.article-list li.article-item h2 {
+    ul.article-list li.article-item div.article-by div.article-domain {
+      float: left;
+      font-size: small; }
+    ul.article-list li.article-item div.article-head {
       margin-top: 0;
       margin-bottom: 10px;
       font-size: 1.4em; }
-      ul.article-list li.article-item h2 a.article-link {
+      ul.article-list li.article-item div.article-head a.article-link {
         color: #3333CC; }
-      ul.article-list li.article-item h2 small a {
+      ul.article-list li.article-item div.article-head small a {
         color: #999;
         text-decoration: underline; }
     ul.article-list li.article-item ul.article-mentions-people, ul.article-list li.article-item ul.article-mentions-constituencies {

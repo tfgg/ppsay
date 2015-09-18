@@ -39,31 +39,34 @@
         {% set election = article.election %}
     {% endif %}
     <li class='article-item'>
-      <div class='article-left-float'>
-          {% if article.page.date_published %}
-          <div class='article-date'>
-            {{ article.page.date_published.strftime("%-d %b %Y") }}
-          </div>
-          {% endif %}
-          <div class='article-num-quotes'>
-            {{ article.quotes|length }}
-          </div>
-      </div>
       <div class='article-right-float'>
-          <h2><a class='article-link' target="_blank" href='{{ article.page.final_urls.0 }}'>
-          {% if article.page.title %}
-            {{ article.page.title }}
-          {% else %}
-            {{ article.page.urls.0 }}
-          {% endif %}
-          </a>
-        
-          <small><a href='http://{{ article.domain }}'>{{ article.domain }}</a></small>
-         
           {% if current_user.is_authenticated() %}
-          <small><a href='{{ url_for('ppsay.article', doc_id=article._id) }}'>edit</a></small>
+            <small style='float: right;'><a href='{{ url_for('ppsay.article', doc_id=article._id) }}'>edit</a></small>
           {% endif %}
-          </h2>
+
+          <div class='article-head'>
+              <a class='article-link' target="_blank" href='{{ article.page.final_urls.0 }}'>
+              {% if article.page.title %}
+                {{ article.page.title }}
+              {% else %}
+                {{ article.page.urls.0 }}
+              {% endif %}
+              </a>
+              
+              <div class='article-by'>
+                  {% if article.page.date_published %}
+                  <div class='article-date'>
+                      <i class='fa fa-clock-o'></i> {{ article.page.date_published.strftime("%-d %b %Y") }} &mdash;&nbsp;
+                  </div>
+                  {% endif %}
+        
+                  <div class='article-domain'>
+                      <a href='http://{{ article.domain }}'>{{ article.domain }}</a>
+                  </div>
+              </div>
+
+              <div style='clear:both;'></div>
+          </div>
      
           <ul class='article-mentions-people'>
           {# This incorrectly counts hidden candidates. #}
@@ -110,8 +113,8 @@
               {% endif %}
             </li>
           {% endfor %}
-          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
-          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ url_for("article_report", doc_id=article._id) }}' target="_blank">report this</a></li>
+          {#<li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
+          <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ url_for("article_report", doc_id=article._id) }}' target="_blank">report this</a></li>#}
           </ul>
       </div>
       <div style='clear:both;'></div>
