@@ -8,6 +8,8 @@ addons:
       - gfortran
       - liblapack-dev
       - libblas-dev
+services:
+  - mongodb
 # command to install dependencies
 install:
   - "pip install -r requirements.txt"
