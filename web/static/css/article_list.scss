@@ -19,10 +19,6 @@ ul.article-list {
     border: 1px solid #eee;
     box-shadow: 5px 5px 5px rgba(136, 136, 136, 0.08);
 
-    @media screen and (max-width: 1400px) {
-        margin-top: 50px;
-    }
-
     &:nth-of-type(1) {
     /*    padding-top: 0px; */
     }
