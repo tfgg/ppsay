@@ -8,10 +8,16 @@ addons:
       - gfortran
       - liblapack-dev
       - libblas-dev
+      - ccache
 services:
   - mongodb
 # command to install dependencies
-cache: pip
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.ccache
+before_install:
+    - export PATH="/usr/lib/ccache:$PATH"
 install:
   - "pip install -r requirements.txt"
 # command to run tests
