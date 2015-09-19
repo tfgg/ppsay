@@ -18,7 +18,7 @@ def transform_person(person):
 
     if person['party_memberships']:
         candidacies = {
-            year: {
+            "ge{}".format(year): {
                 'party': {
                     'name': person['party_memberships'][year]['name'],
                     'id': person['party_memberships'][year]['id'].split(':')[1],

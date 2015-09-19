@@ -45,11 +45,11 @@ for person_id in all_ids:
     candidate_doc = db_candidates.find_one({'id': person_id})
 
     if person_id not in missing_ids and candidate_doc.get('deleted', False):
-        print "  UNDELETING {name:} ({id:})".format(**candidate_doc)
+        print u"  UNDELETING {name:} ({id:})".format(**candidate_doc)
         candidate_doc['deleted'] = False
         db_candidates.save(candidate_doc)
     elif person_id in missing_ids:
-        print "  {name:} ({id:}) deleted".format(**candidate_doc)
+        print u"  {name:} ({id:}) deleted".format(**candidate_doc)
         candidate_doc['deleted'] = True
         db_candidates.save(candidate_doc)
 
