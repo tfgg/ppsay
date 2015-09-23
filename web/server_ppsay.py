@@ -2,6 +2,7 @@
 import requests
 import json
 import math
+import iso8601
 
 from datetime import timedelta, datetime
 
@@ -44,6 +45,7 @@ from ppsay.db import (
     db_candidates,
     db_action_log,
     db_domains,
+    db_events
 )
 
 app = Blueprint('ppsay',
@@ -509,4 +511,28 @@ def autocomplete_constituency():
                 matches.append({'label': name, 'value': constituency['id']})
 
     return json.dumps(matches)
+
+@app.route('/event/click', methods=['POST'])
+def event_click():
+    doc_id = ObjectId(request.form.get('doc_id', None))
+    url = request.form.get('url', None)
+    href = request.form.get('href', None)
+    server_time = datetime.now()
+    client_time = iso8601.parse_date(request.form.get('time', None))
+
+    doc = {
+        'event': 'article_click',
+        'url': url,
+        'value': {
+            'href': href,
+            'doc_id': doc_id,
+        },
+        'time_server': server_time,
+        'time_client': client_time,
+        'client_ip': request.remote_addr,
+    }
+
+    db_events.save(doc)
+
+    return "" 
 
