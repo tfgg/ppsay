@@ -12,7 +12,8 @@ if len(sys.argv) > 1:
     fresh = (sys.argv[1] == "fresh")
 
 for item in feed['items']:
-    url = clean_link(item['feedburner_origlink'])
+    print item.keys()
+    url = clean_link(item['link'])
     print url
     get_source_if_matches(url, 'rss/labour_list', 'approved', fresh=fresh)
 
