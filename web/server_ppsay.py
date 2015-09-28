@@ -45,7 +45,8 @@ from ppsay.db import (
     db_candidates,
     db_action_log,
     db_domains,
-    db_events
+    db_events,
+    db_areas
 )
 
 app = Blueprint('ppsay',
@@ -79,7 +80,7 @@ def index():
     last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(5)
 
     return render_template('index.html',
-                           constituencies=get_constituencies(),
+                           constituencies=db_areas.find().sort([('name', 1)]),
                            articles=article_docs,
                            last_week_candidate_mentions=last_week_candidate_mentions)
 
