@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-def primary_generate_names(names, incumbent, prefix):
+def primary_generate_names(names, person):
     """
         Make primary names to match someone.
 
         These are used to find someone initially.
     """
+
+    incumbent = person['incumbent']
+    prefix = person['name_prefix'] 
 
     for name in names:
         name_tokens = name.split()
@@ -40,12 +43,13 @@ male_titles = {'Mr'}
 female_titles = {'Mrs', 'Miss', 'Ms'}
 name_blacklist = {'pub', 'the', 'landlord', 'pub landlord', 'will'}
 
-def secondary_generate_names(names, gender=None):
+def secondary_generate_names(names, person):
     """
         Make extra (non-primary) names to match someone.
 
         These are only used when there's a primary match.
     """
+    gender = person.get('gender')
     extra_names = []
 
     # Try to only match gender appropriate titles

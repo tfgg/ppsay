@@ -27,15 +27,19 @@ from text import (
 from itertools import chain
 from collections import namedtuple
 
-from match_lookup import get_ngrams, index
+from match_lookup import (
+    get_ngrams,
+    index,
+)
+
 from namemunge.en import (
     primary_generate_names,
     secondary_generate_names,
 )
 
 MatchEntity = namedtuple('MatchEntity', ['type', 'id', 'match']) 
-Matches = namedtuple('Matches', ['matches', 'possible'])
 MatchQuotes = namedtuple('MatchQuotes', ['quotes', 'tags'])
+Matches = namedtuple('Matches', ['matches', 'possible'])
 
 def find_overlaps(matches):
     for i, match1 in enumerate(matches):
@@ -81,10 +85,7 @@ def resolve_overlaps(matches, verbose=False):
         if i not in remove:
             yield match
 
-
-def add_matches(texts, verbose=False):
-    texts_tokens = [get_tokens(text.lower()) for text in texts]
-
+def prescreen_text(texts_tokens, index):
     # Pre-screen with an n-gram match
     ngrams = chain(*[get_ngrams(text_tokens.tokens, n) for n in range(1,4) for text_tokens in texts_tokens])
 
@@ -93,26 +94,30 @@ def add_matches(texts, verbose=False):
         if ngram in index:
             poss_matches |= set(index[ngram])
 
+    return poss_matches
+
+def matches(texts, obj_types, index, verbose=False): 
+    texts_tokens = [get_tokens(text.lower()) for text in texts]
+
+    poss_matches = prescreen_text(texts_tokens, index)
+
     match_entities = []
 
     # Take candidate matches and refine match
     for obj_type, obj_index in poss_matches:
-        secondary_names = []
+        ot = obj_types[obj_type]
+        object = ot.get_object(obj_index)
+        names = [object['name']] + object.get('other_names', [])
 
-        if obj_type == 'party':
-            party = parties[obj_index]
-            primary_names = set([party['name']] + parties[obj_index]['other_names'])
+        if ot.primary_generate_names:
+            primary_names = set(chain(names, ot.primary_generate_names(names, object)))
+        else:
+            primary_names = names
 
-        elif obj_type == 'constituency':
-            constituency = get_constituency(obj_index)
-            primary_names = set([constituency['name']] + constituency['other_names'])
-
-        elif obj_type == 'candidate':
-            candidate = get_candidate(obj_index)
-            names = [candidate['name']] + candidate['other_names']
-
-            primary_names = set(chain(names, primary_generate_names(names, candidate['incumbent'], candidate['name_prefix'])))
-            secondary_names = set(secondary_generate_names(names, candidate.get('gender', None)))
+        if ot.secondary_generate_names:
+            secondary_names = set(secondary_generate_names(names, object))
+        else:
+            secondary_names = None
 
         have_matches = False
         for match in find_matches(primary_names, *texts_tokens):
@@ -120,29 +125,31 @@ def add_matches(texts, verbose=False):
             have_matches = True
 
         # If we have some definite matches, do some looser matches, e.g. Tim Green -> Mr Green
-        if have_matches and len(secondary_names) > 0:
+        if have_matches and secondary_names:
             for match in find_matches(secondary_names, *texts_tokens):
                 match_entities.append(MatchEntity(type=obj_type + "_extra", id=obj_index, match=match))
             
-
-    party_ids = {x[1] for x in match_entities if x.type == 'party'}
-    candidate_ids = {x[1] for x in match_entities if x.type == 'candidate'}
-    constituency_ids = {x[1] for x in match_entities if x.type == 'constituency'}
+    object_ids = {
+        obj_type: {x.id for x in match_entities if x.type==obj_type}
+        for obj_type in obj_types
+    }
 
     if verbose:
-        print "  Found {} parties".format(len(party_ids))
-        print "  Found {} candidates".format(len(candidate_ids))
-        print "  Found {} constituencies".format(len(constituency_ids))
+        for obj_type, ids in object_ids.items():
+            print "  Found {} of {}".format(len(ids), obj_type)
     
-    # Load in squish phrases for matched constituencies, e.g. Gordon Ramsay for Gordon.
-
+    # Load in squish phrases for matched objects, e.g. Gordon Ramsay for Gordon.
     num_squish = 0
-    for constituency_id in constituency_ids:
-        if constituency_id in squish_constituencies:
-            phrases = squish_constituencies[constituency_id]
-            for match in find_matches(phrases, *texts_tokens):
-                match_entities.append(MatchEntity(type='squish', id=None, match=match))
-                num_squish += 1
+    for obj_type in object_ids:
+        ot = obj_types[obj_type]
+
+        for obj_id in object_ids[obj_type]:
+            phrases = ot.squish_index.get(obj_id)
+    
+            if phrases:
+                for match in find_matches(phrases, *texts_tokens):
+                    match_entities.append(MatchEntity(type='squish', id=None, match=match))
+                    num_squish += 1
 
     # Fixes complaint about https://www.electionmentions.com/article/553ab95f238f31772f962b5d
     extra_squishes = ['Ian Smart']
@@ -158,60 +165,81 @@ def add_matches(texts, verbose=False):
         for match_entity in match_entities:
             print "   ", match_entity
 
+    return match_entities
+
+def trim_matches(match_entities, object_ids, verbose=False):
     match_entities = list(resolve_overlaps(match_entities, verbose))
 
     if verbose:
         print "  Total {} matches remaining".format(len(match_entities))
     
-    possible_party_matches = {}
-    for match_entity in match_entities:
-        if match_entity.type == 'party':
-            possible_party_matches[match_entity.id] = {'id': parties[match_entity.id]['id']}
-
-    possible_constituency_matches = {}
-    for match_entity in match_entities:
-        if match_entity.type == 'constituency':
-            possible_constituency_matches[match_entity.id] = {'id': get_constituency(match_entity.id)['id']}
-
-    possible_candidate_matches = {}
-    for match_entity in match_entities:
-        if match_entity.type == 'candidate':
-            candidate = get_candidate(match_entity.id)
-
-            party_match = False
-            for _, candidacy in candidate['candidacies'].items():
-                if candidacy['party']['id'] in possible_party_matches:
-                    party_match = True
-            
-            constituency_match = False
-            for _, candidacy in candidate['candidacies'].items():
-                if candidacy['constituency']['id'] in possible_constituency_matches:
-                    constituency_match = True
-
-            is_running_2015 = '2015' in candidate['candidacies']
-
-            match_doc = {'match_party': party_match,
-                         'match_constituency': constituency_match,
-                         'running_2015': is_running_2015,
-                         'id': candidate['id'],}
-
-            possible_candidate_matches[candidate['id']] = match_doc
-
     # Remove extra matches which no longer have a parent match
     def filter_extra(match_entity):
-        if match_entity.type == 'candidate_extra':
-            if match_entity.id not in possible_candidate_matches:
-                print match_entity, "not got parent"
+        if match_entity.type.endswith('_extra'):
+            parent_type = match_entity.type[:-len('_extra')]
+            if match_entity.id not in object_ids[parent_type]:
+                if verbose: 
+                    print match_entity, "not got parent"
                 return False
         return True
 
-    possible = {}
-    possible['candidates'] = possible_candidate_matches.values()
-    possible['constituencies'] = possible_constituency_matches.values()
-    possible['parties'] = possible_party_matches.values()
+    match_entities = filter(filter_extra, match_entities)
+
+    return match_entities
+
+ObjectType = namedtuple(
+    'ObjectType',
+    [
+        'get_object',
+        'squish_index',
+        'primary_generate_names',
+        'secondary_generate_names'
+    ],
+)
+
+obj_types = {
+    'candidate': ObjectType(
+        get_object=get_candidate,
+        squish_index={},
+        primary_generate_names=primary_generate_names,
+        secondary_generate_names=secondary_generate_names,
+    ),
+    'constituency': ObjectType(
+        get_object=get_constituency,
+        squish_index=squish_constituencies,
+        primary_generate_names=None, 
+        secondary_generate_names=None,
+    ),
+    'party': ObjectType(
+        get_object=lambda obj_id: parties[obj_id],
+        squish_index={},
+        primary_generate_names=None, 
+        secondary_generate_names=None,
+    ),
+}
+
+def add_matches(texts, verbose=False):  
+    match_entities = matches(texts, obj_types, index, verbose=verbose)
     
-    return Matches(matches=filter(filter_extra, match_entities),
+    object_ids = {
+        obj_type: {x.id for x in match_entities if x.type==obj_type}
+        for obj_type in obj_types
+    }
+
+    match_entities = trim_matches(match_entities, object_ids, verbose=verbose)
+
+    def unique_obj(objs, obj_type):
+        return {x.id for x in objs if x.type == obj_type}
+
+    possible = {
+        'parties': [{'id': x} for x in unique_obj(match_entities, 'party')],
+        'constituencies': [{'id': x} for x in unique_obj(match_entities, 'constituency')],
+        'candidates': [{'id': x} for x in unique_obj(match_entities, 'candidate')],
+    }
+
+    return Matches(matches=match_entities,
                    possible=possible)
+
 
 MatchTag = namedtuple('MatchTag', ['start', 'end', 'type', 'id', 'source']) 
 

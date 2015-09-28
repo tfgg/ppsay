@@ -17,6 +17,9 @@ class Article(object):
     class FetchError(Exception):
         pass
 
+    class ParseError(Exception):
+        pass
+
     def __init__(self, page):
         self.url = page.url
 
@@ -27,9 +30,17 @@ class Article(object):
 
         article = self.wrap_newspaper(page) 
         
-        self.text = article.text
+        self.text = article.text.strip()
 
         tree = page.lxml_tree()
+        
+        if len(self.text) == 0:
+            # Guardian fix
+            for el in tree.xpath('//div[@itemprop="articleBody"]'):
+                self.text = el.text_content().strip()
+
+            #if len(self.text) == 0:
+            #    raise Article.ParseError(u"Could not parse {}".format(self.url))
 
         self.get_title(tree, article)
         self.get_date(tree)
