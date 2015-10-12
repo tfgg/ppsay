@@ -14,4 +14,5 @@ db_action_log = db_client.news.action_log
 db_domains = db_client.news.domains
 db_areas = db_client.news.areas
 db_events = db_client.news.events
+db_pages = db_client.news.pages
 

@@ -241,7 +241,16 @@ def add_matches(texts, verbose=False):
                    possible=possible)
 
 
-MatchTag = namedtuple('MatchTag', ['start', 'end', 'type', 'id', 'source']) 
+MatchTag = namedtuple(
+    'MatchTag',
+    [
+        'start',
+        'end',
+        'type',
+        'id',
+        'source',
+    ]
+)
 
 def add_quotes(matches, texts):
     texts_tokens = [get_tokens(text.lower()) for text in texts]
@@ -424,9 +433,9 @@ def resolve_constituencies(doc_user, doc_possible):
     return resolved_constituencies
 
 
-def resolve_quotes(doc, verbose=False):
-    texts = [doc['page']['text'],
-             doc['page']['title']]
+def resolve_quotes(texts, doc, verbose=False):
+    #texts = [doc['page']['text'],
+    #         doc['page']['title']]
 
     candidates = {candidate['id']: candidate for candidate in doc['candidates'] if candidate['state'] not in ['removed', 'removed_ml']}
     constituencies = {constituency['id']: constituency for constituency in doc['constituencies'] if constituency['state'] != 'removed'}
@@ -488,11 +497,11 @@ def resolve_quotes(doc, verbose=False):
                 if verbose:
                     print "Clash", tag1, tag2
 
-    doc['tagged_html'] = add_tags(doc['page']['text'], tags)
+    doc['tagged_html'] = add_tags(texts[0], tags)
     doc['tag_clash'] = clash
         
 
-def resolve_matches(doc, verbose=False):
+def resolve_matches(texts, doc, verbose=False):
     """
         Generate the final description of the tags by combining the machine matched
         tags and the user contributed tags.
@@ -512,7 +521,7 @@ def resolve_matches(doc, verbose=False):
         doc['constituencies'] = resolve_constituencies(doc['user'], doc['possible']) 
 
     if 'quotes' in doc:
-        resolve_quotes(doc, verbose)
+        resolve_quotes(texts, doc, verbose)
 
     return
 

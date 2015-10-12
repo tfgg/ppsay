@@ -2,25 +2,22 @@ import sys
 from urlparse import urlparse
 from datetime import datetime
 
-from domains import domain_whitelist, add_domain
+from domains import domain_whitelist
 from dates import add_date
 from matches import add_matches, resolve_matches, add_quotes
 from ml.assign import get_machine
-from db import db_web_cache, db_articles
-from article import Article
+from db import db_web_cache, db_articles, db_pages
 from webcache import WebPage
+from page import Page
 
-def get_or_create_doc(page, source):
-    doc = db_articles.find_one({'keys': page.url})
+def get_or_create_doc(page):
+    doc = db_articles.find_one({'keys': page.url,})
 
     new = False
 
     if doc is None:
-        article = Article(page)
-        
         doc = {
-            'page': article.as_dict(),
-            'source': source,
+            'pages': [page._id],
             'time_added': datetime.now(),
             'keys': [page.url],
         }
@@ -30,30 +27,24 @@ def get_or_create_doc(page, source):
     return new, doc
 
 def process_doc(doc):
-    try:
-        doc['page']['date_published'] = add_date(doc)
-    except ValueError: # ignore date errors for now
-        pass
+    page = Page.get(doc['pages'][0])
 
-    doc['domain'] = add_domain(doc)
+    texts = [page.text, page.title,]
 
-    doc['matches'], doc['possible'] = add_matches([doc['page']['text'],
-                                                   doc['page']['title'],])
+    doc['matches'], doc['possible'] = add_matches(texts)
 
-    doc['quotes'], doc['tags'] = add_quotes(doc['matches'],
-                                            [doc['page']['text'],
-                                             doc['page']['title']])
+    doc['quotes'], doc['tags'] = add_quotes(doc['matches'], texts)
     
     doc['machine'] = get_machine(doc)
 
-    resolve_matches(doc)
+    resolve_matches(texts, doc)
 
     return
 
-def get_source_whitelist(source_url, source):
-    """
+"""def get_source_whitelist(source_url, source):
+    ""
         Get a source and save it if the domain is in the whitelist.
-    """
+    ""
 
     source_url_parsed = urlparse(source_url)
     
@@ -62,7 +53,7 @@ def get_source_whitelist(source_url, source):
 
         return article_doc
     else:
-        return None
+        return None"""
 
 def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fresh=False):
     """
@@ -70,79 +61,81 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
 
         min_candidates, min_constituencies, min_parties
     """
-
-    page = WebPage(source_url)
-
+    
     result = {
         'url': source_url,
         'source': source,
         'state': state
     }
 
-    try:
-        page.fetch()
-    except WebPage.FailedToFetch, e:
-        result['error'] = {
-            'type': 'WebPage.FailedToFetch',
-            'text': str(e),
-        }
-        print "FAILED", e
-     
-    if not fresh and 'error' not in result and page.is_local:
-        print "Already in cache, skipping"
-        result['skip'] = {
-            'text': 'Already in cache'
-        }
-    else:
-        print "Enforced fresh run"
+    # First, get the parsed page object 
+    page = Page.get_url(source_url)
 
-    if 'error' not in result and 'skip' not in result:
+    if page is not None:
+        print "Page already exists."
+
+        if not fresh:
+            result['skip'] = {
+                'text': 'Page already exists.'
+            }
+
+    else:
+        print "Page doesn't exist"
+
+        web_page = WebPage(source_url)
+
         try:
-            new, doc = get_or_create_doc(page, source)
-        except Article.FetchError, e:
-            print "FAILED", e
+            web_page.fetch()
+        except WebPage.FailedToFetch, e:
             result['error'] = {
-                'type': 'Article.FetchError',
+                'type': 'WebPage.FailedToFetch',
                 'text': str(e),
             }
 
-    if 'error' not in result and 'skip' not in result:
-        if fresh or new and doc['page'] is not None:
-            print "  New"
-
-            process_doc(doc) 
-
-            # Only save if it has matches
-            has_matches = False
-
-            for min_candidates, min_constituencies, min_parties in conditions:            
-                if len(doc['possible']['candidates']) >= min_candidates and \
-                   len(doc['possible']['constituencies']) >= min_constituencies and \
-                   len(doc['possible']['parties']) >= min_parties:
-                    has_matches = True
-
-            if has_matches:
-                print "    Matches"
-                result['success'] = {
-                    'text': 'Matches'
-                }
-                
-                doc['state'] = state
-
-                try:
-                    doc['_id'] = db_articles.save(doc)
-                except RuntimeError, e:
-                    result['error'] = "RuntimeError: {}".format(str(e))
-            else:
-                print "    No matches"
-                result['skip'] = {
-                    'text': 'No matches'
-                }
-        else:
-            result['skip'] = {
-                'text': 'Not new'
+        try:
+            page = Page.from_web_page(web_page, source)
+            page.save()
+        except Page.FetchError, e:
+            print "FAILED", e
+            result['error'] = {
+                'type': 'Page.FetchError',
+                'text': str(e),
             }
-            print "  Not new"
+
+    # Next, using the page object, get the article object or create a new one
+    if 'error' not in result and 'skip' not in result:
+        new, doc = get_or_create_doc(page)
+
+    # If this has worked, process it unless we're skipping this or there's an error
+    if 'error' not in result and 'skip' not in result and new:
+        process_doc(doc) 
+
+        # Only save if it has matches
+        has_matches = False
+
+        for min_candidates, min_constituencies, min_parties in conditions:            
+            if len(doc['possible']['candidates']) >= min_candidates and \
+               len(doc['possible']['constituencies']) >= min_constituencies and \
+               len(doc['possible']['parties']) >= min_parties:
+                has_matches = True
+
+        if has_matches:
+            print "    Matches found"
+            result['success'] = {
+                'text': 'Matches'
+            }
+            
+            doc['state'] = state
+
+            try:
+                doc['_id'] = db_articles.save(doc)
+            except RuntimeError, e:
+                result['error'] = "RuntimeError: {}".format(str(e))
+        else:
+            print "    No matches"
+            result['skip'] = {
+                'text': 'No matches'
+            }
 
     if 'error' in result:
         print >>sys.stderr, datetime.now(), result
