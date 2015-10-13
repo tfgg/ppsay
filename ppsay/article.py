@@ -1,4 +1,6 @@
-from db import db_articles
+from db import db_articles, db_pages
+from ppsay.data import elections
+from ppsay.page import Page
 
 def get_articles(person_ids, constituency_ids=None):
     if constituency_ids:
@@ -22,8 +24,10 @@ def get_articles(person_ids, constituency_ids=None):
     article_docs = list(article_docs)
 
     for article_doc in article_docs:
-        if article_doc['page']['date_published']:
-            article_doc['order_date'] = article_doc['page']['date_published']
+        article_doc['page'] = Page.get(article_doc['pages'][0])
+
+        if article_doc['page'].date_published:
+            article_doc['order_date'] = article_doc['page'].date_published
         else:
             article_doc['order_date'] = article_doc['time_added']
         
@@ -31,5 +35,6 @@ def get_articles(person_ids, constituency_ids=None):
             article_doc['election'] = 'ge2010'
         else:
             article_doc['election'] = 'ge2015'
+
 
     return article_docs

@@ -49,11 +49,11 @@
           {% endif %}
 
           <div class='article-head'>
-              <a class='article-link' target="_blank" href='{{ article.page.final_urls.0 }}' data-doc-id="{{ article._id }}">
+              <a class='article-link' target="_blank" href='{{ article.page.final_url }}' data-doc-id="{{ article._id }}">
               {% if article.page.title %}
                 {{ article.page.title }}
               {% else %}
-                {{ article.page.urls.0 }}
+                {{ article.page.url }}
               {% endif %}
               </a>
               
@@ -113,11 +113,11 @@
                       {% for constituency in quote.constituencies %} quote-constituency-{{ constituency.id }}{% endfor %}
                       {% if quotes_closed %} quote-closed{% endif %}'>
               {% if 'truncated' in quote %}
-              <p class='quote-text'>{% if quote.truncated.left %}&hellip; {% endif %}{{ quote.html|safe }}{% if quote.truncated.right %} &hellip;{% endif %} <a href='{{ article.page.urls.0 }}'>read more</a></p>
+              <p class='quote-text'>{% if quote.truncated.left %}&hellip; {% endif %}{{ quote.html|safe }}{% if quote.truncated.right %} &hellip;{% endif %} <a href='{{ article.page.url }}'>read more</a></p>
               {% endif %}
             </li>
           {% endfor %}
-          {#<li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.urls.0 }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
+          {#<li class='quote-more' id='quotes-{{ article._id }}-more'><a href='http://twitter.com/home?status={{ article.page.url }} via @ge2015mentions #ge2015' target="_blank">tweet this</a></li>
           <li class='quote-more' id='quotes-{{ article._id }}-more'><a href='{{ url_for("article_report", doc_id=article._id) }}' target="_blank">report this</a></li>#}
           </ul>
       </div>

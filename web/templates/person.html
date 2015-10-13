@@ -184,7 +184,7 @@
                     {% if quote.article.page.date_published %}
                         <i class="fa fa-clock-o"></i> {{ quote.article.page.date_published.strftime("%-d %b %Y") }}&nbsp;&mdash;&nbsp;
                     {% endif %}
-                    <a href='{{ quote.article.page.urls[0] }}'>{{ quote.article.page.title }}</a> ({{ quote.article.domain }})
+                    <a href='{{ quote.article.page.url }}'>{{ quote.article.page.title }}</a> ({{ quote.article.page.domain }})
                 </p>
                 <p class='quote-text'>{% if quote.truncated.left %}&hellip; {% endif %}{{ quote.html|safe }}{% if quote.truncated.right %} &hellip;{% endif %}</p>
             </li>

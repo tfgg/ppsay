@@ -27,6 +27,7 @@ from ppsay.domains import domain_whitelist, get_domain
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
 from ppsay.article import get_articles
+from ppsay.page import Page
 
 from ppsay.constituency import (
     constituency_get_candidates,
@@ -76,6 +77,7 @@ def index():
 
     for article_doc in article_docs:
         article_doc['election'] = 'ge2015'
+        article_doc['page'] = Page.get(article_doc['pages'][0])
 
     last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(5)
 
@@ -246,7 +248,7 @@ def person(person_id):
     quote_docs = get_person_quotes(person_id)
     article_docs = get_person_articles(person_id)
 
-    domains = sorted([(get_domain(domain), count) for domain, count in Counter(doc['domain'] for doc in article_docs).items()], key=lambda x: x[1], reverse=True)
+    domains = sorted([(get_domain(domain), count) for domain, count in Counter(doc['page'].domain for doc in article_docs).items()], key=lambda x: x[1], reverse=True)
 
     weekly_buckets = sorted(list(Counter(doc['order_date'].replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=doc['order_date'].weekday()) for doc in article_docs).items()))
 
