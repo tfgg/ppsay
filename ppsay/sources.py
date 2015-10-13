@@ -10,16 +10,16 @@ from db import db_web_cache, db_articles, db_pages
 from webcache import WebPage
 from page import Page
 
-def get_or_create_doc(page):
-    doc = db_articles.find_one({'keys': page.url,})
+def get_or_create_doc(pages):
+    doc = db_articles.find_one({'keys': pages[0].url,})
 
     new = False
 
     if doc is None:
         doc = {
-            'pages': [page._id],
+            'pages': [page._id for page in pages],
             'time_added': datetime.now(),
-            'keys': [page.url],
+            'keys': [page.url for page in pages],
         }
        
         new = True
@@ -104,7 +104,7 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
 
     # Next, using the page object, get the article object or create a new one
     if 'error' not in result and 'skip' not in result:
-        new, doc = get_or_create_doc(page)
+        new, doc = get_or_create_doc([page])
 
     # If this has worked, process it unless we're skipping this or there's an error
     if 'error' not in result and 'skip' not in result and new:

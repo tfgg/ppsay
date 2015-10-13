@@ -38,5 +38,5 @@ for doc in db_articles.find():
     
     print doc
 
-    #db_articles.save(doc)
+    db_articles.save(doc)
 
