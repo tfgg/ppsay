@@ -75,10 +75,11 @@
           <ul class='article-mentions-people'>
           {# This incorrectly counts hidden candidates. #}
           {% set max_candidates = 5 %}
-          {% for candidate in article.candidates %}
-            {% if article.candidates|length > max_candidates and loop.index > max_candidates %}
-            {% elif article.candidates|length > max_candidates and loop.index == max_candidates %}
-                and {{ article.candidates|length - max_candidates }} more
+          {% set candidates = article.analysis.final.candidates %}
+          {% for candidate in candidates %}
+            {% if candidates|length > max_candidates and loop.index > max_candidates %}
+            {% elif candidates|length > max_candidates and loop.index == max_candidates %}
+                and {{ candidates|length - max_candidates }} more
             {% else %}
             <li class='candidate-score-{{ candidate.state }}'>
                 <a href='{{ url_for('ppsay.person', person_id=candidate.id) }}'>{{ candidate.name }}</a>
@@ -89,10 +90,11 @@
           
           {% set max_constituencies = 5 %}
           <ul class='article-mentions-constituencies'>
-          {% for constituency in article.constituencies %}
-            {% if article.constituencies|length > max_constituencies and loop.index > max_constituencies %}
-            {% elif article.constituencies|length > max_constituencies and loop.index == max_constituencies %}
-                and {{ article.constituencies|length - max_constituencies }} more
+          {% set constituencies = article.analysis.final.constituencies %}
+          {% for constituency in constituencies %}
+            {% if constituencies|length > max_constituencies and loop.index > max_constituencies %}
+            {% elif constituencies|length > max_constituencies and loop.index == max_constituencies %}
+                and {{ constituencies|length - max_constituencies }} more
             {% else %}
             <li class='constituency-score-{{ constituency.state }}'>
                 <a href='{{ url_for('ppsay.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
@@ -103,9 +105,9 @@
 
           <ul class='quotes' id='quotes-{{ article._id }}'>
           {% if all_quotes %}
-              {% set quotes = article.quotes %}
+              {% set quotes = article.output.quotes %}
           {% else %}
-              {% set quotes = article.quotes[:1] %}
+              {% set quotes = article.output.quotes[:1] %}
           {% endif %}
           {% for quote in quotes %}
             <li class='quote

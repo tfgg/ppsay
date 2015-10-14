@@ -70,7 +70,7 @@ def index():
     article_docs = [
         x for x in article_docs
         if sum(
-            1 for y in x.get('candidates', [])
+            1 for y in x['analysis']['final'].get('candidates', [])
             if y['state'] not in ['removed', 'removed_ml']
         ) > 0
     ]
@@ -160,7 +160,7 @@ def get_person_articles(person_id):
     article_docs = list(get_articles([person_id]))
 
     for article_doc in article_docs:
-        for quote_doc in article_doc['quotes']:
+        for quote_doc in article_doc['output']['quotes']:
             score = 0.0
 
             if person_id in [x[0] for x in quote_doc['candidate_ids']]:
@@ -174,7 +174,7 @@ def get_person_articles(person_id):
  
             quote_doc['score'] = score
         
-        article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
+        article_doc['output']['quotes'] = sorted(article_doc['output']['quotes'], key=lambda x: x['score'], reverse=True)
  
     article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
 
@@ -210,7 +210,7 @@ def get_person_quotes(person_id):
     quote_docs = {}
 
     for article_doc in article_docs:
-        for quote_doc in article_doc['quotes']:
+        for quote_doc in article_doc['output']['quotes']:
             if person_id in [x[0] for x in quote_doc['candidate_ids']]:
                 quote_doc['article'] = article_doc
 
@@ -284,7 +284,7 @@ def constituency(constituency_id, rss=False):
     article_docs = get_articles(person_ids, [constituency_id])
 
     for article_doc in article_docs:
-        for quote_doc in article_doc['quotes']:
+        for quote_doc in article_doc['output']['quotes']:
             score = 0.0
 
             for person_id in person_ids:
@@ -299,7 +299,7 @@ def constituency(constituency_id, rss=False):
  
             quote_doc['score'] = score
 
-        article_doc['quotes'] = sorted(article_doc['quotes'], key=lambda x: x['score'], reverse=True)
+        article_doc['output']['quotes'] = sorted(article_doc['output']['quotes'], key=lambda x: x['score'], reverse=True)
 
     if not rss:
         article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
@@ -369,13 +369,13 @@ def article_person_confirm(doc_id):
 
     person_id = request.form.get('person_id', None)
 
-    doc['user']['candidates']['confirm'].append(person_id)
+    doc['analysis']['user']['candidates']['confirm'].append(person_id)
 
-    if person_id in doc['user']['candidates']['remove']:
-        doc['user']['candidates']['remove'].remove(person_id)
+    if person_id in doc['analysis']['user']['candidates']['remove']:
+        doc['analysis']['user']['candidates']['remove'].remove(person_id)
     
-    doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
-    doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
+    doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
+    doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
    
     resolve_matches(doc)
  
@@ -396,13 +396,13 @@ def article_person_remove(doc_id):
     
     person_id = request.form.get('person_id', None)
 
-    doc['user']['candidates']['remove'].append(person_id)
+    doc['analysis']['user']['candidates']['remove'].append(person_id)
     
-    if person_id in doc['user']['candidates']['confirm']:
-        doc['user']['candidates']['confirm'].remove(person_id)
+    if person_id in doc['analysis']['user']['candidates']['confirm']:
+        doc['analysis']['user']['candidates']['confirm'].remove(person_id)
     
-    doc['user']['candidates']['confirm'] = list(set(doc['user']['candidates']['confirm']))
-    doc['user']['candidates']['remove'] = list(set(doc['user']['candidates']['remove']))
+    doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
+    doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
 
     resolve_matches(doc)
 
@@ -423,13 +423,13 @@ def article_constituency_confirm(doc_id):
 
     constituency_id = request.form.get('constituency_id', None)
 
-    doc['user']['constituencies']['confirm'].append(constituency_id)
+    doc['analysis']['user']['constituencies']['confirm'].append(constituency_id)
 
-    if constituency_id in doc['user']['constituencies']['remove']:
-        doc['user']['constituencies']['remove'].remove(constituency_id)
+    if constituency_id in doc['analysis']['user']['constituencies']['remove']:
+        doc['analysis']['user']['constituencies']['remove'].remove(constituency_id)
     
-    doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
-    doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
+    doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
+    doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
     
     resolve_matches(doc)
 
@@ -456,13 +456,13 @@ def article_constituency_remove(doc_id):
 
     constituency_id = request.form.get('constituency_id', None)
 
-    doc['user']['constituencies']['remove'].append(constituency_id)
+    doc['analysis']['user']['constituencies']['remove'].append(constituency_id)
 
     if constituency_id in doc['user']['constituencies']['confirm']:
-        doc['user']['constituencies']['confirm'].remove(constituency_id)
+        doc['analysis']['user']['constituencies']['confirm'].remove(constituency_id)
     
-    doc['user']['constituencies']['confirm'] = list(set(doc['user']['constituencies']['confirm']))
-    doc['user']['constituencies']['remove'] = list(set(doc['user']['constituencies']['remove']))
+    doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
+    doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
     
     resolve_matches(doc)
 

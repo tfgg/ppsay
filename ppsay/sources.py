@@ -20,6 +20,8 @@ def get_or_create_doc(pages):
             'pages': [page._id for page in pages],
             'time_added': datetime.now(),
             'keys': [page.url for page in pages],
+            'analysis': {},
+            'output': {},
         }
        
         new = True
@@ -31,29 +33,22 @@ def process_doc(doc):
 
     texts = [page.text, page.title,]
 
-    doc['matches'], doc['possible'] = add_matches(texts)
+    if 'analysis' not in doc:
+        doc['analysis'] = {}
 
-    doc['quotes'], doc['tags'] = add_quotes(doc['matches'], texts)
+    if 'output' not in doc:
+        doc['output'] = {}
+
+    doc['analysis']['matches'], doc['analysis']['possible'] = add_matches(texts)
+
+    doc['output']['quotes'], doc['output']['tags'] = add_quotes(doc['analysis']['matches'], texts)
     
-    doc['machine'] = get_machine(doc)
+    doc['analysis']['machine'] = get_machine(doc)
 
     resolve_matches(texts, doc)
 
     return
 
-"""def get_source_whitelist(source_url, source):
-    ""
-        Get a source and save it if the domain is in the whitelist.
-    ""
-
-    source_url_parsed = urlparse(source_url)
-    
-    if source_url_parsed.netloc in domain_whitelist:
-        article_doc = get_source(source_url, source, 'approved')
-
-        return article_doc
-    else:
-        return None"""
 
 def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fresh=False):
     """
@@ -114,9 +109,9 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
         has_matches = False
 
         for min_candidates, min_constituencies, min_parties in conditions:            
-            if len(doc['possible']['candidates']) >= min_candidates and \
-               len(doc['possible']['constituencies']) >= min_constituencies and \
-               len(doc['possible']['parties']) >= min_parties:
+            if len(doc['analysis']['possible']['candidates']) >= min_candidates and \
+               len(doc['analysis']['possible']['constituencies']) >= min_constituencies and \
+               len(doc['analysis']['possible']['parties']) >= min_parties:
                 has_matches = True
 
         if has_matches:

@@ -31,19 +31,19 @@ def person_article_count_week(person_id):
 def vecs(article, return_all=False):
     constituencies = {}
 
-    for possible_constituency in article['possible']['constituencies']:
+    for possible_constituency in article['analysis']['possible']['constituencies']:
         constituencies[possible_constituency['id']] = possible_constituency
 
     parties = {}
 
-    for possible_party in article['possible']['parties']:
+    for possible_party in article['analysis']['possible']['parties']:
         parties[possible_party['id']] = possible_party
 
     people = {}
     people_party = defaultdict(list)
     people_constituency = defaultdict(list)
 
-    for possible_candidate in article['possible']['candidates']:
+    for possible_candidate in article['analysis']['possible']['candidates']:
         person = get_candidate(possible_candidate['id'])
 
         if '2015' in person['candidacies']:
@@ -80,12 +80,14 @@ def vecs(article, return_all=False):
         vecs[person['id']] = {'X': vec.values(), 'y': None,}
 
         if True:
-            vecs[person['id']].update({'person_id': person['id'],
-                                       'doc_id': str(article.get('_id')),
-                                       'person_name': person['name'],})
+            vecs[person['id']].update({
+                'person_id': person['id'],
+                'doc_id': str(article.get('_id')),
+                'person_name': person['name'],
+            })
 
-    if 'candidates' in article:
-        for candidate in article['candidates']:
+    if 'candidates' in article['analysis']:
+        for candidate in article['analysis']['candidates']:
             if candidate['id'] in vecs:
                 if candidate['state'] == 'confirmed':
                    vecs[candidate['id']]['y'] = 1.0
