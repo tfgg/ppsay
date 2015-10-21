@@ -1,4 +1,4 @@
-    {% for constituency in article.constituencies %}
+    {% for constituency in article.analysis.final.constituencies %}
         <li class='constituency-tagged constituency-tagged-{{ constituency.state }}'>
             <div class='name'><a href='{{ url_for(".constituency", constituency_id=constituency.id) }}'>{{ constituency.name }}</a></div>
 

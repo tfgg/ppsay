@@ -357,6 +357,8 @@ def article(doc_id):
 
     doc = db_articles.find_one({'_id': doc_id})
 
+    doc['page'] = Page.get(doc['pages'][0])
+
     return render_template('article.html',
                            article=doc)
 

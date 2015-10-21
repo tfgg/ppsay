@@ -3,7 +3,7 @@ from ppsay.db import db_articles
 from urlparse import urlparse
 
 for doc in db_articles.find():
-    if 'page' not in doc:
+    if 'page' not in doc or doc['page'] is None:
         print "Skipping"
         continue
 
@@ -32,11 +32,41 @@ for doc in db_articles.find():
 
     doc['pages'] = page_ids
 
+    doc['analysis'] = {
+        'matches': doc['matches'],
+        'machine': doc['machine'],
+        'possible': doc['possible'],
+        'user': doc['user'],
+        'final': {
+            'candidates': doc['candidates'],
+            'constituencies': doc['constituencies'],
+        },
+    }
+
+    doc['output'] = {
+        'quotes': doc['quotes'],
+        'tags': doc['tags'],
+        'tagged_html': doc['tagged_html'],
+        'tag_clash': doc['tag_clash'],
+    }
+
+    del doc['matches']
+    del doc['machine']
+    del doc['possible']
+    del doc['user']
+    del doc['candidates']
+    del doc['constituencies']
+
+    del doc['quotes']
+    del doc['tags']
+    del doc['tagged_html']
+    del doc['tag_clash']
+
     del doc['page']
     del doc['source']
     del doc['domain']
     
-    print doc
+    #print doc
 
     db_articles.save(doc)
 
