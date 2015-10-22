@@ -8,8 +8,10 @@ events = db_events.find({'event': 'article_click'})
 sections = Counter()
 ips = Counter()
 ips_d = defaultdict(list)
+num = 0
 
 for event in events:
+    num += 1
     url = event['url']
     val = event['value']
     client_ip = event['client_ip']
@@ -20,6 +22,9 @@ for event in events:
     ips[client_ip] += 1
     ips_d[client_ip].append(event)
 
+print "{} events total".format(num)
+
+print 
 print "# Clicks per section"
 for section, count in sections.items():
     if section == "":
