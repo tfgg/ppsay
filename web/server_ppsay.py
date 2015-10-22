@@ -362,6 +362,12 @@ def article(doc_id):
     return render_template('article.html',
                            article=doc)
 
+def _resolve_matches(doc):
+    page = Page.get(doc['pages'][0])
+
+    texts = [page.text, page.title,]
+
+    resolve_matches(texts, doc)
 
 @app.route('/article/<doc_id>/people', methods=['PUT'])
 @login_required
@@ -379,7 +385,7 @@ def article_person_confirm(doc_id):
     doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
     doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
    
-    resolve_matches(doc)
+    _resolve_matches(doc)
  
     db_articles.save(doc)
 
@@ -406,7 +412,7 @@ def article_person_remove(doc_id):
     doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
     doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
 
-    resolve_matches(doc)
+    _resolve_matches(doc)
 
     db_articles.save(doc)
     
@@ -433,7 +439,7 @@ def article_constituency_confirm(doc_id):
     doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
     doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
     
-    resolve_matches(doc)
+    _resolve_matches(doc)
 
     db_articles.save(doc)
     
@@ -466,7 +472,7 @@ def article_constituency_remove(doc_id):
     doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
     doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
     
-    resolve_matches(doc)
+    _resolve_matches(doc)
 
     db_articles.save(doc)
     
