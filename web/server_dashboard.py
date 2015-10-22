@@ -17,6 +17,7 @@ from ppsay.db import (
     db_action_log,
     db_domains,
 )
+from ppsay.page import Page
 
 app = Blueprint('dashboard',
                 __name__,
@@ -25,19 +26,19 @@ app = Blueprint('dashboard',
 dashboard_queries = [{'query': {},
                       'id': 'num_articles',
                       'name': 'Number of articles',},
-                     {'query': {'page': None},
+                     {'query': {'pages': None},
                       'id': 'num_articles_no_page',
                       'name': 'Number of unscraped articles',},
                      {'query': {'page.date_published': None},
                       'id': 'num_articles_no_date',
                       'name': 'Number of articles without a date',},
-                     {'query': {'possible.candidates': {'$size': 0}},
+                     {'query': {'analysis.possible.candidates': {'$size': 0}},
                       'id': 'num_articles_no_candidates',
                       'name': 'Number of articles with no candidates',},
-                     {'query': {'possible.constituencies': {'$size': 0}},
+                     {'query': {'analysis.possible.constituencies': {'$size': 0}},
                       'id': 'num_articles_no_constituencies',
                       'name': 'Number of articles with no constituencies',},
-                     {'query': {'tag_clash': True},
+                     {'query': {'output.tag_clash': True},
                       'id': 'tag_clash',
                       'name': 'Number of articles with clashing tags',}
                     ]
@@ -60,7 +61,10 @@ def dashboard():
 @login_required
 def dashboard_article(query_id):
     query = dashboard_query_index[query_id]
-    docs = db_articles.find(query['query'])
+    docs = list(db_articles.find(query['query']))
+
+    for doc in docs:
+        doc['page'] = Page.get(doc['pages'][0])
 
     return render_template('dashboard_query.html',
                            query=query,
