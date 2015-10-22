@@ -1,10 +1,12 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+from ppsay.db import db_articles
+from ppsay.page import Page
 
 client = MongoClient()
 
 db_webcache = client.news.web_cache
-db_articles = client.news.articles
+db_pages = client.news.articles
 
 now = datetime.now()
 last_week = now - timedelta(days=7)
@@ -16,7 +18,12 @@ for doc_webcache in db_webcache.find():
     if doc_webcache['time_fetched'] > last_week or (doc_webcache.get('html_compressed') is None and doc_webcache.get('html') is None):
         continue
 
-    doc_article = db_articles.find_one({'keys': doc_webcache['url']})
+    page = Page.get_url(doc_webcache['url'])
+
+    if page is not None:
+        doc_article = db_articles.find_one({'pages': page._id})
+    else:
+        doc_article = None
 
     if doc_article is None:
         print u"WIPING", doc_webcache['_id'], doc_webcache['url'].encode('utf-8')
