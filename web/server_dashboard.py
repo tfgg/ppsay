@@ -105,11 +105,11 @@ def dashboard_classifier():
         stats = defaultdict(Counter)
 
         for doc in docs:
-            if 'machine' in doc:
+            if 'machine' in doc.get('analysis', {}):
                 timestamp = time.mktime(doc['time_added'].date().timetuple())
 
-                stats[timestamp]['remove'] += len(doc['machine']['candidates']['remove'])
-                stats[timestamp]['confirm'] += len(doc['machine']['candidates']['confirm'])
+                stats[timestamp]['remove'] += len(doc['analysis']['machine']['candidates']['remove'])
+                stats[timestamp]['confirm'] += len(doc['analysis']['machine']['candidates']['confirm'])
 
         stats_json = []
         for day, day_stats in sorted(stats.items()):
@@ -135,8 +135,12 @@ def action_log():
 @app.route('/queue')
 @login_required
 def moderation_queue():
-    articles = db_articles.find({'state': 'moderated'}) \
-                          .sort([('time_added', -1)])[:50]
+    articles = list(db_articles.find({'state': 'moderated'}) \
+                          .sort([('time_added', -1)])[:50])
+
+    for doc in articles:
+        if 'pages' in doc:
+            doc['page'] = Page.get(doc['pages'][0])
 
     return render_template('moderation_queue.html',
                            articles=articles)
