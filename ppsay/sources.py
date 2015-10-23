@@ -87,15 +87,20 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
                 'text': str(e),
             }
 
-        try:
-            page = Page.from_web_page(web_page, source)
-            page.save()
-        except Page.FetchError, e:
-            print "FAILED", e
-            result['error'] = {
-                'type': 'Page.FetchError',
-                'text': str(e),
+        if web_page.is_local:
+            result['skip'] = {
+                'text': 'Already in cache',
             }
+        else:
+            try:
+                page = Page.from_web_page(web_page, source)
+                page.save()
+            except Page.FetchError, e:
+                print "FAILED", e
+                result['error'] = {
+                    'type': 'Page.FetchError',
+                    'text': str(e),
+                }
 
     # Next, using the page object, get the article object or create a new one
     if 'error' not in result and 'skip' not in result:
