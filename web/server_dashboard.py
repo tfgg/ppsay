@@ -27,19 +27,19 @@ app = Blueprint('dashboard',
 dashboard_queries = [
     {
         'db': 'pages',
-        'type': 'count',
+        'type': 'stats',
         'template': 'count',
-        'query': {},
         'id': 'num_pages',
         'name': 'Number of pages',
+        'value': lambda d: "{:,} ({} MiB)".format(d['count'], d['size'] / 2**20)
     },
     {
         'db': 'articles',
-        'type': 'count',
-        'query': {},
+        'type': 'stats',
         'template': 'count',
         'id': 'num_articles',
         'name': 'Number of articles',
+        'value': lambda d: "{:,} ({} MiB)".format(d['count'], d['size'] / 2**20)
     },
     {
         'db': 'pages',
@@ -247,17 +247,22 @@ def dashboard():
     for query in dashboard_queries:
         db_query = db[query['db']]
    
-        if query['type'] == 'count': 
+        if query['type'] == 'count':
             result = db_query.find(query['query']).count()
+        elif query['type'] == 'stats':
+            result = db.command("collstats",query['db'])
+            
+            if query.get('value'):
+                result = query['value'](result)
         elif query['type'] == 'aggregate':
             result = list(db_query.aggregate(query['query']))
 
+            if query.get('value'):
+                for d in result:
+                    d['value'] = query['value'](d)
+
         if query['template'] == 'timeseries':
             result = [x for x in result if x['_id']['y'] > 2014]
-
-        if query.get('value'):
-            for d in result:
-                d['value'] = query['value'](d)
 
         print result
 
