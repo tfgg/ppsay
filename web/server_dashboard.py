@@ -88,7 +88,34 @@ dashboard_queries = [
         ],
         'id': 'timeseries_articles',
         'name': 'Articles over time',
-    }
+    },
+    {
+        'db': 'articles',
+        'type': 'aggregate',
+        'query': [
+            {
+                '$match': {
+                    'time_added': {
+                        '$ne': None
+                    }
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'd': {'$dayOfMonth': '$time_added'},
+                        'm': {'$month': '$time_added'},
+                        'y': {'$year': '$time_added'},
+                    },
+                    'confirm': { '$sum': { '$size': "$analysis.machine.candidates.confirm" } },
+                    'remove': { '$sum': { '$size': "$analysis.machine.candidates.remove" } },
+                }
+            },
+        ],
+        'id': 'timeseries_classifier_candidates',
+        'name': 'Candidate classifier',
+        'value': lambda d: float(d['confirm']) / (d['confirm'] + d['remove']),
+    },
 ]
 """    {
         'db': 'articles',
@@ -161,6 +188,10 @@ def dashboard():
             result = db_query.find(query['query']).count()
         elif query['type'] == 'aggregate':
             result = [x for x in db_query.aggregate(query['query']) if x['_id']['y'] > 2014]
+
+        if query['value']:
+            for d in result:
+                d['value'] = query['value'](d)
 
         stats[query['id']] = result
 

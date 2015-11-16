@@ -67,13 +67,18 @@ def index():
                               .sort([('time_added', -1)]) \
                               .limit(100)
 
-    article_docs = [
-        x for x in article_docs
-        if sum(
-            1 for y in x['analysis']['final'].get('candidates', [])
-            if y['state'] not in ['removed', 'removed_ml']
-        ) > 0
-    ]
+    show_hidden = request.args.get('hidden', None)
+
+    if show_hidden is not None:
+        article_docs = list(article_docs)
+    else:
+        article_docs = [
+            x for x in article_docs
+            if sum(
+                1 for y in x['analysis']['final'].get('candidates', [])
+                if y['state'] not in ['removed', 'removed_ml']
+            ) > 0
+        ]
 
     for article_doc in article_docs:
         article_doc['election'] = 'ge2015'
