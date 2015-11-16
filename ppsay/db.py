@@ -6,6 +6,7 @@ except ConnectionFailure:
     print "Can't connect to MongoDB"
     sys.exit(0)
 
+db = db_client.news
 db_articles = db_client.news.articles
 db_web_cache = db_client.news.web_cache
 db_candidates = db_client.news.candidates

@@ -13,43 +13,131 @@ from flask import (
 from flask.ext.login import login_required
 
 from ppsay.db import (
+    db,
     db_articles,
     db_action_log,
     db_domains,
 )
+from ppsay.page import Page
 
 app = Blueprint('dashboard',
                 __name__,
                 template_folder='templates')
 
-dashboard_queries = [{'query': {},
-                      'id': 'num_articles',
-                      'name': 'Number of articles',},
-                     {'query': {'page': None},
-                      'id': 'num_articles_no_page',
-                      'name': 'Number of unscraped articles',},
-                     {'query': {'page.date_published': None},
-                      'id': 'num_articles_no_date',
-                      'name': 'Number of articles without a date',},
-                     {'query': {'possible.candidates': {'$size': 0}},
-                      'id': 'num_articles_no_candidates',
-                      'name': 'Number of articles with no candidates',},
-                     {'query': {'possible.constituencies': {'$size': 0}},
-                      'id': 'num_articles_no_constituencies',
-                      'name': 'Number of articles with no constituencies',},
-                     {'query': {'tag_clash': True},
-                      'id': 'tag_clash',
-                      'name': 'Number of articles with clashing tags',}
-                    ]
+dashboard_queries = [
+    {
+        'db': 'articles',
+        'type': 'count',
+        'query': {},
+        'id': 'num_articles',
+        'name': 'Number of articles',
+    },
+    {
+        'db': 'pages',
+        'type': 'count',
+        'query': {},
+        'id': 'num_pages',
+        'name': 'Number of pages',
+    },
+    {
+        'db': 'pages',
+        'type': 'aggregate',
+        'query': [
+            {
+                '$match': {
+                    'date_published': {
+                        '$ne': None
+                    }
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'd': {'$dayOfMonth': '$date_published'},
+                        'm': {'$month': '$date_published'},
+                        'y': {'$year': '$date_published'},
+                    },
+                    'total': { '$sum': 1 }
+                }
+            },
+        ],
+        'id': 'timeseries_pages',
+        'name': 'Pages over time',
+    }
+]
+"""    {
+        'db': 'articles',
+        'query': {
+            'pages': None,
+        },
+        'id': 'num_articles_no_page',
+        'name': 'Number of unscraped articles',
+    },
+    {
+        'db': 'articles',
+        'query': {
+            'page.date_published': None,
+        },
+        'id': 'num_articles_no_date',
+        'name': 'Number of articles without a date',
+    },
+    {
+        'db': 'articles',
+        'query': {
+            'analysis.possible.candidates': {
+                '$size': 0,
+            },
+        },
+        'id': 'num_articles_no_candidates',
+        'name': 'Number of articles with no candidates',
+    },
+    {
+        'db': 'articles',
+        'query': {
+            'analysis.possible.constituencies': {
+                '$size': 0,
+            },
+        },
+        'id': 'num_articles_no_constituencies',
+        'name': 'Number of articles with no constituencies',
+    },
+    {
+        'db': 'articles',
+        'query': {
+            'output.tag_clash': True,
+         },
+        'id': 'tag_clash',
+        'name': 'Number of articles with clashing tags',
+    },
+]"""
 
 
-dashboard_query_index = {q['id']: q for q in dashboard_queries}
-          
+dashboard_query_index = {
+    q['id']: q for q in dashboard_queries
+}
 
+def time_series(docs, key):
+    ts = [doc[key] for doc in docs]
+
+    ts_min = min(ts)
+    ts_max = max(ts)
+
+     
+ 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    stats = {query['id']: db_articles.find(query['query']).count() for query in dashboard_queries}
+    stats = {}
+
+    for query in dashboard_queries:
+        db_query = db[query['db']]
+   
+        if query['type'] == 'count': 
+            result = db_query.find(query['query']).count()
+        elif query['type'] == 'aggregate':
+            result = db_query.aggregate(query['query'])
+
+        stats[query['id']] = result
 
     return render_template('dashboard.html',
                            queries=dashboard_queries,
@@ -60,12 +148,14 @@ def dashboard():
 @login_required
 def dashboard_article(query_id):
     query = dashboard_query_index[query_id]
-    docs = db_articles.find(query['query'])
+    docs = list(db_articles.find(query['query']))
+
+    for doc in docs:
+        doc['page'] = Page.get(doc['pages'][0])
 
     return render_template('dashboard_query.html',
                            query=query,
                            articles=docs)
-
 
 @app.route('/dashboard/domains')
 @login_required
@@ -101,11 +191,11 @@ def dashboard_classifier():
         stats = defaultdict(Counter)
 
         for doc in docs:
-            if 'machine' in doc:
+            if 'machine' in doc.get('analysis', {}):
                 timestamp = time.mktime(doc['time_added'].date().timetuple())
 
-                stats[timestamp]['remove'] += len(doc['machine']['candidates']['remove'])
-                stats[timestamp]['confirm'] += len(doc['machine']['candidates']['confirm'])
+                stats[timestamp]['remove'] += len(doc['analysis']['machine']['candidates']['remove'])
+                stats[timestamp]['confirm'] += len(doc['analysis']['machine']['candidates']['confirm'])
 
         stats_json = []
         for day, day_stats in sorted(stats.items()):
@@ -131,8 +221,12 @@ def action_log():
 @app.route('/queue')
 @login_required
 def moderation_queue():
-    articles = db_articles.find({'state': 'moderated'}) \
-                          .sort([('time_added', -1)])[:50]
+    articles = list(db_articles.find({'state': 'moderated'}) \
+                          .sort([('time_added', -1)])[:50])
+
+    for doc in articles:
+        if 'pages' in doc:
+            doc['page'] = Page.get(doc['pages'][0])
 
     return render_template('moderation_queue.html',
                            articles=articles)
