@@ -42,6 +42,14 @@ dashboard_queries = [
         'value': lambda d: "{:,} ({} MiB)".format(d['count'], d['size'] / 2**20)
     },
     {
+        'db': 'web_cache',
+        'type': 'stats',
+        'template': 'count',
+        'id': 'num_web_cache',
+        'name': 'Web cache size',
+        'value': lambda d: "{:,} ({} MiB)".format(d['count'], int(d['size'] / 2**20))
+    },
+    {
         'db': 'pages',
         'type': 'aggregate',
         'template': 'timeseries',
