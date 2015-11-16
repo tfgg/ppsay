@@ -1,0 +1,28 @@
+{% for query in queries %}
+  {% if loop.cycle('left', 'right') == side %}
+    {% if query.type == 'count'i %}
+        <h2>{{ query.name }}</h2>
+        <em>{{ stats[query.id] }}</em>
+    {% elif query.type == 'aggregate' %}
+        <h2>{{ query.name }}</h2>
+        <div id="{{ query.id }}" class="timeseries" style="width:100%;height:300px;">
+        </div>
+        <script>
+            $(document).ready(function(){
+                var headspace = 130
+
+                var data = [
+                    {% for day in stats[query.id] %}
+                        {
+                            date: "{{day._id.y}}-{{day._id.m}}-{{day._id.d}}",
+                            value: {{day.total}}
+                        }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]
+
+                make_timeline_line("div#{{ query.id }}", data);
+            })
+        </script>
+    {% endif %}
+  {% endif %}
+{% endfor %}

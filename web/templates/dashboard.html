@@ -15,41 +15,13 @@
       </div>
     </div>
   </div>
-  <div class='row'>
-    <div class='col-md-12'>
-        <ul class="dashboard__queries">
-            {% for query in queries %}
-            <li>
-                {% if query.type == 'count' %}
-                    <h2>{{ query.name }}</h2>
-                    <em>{{ stats[query.id] }}</em>
-                {% elif query.type == 'aggregate' %}
-                    <h2>{{ query.name }}</h2>
-                    <div id="{{ query.id }}" class="timeseries" style="width:100%;height:300px;">
-                    </div>
-                    <script>
-                        $(document).ready(function(){
-                            var headspace = 130
 
-                            var data = [
-                                {% for day in stats[query.id] %}
-                                    {
-                                        date: "{{day._id.y}}-{{day._id.m}}-{{day._id.d}}",
-                                        value: {{day.total}}
-                                    }{% if not loop.last %},{% endif %}
-                                {% endfor %}
-                            ]
-        
-                            make_timeline_line("div#{{ query.id }}", data);
-                        })
-                    </script>
-                {% endif %}
-            </li>
-            {% endfor %}
-            <li><a href='{{ url_for('.dashboard_domains') }}'>Domains</a></li>
-            <li><a href='{{ url_for('.dashboard_classifier') }}'>Classifier</a></li> {# Show -ve rate over time? Average score over time? #}
-        </ul>
-    </div>
+  <div class='row dashboard'>
+  <div class='col-md-6'>
+    {% with side='left' %}
+        {% include 'dashboard_queries.html' %}
+    {% endwith %}
+  </div>
   </div>
 </div>
 {% endblock content %}

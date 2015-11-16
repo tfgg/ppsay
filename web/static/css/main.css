@@ -465,23 +465,11 @@ ul.tab-nav {
         text-decoration: none;
         color: #666; }
 
-ul.dashboard__queries {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: block; }
-  ul.dashboard__queries h2:first-child {
-    margin-top: 0; }
-  ul.dashboard__queries li {
-    display: block;
-    float: left;
-    width: 48%;
-    padding: 1rem;
-    margin: 1%;
-    border: 1px solid #eee; }
-  ul.dashboard__queries div.timeseries svg path {
-    fill: none; }
-    ul.dashboard__queries div.timeseries svg path.domain {
-      stroke: #ccc; }
-    ul.dashboard__queries div.timeseries svg path.line {
-      stroke: black; }
+div.dashboard h2:first-child {
+  margin-top: 0; }
+div.dashboard div.timeseries svg path {
+  fill: none; }
+  div.dashboard div.timeseries svg path.domain {
+    stroke: #ccc; }
+  div.dashboard div.timeseries svg path.line {
+    stroke: black; }

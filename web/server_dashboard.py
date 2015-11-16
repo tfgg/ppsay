@@ -63,6 +63,31 @@ dashboard_queries = [
         ],
         'id': 'timeseries_pages',
         'name': 'Pages over time',
+    },
+    {
+        'db': 'articles',
+        'type': 'aggregate',
+        'query': [
+            {
+                '$match': {
+                    'time_added': {
+                        '$ne': None
+                    }
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'd': {'$dayOfMonth': '$time_added'},
+                        'm': {'$month': '$time_added'},
+                        'y': {'$year': '$time_added'},
+                    },
+                    'total': { '$sum': 1 }
+                }
+            },
+        ],
+        'id': 'timeseries_articles',
+        'name': 'Articles over time',
     }
 ]
 """    {
@@ -135,7 +160,7 @@ def dashboard():
         if query['type'] == 'count': 
             result = db_query.find(query['query']).count()
         elif query['type'] == 'aggregate':
-            result = db_query.aggregate(query['query'])
+            result = [x for x in db_query.aggregate(query['query']) if x['_id']['y'] > 2014]
 
         stats[query['id']] = result
 

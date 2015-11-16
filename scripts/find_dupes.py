@@ -28,7 +28,8 @@ for page in docs:
 print "Checking for body text dupes"
 for title, pages in titles.items():
     if len(pages) > 1 and title != u"":
-        print title.encode('utf-8')
+        print 
+        print "#", title.encode('utf-8')
         
         page_ids = [page['_id'] for page in pages]
 
@@ -48,7 +49,7 @@ for title, pages in titles.items():
             same_text[page['text']].append(page)
 
         for text, pages in same_text.items():
-            print u"  \"{} ...\": {}".format(text[:100], ", ".join([str(page['_id']) for page in pages]))
+            print u"  \"{} ...\": {}".format(repr(text[:100]), ", ".join([str(page['_id']) for page in pages]))
 
         for text, pages_group in same_text.items():
             if len(pages_group) == 1:
