@@ -171,6 +171,14 @@ dashboard_queries = [
         'xlabel': 'Domain',
         'ylabel': '#Pages',
     },
+    {
+        'db': 'articles',
+        'type': 'count',
+        'template': 'count',
+        'query': {"output.tag_clash": True},
+        'id': 'num_tag_clash',
+        'name': 'Num. articles with clashing tags',
+    },
 ]
 """    {
         'db': 'articles',
