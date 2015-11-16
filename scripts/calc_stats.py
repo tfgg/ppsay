@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 from ppsay.domains import get_domain
+from ppsay.page import Page
 
 client = MongoClient()
 
@@ -22,13 +23,15 @@ one_week_ago = datetime.now() - timedelta(days=7)
 two_week_ago = datetime.now() - timedelta(days=14)
 
 for doc in docs:
-    if 'page' not in doc:
-        continue
-    
-    if 'candidates' not in doc:
+    analysis = doc.get('analysis')
+
+    if not analysis:
         continue
 
-    if 'constituencies' not in doc:
+    if 'candidates' not in analysis['final']:
+        continue
+
+    if 'constituencies' not in analysis['final']:
         continue
 
     if 'state' not in doc:
@@ -41,10 +44,12 @@ for doc in docs:
         continue
 
     removed_states = ['removed', 'removed_ml']
+    
+    page = Page.get(doc['pages'][0])
 
-    domain = get_domain(doc['domain'])
+    domain = get_domain(page.domain)
 
-    for candidate in doc['candidates']:
+    for candidate in analysis['final']['candidates']:
         if candidate['state'] not in removed_states:
             total_candidates[candidate['id']] += 1
 
@@ -54,17 +59,17 @@ for doc in docs:
             if domain is not None and 'local_news' in domain['categories']:
                 domain_candidates['local'][candidate['id']] += 1
     
-    for constituency in doc['constituencies']:
+    for constituency in analysis['final']['constituencies']:
         if constituency['state'] not in removed_states:
             total_constituencies[constituency['id']] += 1
 
-    if doc['page']['date_published'] is not None and doc['page']['date_published'] >= one_week_ago:
-        for candidate in doc['candidates']:
+    if page.date_published is not None and page.date_published >= one_week_ago:
+        for candidate in analysis['final']['candidates']:
             if candidate['state'] not in removed_states:
                 last_week_candidates[candidate['id']] += 1
     
-    if doc['page']['date_published'] is not None and one_week_ago > doc['page']['date_published'] >= two_week_ago:
-        for candidate in doc['candidates']:
+    if page.date_published is not None and one_week_ago > page.date_published >= two_week_ago:
+        for candidate in analysis['final']['candidates']:
             if candidate['state'] not in removed_states:
                 last_last_week_candidates[candidate['id']] += 1
 
