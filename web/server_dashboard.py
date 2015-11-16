@@ -127,6 +127,20 @@ dashboard_queries = [
         'xlabel': 'Time',
         'ylabel': '#Tags confirmed / #Total tags',
     },
+    {
+        'db': 'events',
+        'type': 'count',
+        'query': {'event': 'article_click'},
+        'id': 'num_clicks',
+        'name': 'Number of article clicks',
+    },
+    {
+        'db': 'domains',
+        'type': 'count',
+        'query': {},
+        'id': 'num_domains',
+        'name': 'Number of domains',
+    },
 ]
 """    {
         'db': 'articles',

@@ -7,15 +7,20 @@
 
 {% block content %}
 <div class='container'>
-  <div class='row'>
-    <div class='col-md-12 top-banner'>
-      <a href='{{ url_for("ppsay.index") }}' class='link-back'>&lt; all articles</a>
-      <div class='name'>
-        <h1>Dashboard</h1>
+  {% include "header.html" %}
+</div>
+<div style='background:#516FFF;'>
+  <div class='container'>
+      <div class='row'>
+        <div class='col-md-12 top-banner'>
+          <div class='name'>
+            <h1>Dashboard</h1>
+          </div>
+        </div>
       </div>
-    </div>
   </div>
-
+</div>
+<div class='container'>
   <div class='row dashboard'>
   <div class='col-md-6'>
     {% with side='left' %}
