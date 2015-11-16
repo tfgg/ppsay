@@ -1,6 +1,7 @@
 {% for query in queries %}
   {% if loop.cycle('left', 'right') == side %}
-    {% if query.type == 'count'i %}
+  <div class='query'>
+    {% if query.type == 'count' %}
         <h2>{{ query.name }}</h2>
         <em>{{ stats[query.id] }}</em>
     {% elif query.type == 'aggregate' %}
@@ -24,5 +25,6 @@
             })
         </script>
     {% endif %}
+  </div>
   {% endif %}
 {% endfor %}

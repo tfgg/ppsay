@@ -26,18 +26,18 @@ app = Blueprint('dashboard',
 
 dashboard_queries = [
     {
-        'db': 'articles',
-        'type': 'count',
-        'query': {},
-        'id': 'num_articles',
-        'name': 'Number of articles',
-    },
-    {
         'db': 'pages',
         'type': 'count',
         'query': {},
         'id': 'num_pages',
         'name': 'Number of pages',
+    },
+    {
+        'db': 'articles',
+        'type': 'count',
+        'query': {},
+        'id': 'num_articles',
+        'name': 'Number of articles',
     },
     {
         'db': 'pages',

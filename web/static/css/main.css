@@ -467,6 +467,13 @@ ul.tab-nav {
 
 div.dashboard h2:first-child {
   margin-top: 0; }
+div.dashboard div.query {
+  padding: 2rem;
+  background: #F5F5F5;
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+  div.dashboard div.query em {
+    font-size: 2rem; }
 div.dashboard div.timeseries svg path {
   fill: none; }
   div.dashboard div.timeseries svg path.domain {

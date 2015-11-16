@@ -3,6 +3,17 @@ div.dashboard {
         margin-top: 0;
     }
 
+    div.query {
+        padding: 2rem;
+        background:#F5F5F5;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+
+        em {
+            font-size: 2rem;
+        }
+    }
+
     div.timeseries {
         svg {
             path {
