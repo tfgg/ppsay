@@ -28,6 +28,7 @@ dashboard_queries = [
     {
         'db': 'pages',
         'type': 'count',
+        'template': 'count',
         'query': {},
         'id': 'num_pages',
         'name': 'Number of pages',
@@ -36,12 +37,14 @@ dashboard_queries = [
         'db': 'articles',
         'type': 'count',
         'query': {},
+        'template': 'count',
         'id': 'num_articles',
         'name': 'Number of articles',
     },
     {
         'db': 'pages',
         'type': 'aggregate',
+        'template': 'timeseries',
         'query': [
             {
                 '$match': {
@@ -70,6 +73,7 @@ dashboard_queries = [
     {
         'db': 'articles',
         'type': 'aggregate',
+        'template': 'timeseries',
         'query': [
             {
                 '$match': {
@@ -98,6 +102,7 @@ dashboard_queries = [
     {
         'db': 'articles',
         'type': 'aggregate',
+        'template': 'timeseries',
         'query': [
             {
                 '$match': {
@@ -130,6 +135,7 @@ dashboard_queries = [
     {
         'db': 'events',
         'type': 'count',
+        'template': 'count',
         'query': {'event': 'article_click'},
         'id': 'num_clicks',
         'name': 'Number of article clicks',
@@ -137,9 +143,33 @@ dashboard_queries = [
     {
         'db': 'domains',
         'type': 'count',
+        'template': 'count',
         'query': {},
         'id': 'num_domains',
         'name': 'Number of domains',
+    },
+    {
+        'db': 'pages',
+        'type': 'aggregate',
+        'template': 'table',
+        'query': [
+            {
+                '$match': { 'date_published': None },
+            },
+            {
+                '$group': {
+                    '_id': '$domain',
+                    'total': { '$sum': 1 },
+                 },
+            },
+            { '$sort': { 'total': -1 } },
+            { '$limit': 10 },
+        ]),
+        'id': 'table_missing_date',
+        'name': 'Pages missing date',
+        'value': lambda d: d['total'],
+        'xlabel': 'Domain',
+        'ylabel': 'Count',
     },
 ]
 """    {
