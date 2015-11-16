@@ -164,12 +164,12 @@ dashboard_queries = [
             },
             { '$sort': { 'total': -1 } },
             { '$limit': 10 },
-        ]),
+        ],
         'id': 'table_missing_date',
-        'name': 'Pages missing date',
+        'name': 'Top 10 domains missing date',
         'value': lambda d: d['total'],
         'xlabel': 'Domain',
-        'ylabel': 'Count',
+        'ylabel': '#Pages',
     },
 ]
 """    {
@@ -242,11 +242,16 @@ def dashboard():
         if query['type'] == 'count': 
             result = db_query.find(query['query']).count()
         elif query['type'] == 'aggregate':
-            result = [x for x in db_query.aggregate(query['query']) if x['_id']['y'] > 2014]
+            result = list(db_query.aggregate(query['query']))
+
+        if query['template'] == 'timeseries':
+            result = [x for x in result if x['_id']['y'] > 2014]
 
         if query.get('value'):
             for d in result:
                 d['value'] = query['value'](d)
+
+        print result
 
         stats[query['id']] = result
 

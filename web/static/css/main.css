@@ -480,3 +480,10 @@ div.dashboard div.timeseries svg path {
     stroke: #ccc; }
   div.dashboard div.timeseries svg path.line {
     stroke: black; }
+div.dashboard table {
+  width: 100%; }
+  div.dashboard table th {
+    font-weight: bold; }
+  div.dashboard table th, div.dashboard table td {
+    padding: 1rem;
+    border: 1px solid #ccc; }
