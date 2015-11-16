@@ -16,7 +16,7 @@
                     {% for day in stats[query.id] %}
                         {
                             date: "{{day._id.y}}-{{day._id.m}}-{{day._id.d}}",
-                            value: {{day.total}}
+                            value: {{day.value}}
                         }{% if not loop.last %},{% endif %}
                     {% endfor %}
                 ]

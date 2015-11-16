@@ -63,6 +63,7 @@ dashboard_queries = [
         ],
         'id': 'timeseries_pages',
         'name': 'Pages over time',
+        'value': lambda d: d['total'],
     },
     {
         'db': 'articles',
@@ -88,6 +89,7 @@ dashboard_queries = [
         ],
         'id': 'timeseries_articles',
         'name': 'Articles over time',
+        'value': lambda d: d['total'],
     },
     {
         'db': 'articles',
@@ -96,6 +98,9 @@ dashboard_queries = [
             {
                 '$match': {
                     'time_added': {
+                        '$ne': None
+                    },
+                    'analysis.machine': {
                         '$ne': None
                     }
                 }
@@ -189,7 +194,7 @@ def dashboard():
         elif query['type'] == 'aggregate':
             result = [x for x in db_query.aggregate(query['query']) if x['_id']['y'] > 2014]
 
-        if query['value']:
+        if query.get('value'):
             for d in result:
                 d['value'] = query['value'](d)
 
