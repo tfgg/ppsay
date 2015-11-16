@@ -64,6 +64,8 @@ dashboard_queries = [
         'id': 'timeseries_pages',
         'name': 'Pages over time',
         'value': lambda d: d['total'],
+        'xlabel': 'Time',
+        'ylabel': '#Published',
     },
     {
         'db': 'articles',
@@ -90,6 +92,8 @@ dashboard_queries = [
         'id': 'timeseries_articles',
         'name': 'Articles over time',
         'value': lambda d: d['total'],
+        'xlabel': 'Time',
+        'ylabel': '#Added',
     },
     {
         'db': 'articles',
@@ -120,6 +124,8 @@ dashboard_queries = [
         'id': 'timeseries_classifier_candidates',
         'name': 'Candidate classifier',
         'value': lambda d: float(d['confirm']) / (d['confirm'] + d['remove']),
+        'xlabel': 'Time',
+        'ylabel': '#Tags confirmed / #Total tags',
     },
 ]
 """    {

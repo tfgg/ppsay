@@ -21,7 +21,7 @@
                     {% endfor %}
                 ]
 
-                make_timeline_line("div#{{ query.id }}", data);
+                make_timeline_line("div#{{ query.id }}", data, "{{ query.xlabel }}", "{{ query.ylabel }}");
             })
         </script>
     {% endif %}

@@ -67,9 +67,9 @@ function make_timeline(element, headspace, xtics, xlabels, weekly_data) {
           .on("mouseout", function(d,i) { $("svg.timeline text#text-bar-"+i).attr("class", "bar"); });
 }
 
-function make_timeline_line(element, data) {
+function make_timeline_line(element, data, xlabel, ylabel) {
     // Set the dimensions of the canvas / graph
-    var margin = {top: 30, right: 20, bottom: 30, left: 50}
+    var margin = {top: 20, right: 20, bottom: 50, left: 70}
     var width = $(element).width() - margin.left - margin.right
     var height = $(element).height() - margin.top - margin.bottom
 
@@ -129,5 +129,22 @@ function make_timeline_line(element, data) {
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
+
+    // X axis label
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(xlabel);
+
+    // Y axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", - margin.left)
+        .attr("x", - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(ylabel);
 }
 
