@@ -31,7 +31,7 @@ dashboard_queries = [
         'template': 'count',
         'id': 'num_pages',
         'name': 'Number of pages',
-        'value': lambda d: "{:,} ({} MiB)".format(d['count'], d['size'] / 2**20)
+        'value': lambda d: "{:,} ({} MiB)".format(d['count'], int(d['size'] / 2**20))
     },
     {
         'db': 'articles',
@@ -39,7 +39,7 @@ dashboard_queries = [
         'template': 'count',
         'id': 'num_articles',
         'name': 'Number of articles',
-        'value': lambda d: "{:,} ({} MiB)".format(d['count'], d['size'] / 2**20)
+        'value': lambda d: "{:,} ({} MiB)".format(d['count'], int(d['size'] / 2**20))
     },
     {
         'db': 'web_cache',
