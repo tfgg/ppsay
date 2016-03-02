@@ -20,6 +20,21 @@ token_re = re.compile(u'([^ ,‘’“”.!;:\'`"?\-=+_\r\n\t()\xa0><@]+)')
 
 TextTokens = namedtuple("TextTokens", ['tokens', 'spans'])
 
+normalize_pairs = [
+    (u"“", u'"'),
+    (u"”", u'"'),
+    (u"‘", u"'"),
+    (u"’", u"'"),
+    (u"\xa0", u" "), # Non-breaking space
+    (u"\x2013", u"-"), # en-dash
+    (u"\x2014", u"-"), # en-dash
+]
+
+def normalize(s):
+    for a, b in normalize_pairs:
+        s = s.replace(a,b)
+    return s
+
 def get_tokens(s):
     tokens = []
     spans = []
@@ -64,3 +79,8 @@ def add_tags(s, tags):
     html += s[last:]
     
     return html
+
+if __name__ == "__main__":
+    import sys
+    print normalize(open(sys.argv[1]).read().decode('utf-8'))
+
