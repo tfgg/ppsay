@@ -26,8 +26,10 @@ normalize_pairs = [
     (u"‘", u"'"),
     (u"’", u"'"),
     (u"\xa0", u" "), # Non-breaking space
-    (u"\x2013", u"-"), # en-dash
-    (u"\x2014", u"-"), # en-dash
+    (u"\u2013", u"-"), # en-dash
+    (u"\u2014", u"-"), # em-dash
+    (u'."', '".'), # End of quote punctuation
+    (u',"', '",'), # End of quote punctuation
 ]
 
 def normalize(s):
@@ -82,5 +84,10 @@ def add_tags(s, tags):
 
 if __name__ == "__main__":
     import sys
-    print normalize(open(sys.argv[1]).read().decode('utf-8'))
+    import codecs
+
+    utf8_text = codecs.open(sys.argv[1], 'r', 'utf-8').read()
+
+    print normalize(utf8_text).encode('utf-8')
+
 

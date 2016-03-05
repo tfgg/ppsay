@@ -4,6 +4,7 @@ from ppsay.sources import get_source_if_matches
 class Feed(object):
     feed_urls = None
     source = None
+    match_condition = None
     link_key = 'link'
 
     def __init__(self, fresh):
@@ -27,7 +28,21 @@ class Feed(object):
         return self.iter()
 
     def fetch(self):
-        for url in self.iter():
-            print url
-            result = get_source_if_matches(url, 'rss/bbc', 'approved', fresh=self.fresh)
+        if self.match_condition is None:
+            for url in self.iter():
+                result = get_source_if_matches(
+                    url,
+                    self.source,
+                    'approved',
+                    fresh=self.fresh,
+                )
+        else:            
+            for url in self.iter():
+                result = get_source_if_matches(
+                    url,
+                    self.source,
+                    'approved',
+                    self.match_condition,
+                    fresh=self.fresh,
+                )
  

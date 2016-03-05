@@ -1,18 +1,16 @@
 import sys
-from ppsay.sources import get_source_if_matches
-import feedparser
+from ppsay.feed import Feed
 
-feed = feedparser.parse('http://rss.feedsportal.com/c/266/f/3498/index.rss')
+class IndependentFeed(Feed):
+    feed_urls = ['http://rss.feedsportal.com/c/266/f/3498/index.rss']
+    source = 'rss/independent'
+    link_key = 'id'
 
-def clean_link(x):
-    return x.split('#')[0]
+if __name__ == "__main__":
+    fresh = False
+    if len(sys.argv) > 1:
+        fresh = (sys.argv[1] == "fresh")
 
-fresh = False
-if len(sys.argv) > 1:
-    fresh = (sys.argv[1] == "fresh")
-
-for item in feed['items']:
-    url = clean_link(item['id'])
-    print url
-    result = get_source_if_matches(url, 'rss/independent', 'approved', fresh=fresh)
+    feed = IndependentFeed(fresh)
+    feed.fetch()
 

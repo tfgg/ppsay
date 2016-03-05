@@ -1,42 +1,39 @@
 import sys
-from ppsay.sources import get_source_if_matches
 import socket
-import feedparser
+from ppsay.feed import Feed
 
 socket.setdefaulttimeout(10.0)
 
-daylies = ['http://www.echo-news.co.uk',
- 'http://www.oxfordmail.co.uk',
- 'http://www.thepress.co.uk',
- 'http://www.thenorthernecho.co.uk',
- 'http://www.swindonadvertiser.co.uk',
- 'http://www.theargus.co.uk',
- 'http://www.bournemouthecho.co.uk',
- 'http://www.dorsetecho.co.uk',
- 'http://www.thetelegraphandargus.co.uk',
- 'http://www.theboltonnews.co.uk',
- 'http://www.heraldscotland.com',
- 'http://www.eveningtimes.co.uk',
- 'http://www.southwalesargus.co.uk',
- 'http://www.dailyecho.co.uk',
- 'http://www.lancashiretelegraph.co.uk']
-
-sundays = ['http://www.sundayherald.com']
-
-fresh = False
-if len(sys.argv) > 1:
-    fresh = (sys.argv[1] == "fresh")
-
-for url in daylies:
-    print url
-    feed = feedparser.parse(url + '/news/rss/')
-
-    def clean_link(x):
+class NewsquestDayliesFeed(Feed):
+    feed_urls = [
+        'http://www.echo-news.co.uk/news/rss/',
+        'http://www.oxfordmail.co.uk/news/rss/',
+        'http://www.thepress.co.uk/news/rss/',
+        'http://www.thenorthernecho.co.uk/news/rss/',
+        'http://www.swindonadvertiser.co.uk/news/rss/',
+        'http://www.theargus.co.uk/news/rss/',
+        'http://www.bournemouthecho.co.uk/news/rss/',
+        'http://www.dorsetecho.co.uk/news/rss/',
+        'http://www.thetelegraphandargus.co.uk/news/rss/',
+        'http://www.theboltonnews.co.uk/news/rss/',
+        'http://www.heraldscotland.com/news/rss/',
+        'http://www.eveningtimes.co.uk/news/rss/',
+        'http://www.southwalesargus.co.uk/news/rss/',
+        'http://www.dailyecho.co.uk/news/rss/',
+        'http://www.lancashiretelegraph.co.uk/news/rss/',
+        'http://www.sundayherald.com/news/rss/',
+    ]
+    source = 'rss/newsquest_daylies'
+    
+    def clean_link(self,x):
         return x.split('#')[0].split('?')[0]
 
-    for item in feed['items']:
-        url = clean_link(item['link'])
-        print url
-        result = get_source_if_matches(url, 'rss/newsquest_daylies', 'approved', [(1,0,1),], fresh=fresh)
+if __name__ == "__main__":
+    fresh = False
+    if len(sys.argv) > 1:
+        fresh = (sys.argv[1] == "fresh")
+
+    feed = NewsquestDayliesFeed(fresh)
+    feed.fetch()
 
 

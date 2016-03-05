@@ -1,18 +1,15 @@
 import sys
-from ppsay.sources import get_source_if_matches
-import feedparser
+from ppsay.feed import Feed
 
-feed = feedparser.parse('http://www.libdemvoice.org/feed')
+class LibdemVoiceFeed(Feed):
+    feed_urls = ['http://www.libdemvoice.org/feed']
+    source = 'rss/libdem_voice'
 
-def clean_link(x):
-    return x.split('#')[0]
+if __name__ == "__main__":
+    fresh = False
+    if len(sys.argv) > 1:
+        fresh = (sys.argv[1] == "fresh")
 
-fresh = False
-if len(sys.argv) > 1:
-    fresh = (sys.argv[1] == "fresh")
-
-for item in feed['items']:
-    url = clean_link(item['link'])
-    print url
-    get_source_if_matches(url, 'rss/libdem_voice', 'approved', fresh=fresh)
+    feed = LibdemVoiceFeed(fresh)
+    feed.fetch()
 

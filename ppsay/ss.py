@@ -16,10 +16,18 @@ def is_end_of_sentence(s):
     return True
   elif s[3] in end_marks and s[4] in whitespace:
     return True
-  elif s[4] == '\n' and s[3] not in end_marks:
+  elif s[4] == '\n' and s[3] not in end_marks and s[3] not in whitespace:
     return True
   else:
     return False
+
+def is_start_of_sentence(s):
+    if s[3] == '\n' and s[4] != '\n':
+        return True
+    elif s[2] in end_marks and s[3] in whitespace and s[4] not in whitespace and s[1:3] not in titles:
+        return True
+    else:
+        return False 
 
 def samples(ss, l, r):
   for i in range(len(ss) + 1):
@@ -30,6 +38,7 @@ def samples(ss, l, r):
 
 class Text(object):
   def __init__(self, sample=None):
+    self.start_of_sentences = []
     self.end_of_sentences = []
     self.start_of_words = []
     self.end_of_words = []
@@ -43,12 +52,16 @@ class Text(object):
     self.sample = sample
 
     for i, s in samples(sample, 4, 4):
+      start_of_sentence = is_start_of_sentence(s)
       end_of_sentence = is_end_of_sentence(s)
       #start_of_word = is_start_of_word(s)
       #end_of_word = is_end_of_word(s)
       #start_of_bracket = is_start_bracket(s)
       #end_of_bracket = is_end_bracket(s)
 
+      if start_of_sentence:
+        self.start_of_sentences.append(i)
+      
       if end_of_sentence:
         self.end_of_sentences.append(i)
 
@@ -87,6 +100,9 @@ class Text(object):
       
       if i in self.end_of_words:
         out.append('</w>')
+      
+      if i in self.start_of_sentences:
+        out.append('<s>')
       
       if i in self.end_of_sentences:
         out.append('</s>')

@@ -1,18 +1,19 @@
-from ppsay.sources import get_source_if_matches
-import feedparser
+import sys
+from ppsay.feed import Feed
 
-feeds = [('http://50for15.com/feed/', 'link'),
-         ('http://www.wellsjournal.co.uk/news.rss', 'link'),
-         ('http://www.newstatesman.com/feeds/topics/politics.rss', 'link')]
+class MiscFeed(Feed):
+    feed_urls = [
+        'http://50for15.com/feed/',
+        'http://www.wellsjournal.co.uk/news.rss',
+        'http://www.newstatesman.com/feeds/site_feed.rss',
+    ]
+    source = 'rss/misc'
 
-for url, key in feeds:
-    feed = feedparser.parse(url)
+if __name__ == "__main__":
+    fresh = False
+    if len(sys.argv) > 1:
+        fresh = (sys.argv[1] == "fresh")
 
-    def clean_link(x):
-        return x.split('#')[0]
-
-    for item in feed['items']:
-        url = clean_link(item[key])
-        print url
-        get_source_if_matches(url, 'rss/misc', 'approved')
+    feed = MiscFeed(fresh)
+    feed.fetch()
 

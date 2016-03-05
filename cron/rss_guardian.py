@@ -1,19 +1,16 @@
 import sys
-from ppsay.sources import get_source_if_matches
-import feedparser
+from ppsay.feed import Feed
 
-feed = feedparser.parse('http://feeds.theguardian.com/theguardian/politics/rss')
+class GuardianFeed(Feed):
+    feed_urls = ['http://feeds.theguardian.com/theguardian/politics/rss']
+    source = 'rss/guardian'
+    link_key = 'guid'
 
-def clean_link(x):
-    return x.split('#')[0]
+if __name__ == "__main__":
+    fresh = False
+    if len(sys.argv) > 1:
+        fresh = (sys.argv[1] == "fresh")
 
-fresh = False
-if len(sys.argv) > 1:
-    fresh = (sys.argv[1] == "fresh")
-
-for item in feed['items']:
-    url = clean_link(item['guid'])
-    print url
-    result = get_source_if_matches(url, 'rss/guardian', 'approved', fresh=fresh)
-
+    feed = GuardianFeed(fresh)
+    feed.fetch()
 
