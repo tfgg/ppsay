@@ -50,9 +50,8 @@ function make_timeline(element, headspace, xtics, xlabels, weekly_data) {
           .attr("class", "bar");
 
     rectangle.enter().append("text")
-          .attr("x", function(d) { return (norm(d.x1 + d.x2)/2*90 + 5) + "%"; })
+          .attr("x", function(d) { return (norm((d.x1 + d.x2)/2)*90.0 + 5) + "%"; })
           .attr("y", function(d) { return headspace - (d.y / weekly_max * 50) - 10; })
-          /*.attr("fill-opacity", function(d) { return d.y/weekly_max*0.9 + 0.1 ;})*/
           .html(function(d) { return d.y })
           .attr("id", function(d,i) { return "text-bar-" + i; })
           .attr("class", "bar");

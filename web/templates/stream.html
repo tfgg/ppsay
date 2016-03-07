@@ -1,0 +1,62 @@
+<ul class='article-list'>
+{% set election = 'ge2015' %}
+{% for item in stream %}
+    <li class='article-item'>
+      <div class='article-right-float'>
+          {% if current_user.is_authenticated() %}
+            <small style='float: right;'><a href='{{ url_for('ppsay.article', doc_id=item.data.article_id) }}'>edit</a></small>
+          {% endif %}
+
+          <div class='article-head'>
+              <a class='article-link' target="_blank" href='{{ item.data.url }}' data-doc-id="{{ item.data.article_id }}">
+              {% if item.data.title %}
+                {{ item.data.title }}
+              {% else %}
+                {{ item.data.url }}
+              {% endif %}
+              </a>
+              
+              <div class='article-by'>
+                  {% if item.data.date_published %}
+                  <div class='article-date'>
+                      <i class='fa fa-clock-o'></i> {{ item.data.date_published.strftime("%-d %b %Y") }} &mdash;&nbsp;
+                  </div>
+                  {% endif %}
+        
+                  <div class='article-domain'>
+                      <a href='http://{{ item.data.domain }}'>{{ item.data.domain }}</a>
+                  </div>
+              </div>
+
+              <div style='clear:both;'></div>
+          </div>
+     
+          <ul class='article-mentions-people'>
+          {% for person in item.data.people %}
+            <li class='candidate-score-{{ person.state }}'>
+                <a href='{{ url_for('ppsay.person', person_id=person.id) }}'>{{ person.name }}</a>
+            </li>
+          {% endfor %}
+          </ul>
+          
+          <ul class='article-mentions-constituencies'>
+          {% for constituency in item.data.constituencies %}
+            <li class='constituency-score-{{ constituency.state }}'>
+                <a href='{{ url_for('ppsay.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a>
+            </li>
+          {% endfor %}
+          </ul>
+
+          {% if item.data.quote %}
+          <ul class='quotes' id='quotes-{{ item.data.article_id }}'>
+            <li class='quote'>
+              <p class='quote-text'>{% if item.data.quote.truncated.left %}&hellip; {% endif %}{{ item.data.quote.html|safe }}{% if item.data.quote.truncated.right %} &hellip;{% endif %} <a href='{{ item.data.url }}'>read more</a></p>
+            </li>
+          </ul>
+          {% endif %}
+      </div>
+      <div style='clear:both;'></div>
+    </li>
+{% endfor %}
+</ul>
+

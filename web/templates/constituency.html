@@ -25,72 +25,34 @@
   </div>
 </div>
 <div class='container'>
-  <div class='row'>
-    <div class='col-md-12 col-sm-12'>
-        <h3 style='margin-top:0;'><i class="fa fa-users"></i> Candidates in 2015 General Election</h3>
-        <ul class="candidates">
-        {% for candidate in candidates %}
-          {% if "ge2015" in candidate.candidacies and candidate.candidacies['ge2015'].constituency.id == area.id %}
-          <li class="candidate">
-            <div class="candidate-count">{{ candidate.mentions.total_count }}</div>
-            {#<div class="candidate-num-mentions">{% if candidate.mentions %}{{ candidate.mentions.total_count }}{% endif %}</div>#}
-            {% if candidate.proxy_image %}
-                <div class="candidate-photo"><img src='{{ candidate.proxy_image }}/0/40' alt='Photo of {{ candidate.name }}'/></div>
-            {% else %}
-                <div class="candidate-photo"><img src='/static/images/blank-man.png' alt='Photo of {{ candidate.name }}'/></div>
-            {% endif %}
-            <div class="candidate-name"><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></div>
-            <div class="candidate-party">{{ candidate.candidacies['ge2015'].party.name }}</div>
-          </li>
-          {% endif %}
-        {% endfor %}
-        </ul>
-        {#<h3>2010</h3>
-        <ul class="candidates">
-        {% for candidate in candidates %}
-          {% if "ge2010" in candidate.candidacies and candidate.candidacies['ge2010'].constituency.id == area.id %}
-          <li class="candidate">
-            {% if candidate.proxy_image %}
-                <div class="candidate-photo"><img src='{{ candidate.proxy_image }}/0/20' alt='Photo of {{ candidate.name }}'/></div>
-            {% else %}
-                <div class="candidate-photo"><img src='/static/images/blank-man.png' alt='Photo of {{ candidate.name }}'/></div>
-            {% endif %}
-            <div class="candidate-name"><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></div>
-            <div class="candidate-party">{{ candidate.candidacies['ge2010'].party.name }}</div>
-          </li>
-          {% endif %}
-        {% endfor %}#}
-        </ul>
-    </div>
-    {#<div class='col-md-10'>
-        {% include "article_add_form.html" %}
-    </div>#}
-</div>
-<div class='row'>
-    <div class='col-md-12 col-sm-12'>
-        <h3><i class="fa fa-newspaper-o"></i> In the press</h3>
-        {% set num_articles=articles|length %}
-        {% set quotes_closed=False %}
-        {% if num_articles == 0 %}
-        <p class='warning'><i class="fa fa-question-circle"></i> We don't know of any news articles about {{ area.name }}. Why not try to find one and add it?</p>
-        {% include "article_add_form.html" %}
-        {% else %}
-        <p class='warning'><i class="fa fa-info-circle"></i> These are automatically matched pages that we think are talking about the {{ area.name }} constituency or the candidates who stood here. There may be errors.</p>
-        {% include "article_list.html" %} 
-        <script>
-            $('.quote-constituency-{{ area.id }}').removeClass('quote-closed').show();
-            $('.quote-constituency-{{ area.id }}-highlight').addClass("constituency-highlight");
-
+    <div class='row'>
+        <div class='col-md-12 col-sm-12'>
+            <h3 style='margin-top:0;'><i class="fa fa-users"></i> Candidates in 2015 General Election</h3>
+            <ul class="candidates">
             {% for candidate in candidates %}
-            $('.quote-candidate-{{ candidate.id }}').removeClass('quote-closed').show();
-            $('.quote-candidate-{{ candidate.id }}-highlight').addClass("candidate-highlight");
+              {% if "ge2015" in candidate.candidacies and candidate.candidacies['ge2015'].constituency.id == area.id %}
+              <li class="candidate">
+                <div class="candidate-count">{{ candidate.mentions.total_count }}</div>
+                {% if candidate.proxy_image %}
+                    <div class="candidate-photo"><img src='{{ candidate.proxy_image }}/0/40' alt='Photo of {{ candidate.name }}'/></div>
+                {% else %}
+                    <div class="candidate-photo"><img src='/static/images/blank-man.png' alt='Photo of {{ candidate.name }}'/></div>
+                {% endif %}
+                <div class="candidate-name"><a href='{{ url_for('.person', person_id=candidate.id) }}'>{{ candidate.name }}</a></div>
+                <div class="candidate-party">{{ candidate.candidacies['ge2015'].party.name }}</div>
+              </li>
+              {% endif %}
             {% endfor %}
-        
-            recalculate_extra_quotes();
-        </script>
-        {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
+    <div class='row'>
+        <div class='col-md-12 col-sm-12'>
+            <h3><i class="fa fa-newspaper-o"></i> In the press</h3>
+            <p class='warning'><i class="fa fa-info-circle"></i> These are automatically matched pages that we think are talking about the {{ area.name }} constituency or the candidates who stood here. There may be errors.</p>
+            {% include "stream.html" %} 
+        </div>
+    </div>
 </div>
 <div class='footer'>
 <div class='container'>

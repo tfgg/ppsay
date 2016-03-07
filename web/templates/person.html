@@ -1,3 +1,4 @@
+
 {% extends 'page.html' %}
 
 {% block canonical_link %}{{ url_for('.person', person_id=person.id) }}{% endblock %}
@@ -26,11 +27,13 @@
 {# For the timeline #}
 {% set start_time=year_2015 %}
 
-{% if articles|length > 0 %}
-    {% set finish_time=articles[0].order_date %}
+{% if stream|length > 0 %}
+    {% set finish_time=stream[0].date_order %}
 {% else %}
     {% set finish_time=today %}
 {% endif %}
+
+
 
 {% set interval=finish_time - start_time %}
 {% set election_frac = (elections['ge2015']['date'] - start_time).total_seconds() / interval.total_seconds() %}
@@ -82,7 +85,7 @@
 
 
 
-{% if articles %}
+{% if stream %}
 <script src='/static/js/timeline.js'></script>
 <script>
     $(document).ready(function(){
@@ -147,16 +150,8 @@
       {% endfor %}
       </ul>
     </div>
-    {#<div class='col-md-10'>
-      {% include "article_add_form.html" %}
-    </div>#}
-    {#<div class='col-md-10 col-sm-9'>
-        <ul class='tab-nav'>
-            <li><a href='{{ url_for('.person', person_id=person.id) }}'>quotes</a></li>
-            <li><a href='{{ url_for('.person_articles', person_id=person.id) }}'>articles</a></li>
-        </ul>
-    </div>#}
-    {% if articles %}
+
+    {% if stream %}
     <div class='col-md-10'>
         <svg width="100%" height="130" class="timeline">
           <g class='inner'>
@@ -196,26 +191,7 @@
         {% endif %}
 
         <h3 style='margin-top: 3em;'><i class="fa fa-newspaper-o"></i> Articles mentioning {{ person.name }}</h3>
-        {% set num_articles=articles|length %}
-        {% if num_articles == 0 %}
-        <p class='warning'><i class="fa fa-question-circle"></i> We don't know of any news articles about {{ person.name }}. Why not <a href='http://www.google.com/#q={{ person.name }} {{ person_constituency }} {{ person_party }}'>try to find one</a> and add it?</p>
-        {% include "article_add_form.html" %}
-        {% else %}
-        {#<p class='warning'>These are automatically matched pages that we think are talking about {{ person.name }}. There may be errors. For example, the article may be talking about a different {{ person.name }}.</p>#}
-        {% set quotes_closed=False %}
-        {% include "article_list.html" %}
-        <script>
-            {% for year, candidacy in person.candidacies.items() %}
-            $('.quote-constituency-{{ candidacy.constituency.id }}').removeClass('quote-closed').show();
-            $('.quote-constituency-{{ candidacy.constituency.id }}-highlight').addClass("constituency-highlight");
-            {% endfor %}
-
-            $('.quote-candidate-{{ person.id }}').removeClass('quote-closed').show();
-            $('.quote-candidate-{{ person.id }}-highlight').addClass("candidate-highlight");
-
-            /*recalculate_extra_quotes();*/
-        </script>
-        {% endif %}
+        {% include "stream.html" %}
     </div>
   </div>
 </div>

@@ -1,12 +1,7 @@
 import sys
-from urlparse import urlparse
 from datetime import datetime
 
-from domains import domain_whitelist
-from dates import add_date
-from matches import add_matches, resolve_matches, add_quotes
-from ml.assign import get_machine
-from db import db_web_cache, db_articles, db_pages
+from db import db_articles
 from webcache import WebPage
 from page import Page
 
@@ -16,38 +11,11 @@ def get_or_create_doc(pages):
     new = False
 
     if doc is None:
-        doc = {
-            'pages': [page._id for page in pages],
-            'time_added': datetime.now(),
-            'keys': [page.url for page in pages],
-            'analysis': {},
-            'output': {},
-        }
+        article = Article.from_pages(pages) 
        
         new = True
 
-    return new, doc
-
-def process_doc(doc):
-    page = Page.get(doc['pages'][0])
-
-    texts = [page.text, page.title,]
-
-    if 'analysis' not in doc:
-        doc['analysis'] = {}
-
-    if 'output' not in doc:
-        doc['output'] = {}
-
-    doc['analysis']['matches'], doc['analysis']['possible'] = add_matches(texts)
-
-    doc['output']['quotes'], doc['output']['tags'] = add_quotes(doc['analysis']['matches'], texts)
-    
-    doc['analysis']['machine'] = get_machine(doc)
-
-    resolve_matches(texts, doc)
-
-    return
+    return new, article
 
 
 def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fresh=False):
@@ -104,19 +72,19 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
 
     # Next, using the page object, get the article object or create a new one
     if 'error' not in result and 'skip' not in result:
-        new, doc = get_or_create_doc([page])
+        new, article = get_or_create_doc([page])
 
     # If this has worked, process it unless we're skipping this or there's an error
     if 'error' not in result and 'skip' not in result and new:
-        process_doc(doc) 
+        article.process()
 
         # Only save if it has matches
         has_matches = False
 
         for min_candidates, min_constituencies, min_parties in conditions:            
-            if len(doc['analysis']['possible']['candidates']) >= min_candidates and \
-               len(doc['analysis']['possible']['constituencies']) >= min_constituencies and \
-               len(doc['analysis']['possible']['parties']) >= min_parties:
+            if len(article.analysis['possible']['candidates']) >= min_candidates and \
+               len(article.analysis['possible']['constituencies']) >= min_constituencies and \
+               len(article.analysis['possible']['parties']) >= min_parties:
                 has_matches = True
 
         if has_matches:
@@ -125,10 +93,10 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
                 'text': 'Matches'
             }
             
-            doc['state'] = state
+            article.state = state
 
             try:
-                doc['_id'] = db_articles.save(doc)
+                article.save() 
             except RuntimeError, e:
                 result['error'] = "RuntimeError: {}".format(str(e))
         else:
@@ -141,6 +109,7 @@ def get_source_if_matches(source_url, source, state, conditions=[(1, 0, 0)], fre
         print >>sys.stderr, datetime.now(), result
 
     return result
+
 
 def get_source(source_url, source, state):
     """
@@ -156,16 +125,16 @@ def get_source(source_url, source, state):
         return None
 
     try:
-        new, doc = get_or_create_doc(page, source)
+        new, article = get_or_create_doc(page, source)
     except Article.FetchError, e:
         print "FAILED", e
         return None
 
-    if new and doc['page'] is not None:
-        process_doc(doc) 
+    if new and article.pages is not None:
+        article.process() 
 
-        doc['state'] = state
-        doc['_id'] = db_articles.save(doc)
+        article.state = state
+        article.save()
 
     return doc
 

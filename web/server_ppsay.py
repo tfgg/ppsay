@@ -26,7 +26,6 @@ from ppsay.log import log
 from ppsay.domains import domain_whitelist, get_domain
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
-from ppsay.article import get_articles
 from ppsay.page import Page
 
 from ppsay.constituency import (
@@ -50,6 +49,8 @@ from ppsay.db import (
     db_areas
 )
 
+from ppsay.stream import StreamItem
+
 app = Blueprint('ppsay',
                 __name__,
                 template_folder='templates')
@@ -63,32 +64,13 @@ def get_mapit_area(area_id):
 
 @app.route('/')
 def index():
-    article_docs = db_articles.find({'state': 'approved'}) \
-                              .sort([('time_added', -1)]) \
-                              .limit(100)
-
-    show_hidden = request.args.get('hidden', None)
-
-    if show_hidden is not None:
-        article_docs = list(article_docs)
-    else:
-        article_docs = [
-            x for x in article_docs
-            if sum(
-                1 for y in x['analysis']['final'].get('candidates', [])
-                if y['state'] not in ['removed', 'removed_ml']
-            ) > 0
-        ]
-
-    for article_doc in article_docs:
-        article_doc['election'] = 'ge2015'
-        article_doc['page'] = Page.get(article_doc['pages'][0])
+    stream = StreamItem.get_all(100) 
 
     last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(5)
 
     return render_template('index.html',
                            constituencies=db_areas.find().sort([('name', 1)]),
-                           articles=article_docs,
+                           stream=stream,
                            last_week_candidate_mentions=last_week_candidate_mentions)
 
 
@@ -147,90 +129,16 @@ def statistics_json():
     })
 
 
-def get_person_articles(person_id):
-    person_doc = db_candidates.find_one({'id': person_id})
-
-    if 'ge2015' in person_doc['candidacies']:
-        current_party_id = person_doc['candidacies']['ge2015']['party']['id']
-        current_constituency_id = person_doc['candidacies']['ge2015']['constituency']['id']
-
-    elif 'ge2010' in person_doc['candidacies']:
-        current_party_id = person_doc['candidacies']['ge2010']['party']['id']
-        current_constituency_id = person_doc['candidacies']['ge2010']['constituency']['id']
-
-    else:
-        current_party_id = None
-        current_constituency_id = None
-
-    article_docs = list(get_articles([person_id]))
-
-    for article_doc in article_docs:
-        for quote_doc in article_doc['output']['quotes']:
-            score = 0.0
-
-            if person_id in [x[0] for x in quote_doc['candidate_ids']]:
-                score += 10.0
-            
-            if current_constituency_id in [x[0] for x in quote_doc['constituency_ids']]:
-                score += 0.5
-           
-            score += len(quote_doc['candidate_ids']) * 0.1
-            score += len(quote_doc['constituency_ids']) * 0.1
- 
-            quote_doc['score'] = score
-        
-        article_doc['output']['quotes'] = sorted(article_doc['output']['quotes'], key=lambda x: x['score'], reverse=True)
- 
-    article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
-
-    return article_docs
-
-
 @app.route('/person/<int:person_id>/articles')
 def person_articles(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
 
-    article_docs = get_person_articles(person_id)
+    stream = StreamItem.get_by_entities(None, [person_id], None)
 
     return render_template('person.html',
-                           articles=article_docs,
+                           stream=stream,
                            person=person_doc)
-
-
-def get_person_quotes(person_id):
-    article_docs = list(get_articles([person_id]))
-
-    quote_docs = []
-
-    interesting_words = [
-        'said', 'called', 'called on', 'says', 'promised', 'gaffe', 'popular',
-        'mp', 'becoming', 'was', 'is', 'is the', 'worked', 'minister', 'councillor', 'hate', 'love',
-        'university', 'children', 'family', 'wife', 'husband', 'daughter', 'son', 'married',
-        'apologised', 'apology', 'tackle', 'fix', 'moral', 'ethical', 'penalty', 'law',
-        'responsible', 'pledge', 'urge', 'petition', 'received', u'£', 'leader',
-    ]
-    
-    # Use dict to remove dupes
-    quote_docs = {}
-
-    for article_doc in article_docs:
-        for quote_doc in article_doc['output']['quotes']:
-            if person_id in [x[0] for x in quote_doc['candidate_ids']]:
-                quote_doc['article'] = article_doc
-
-                score = 0.0
-                for word in interesting_words:
-                    if word in quote_doc['text'].lower():
-                        score += 1.0
-                
-                quote_doc['article'] = article_doc
-                quote_doc['score'] = score
-                quote_docs[quote_doc['html']] = quote_doc
-
-    quote_docs = sorted(quote_docs.values(), key=lambda x: x['score'], reverse=True)
-
-    return quote_docs
 
 
 @app.route('/person/<int:person_id>/quotes')
@@ -238,11 +146,39 @@ def person_quotes(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
 
-    quote_docs = get_person_quotes(person_id)
+    quote_docs = []#get_person_quotes(person_id)
 
     return render_template('person_quotes.html',
                            person=person_doc,
                            quotes=quote_docs)
+
+
+def get_person_stats(stream):
+    weekly_buckets = sorted(list(Counter(
+        item.date_order.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=item.date_order.weekday())
+        for item in stream
+    ).items()))
+
+    date_now = datetime.now()
+    months = [
+        datetime(year,month,1)
+        for year in range(2015,date_now.year+1)
+        for month in range(1,13)
+        if datetime(year,month,1) <= stream[0].date_order
+    ]
+
+    return weekly_buckets, months
+
+
+def get_person_domains(stream):
+    return sorted(
+        [
+            (get_domain(domain), count)
+            for domain, count in Counter(item.data['domain'] for item in stream).items()
+        ],
+        key=lambda x: x[1],
+        reverse=True,
+    )
 
 
 @app.route('/person/<int:person_id>')
@@ -250,19 +186,15 @@ def person(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
 
-    quote_docs = get_person_quotes(person_id)
-    article_docs = get_person_articles(person_id)
+    stream = StreamItem.get_by_entities(None, [person_id], None) 
 
-    domains = sorted([(get_domain(domain), count) for domain, count in Counter(doc['page'].domain for doc in article_docs).items()], key=lambda x: x[1], reverse=True)
-
-    weekly_buckets = sorted(list(Counter(doc['order_date'].replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=doc['order_date'].weekday()) for doc in article_docs).items()))
-
-    months = [datetime(2015,i,1) for i in range(1,datetime.now().month+1)]
+    weekly_buckets, months = get_person_stats(stream)
+    domains = get_person_domains(stream)
 
     return render_template('person.html',
                            person=person_doc,
-                           quotes=quote_docs,
-                           articles=article_docs,
+                           quotes=[],#quote_docs,
+                           stream=stream[:100],
                            elections=elections,
                            domains=domains,
                            weekly_buckets=weekly_buckets,
@@ -286,42 +218,19 @@ def constituency(constituency_id, rss=False):
     candidate_docs = constituency_get_candidates(constituency_id)
     person_ids = filter_candidate_or_incumbent(candidate_docs, constituency_id)
 
-    article_docs = get_articles(person_ids, [constituency_id])
-
-    for article_doc in article_docs:
-        for quote_doc in article_doc['output']['quotes']:
-            score = 0.0
-
-            for person_id in person_ids:
-                if person_id in [x[0] for x in quote_doc['candidate_ids']]:
-                    score += 0.5
-
-            if str(constituency_id) in [x[0] for x in quote_doc['constituency_ids']]:
-                score += 10.0
-           
-            score += len(quote_doc['candidate_ids']) * 0.1
-            score += len(quote_doc['constituency_ids']) * 0.1
- 
-            quote_doc['score'] = score
-
-        article_doc['output']['quotes'] = sorted(article_doc['output']['quotes'], key=lambda x: x['score'], reverse=True)
-
-    if not rss:
-        article_docs = sorted(article_docs, key=lambda x: x['order_date'], reverse=True)
-    else:
-        article_docs = sorted(article_docs, key=lambda x: x['time_added'], reverse=True)
+    stream = StreamItem.get_by_entities(100, person_ids, [constituency_id]) 
 
     area_doc = get_mapit_area(constituency_id)
     area_doc['id'] = str(area_doc['id'])
 
     if rss:
         return render_template('constituency_rss.xml',
-                               articles=article_docs,
+                               stream=stream,
                                candidates=candidate_docs,
                                area=area_doc)
     else:
         return render_template('constituency.html',
-                               articles=article_docs,
+                               stream=stream,
                                candidates=candidate_docs,
                                area=area_doc)
 
@@ -367,12 +276,14 @@ def article(doc_id):
     return render_template('article.html',
                            article=doc)
 
+
 def _resolve_matches(doc):
     page = Page.get(doc['pages'][0])
 
     texts = [page.text, page.title,]
 
     resolve_matches(texts, doc)
+
 
 @app.route('/article/<doc_id>/people', methods=['PUT'])
 @login_required
@@ -527,6 +438,7 @@ def autocomplete_constituency():
                 matches.append({'label': name, 'value': constituency['id']})
 
     return json.dumps(matches)
+
 
 @app.route('/event/click', methods=['POST'])
 def event_click():
