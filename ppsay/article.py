@@ -1,10 +1,55 @@
+from datetime import datetime
+from collections import defaultdict
+from bson import ObjectId
 from db import db_articles, db_pages, db_stream
 from ppsay.data import elections
 from ppsay.page import Page
 from ppsay.stream import StreamItem 
 
-from matches import add_matches, resolve_matches, add_quotes
+from matches import (
+    add_matches,
+    resolve_matches,
+    resolve_quotes,
+    add_quotes,
+)
 from ml.assign import get_machine
+
+class ArticleTagged(object):
+    priority = ['naive', 'machine', 'user',]
+
+    def __init__(self):
+        self.add = defaultdict(set)
+        self.remove = defaultdict(set)
+
+    def add(self, type, value):
+        self.add[type].add(value)
+    
+    def remove(self, type, value):
+        self.add[type].add(value)
+
+    def resolve(self):
+        out = set()
+
+        for type in self.priority:
+            for value in self.add[type]:
+                out.add(value)
+
+            for value in self.remove[type]:
+                out.remove(value)
+
+        return out 
+
+    def as_dict(self):
+        rtn = {
+            type: {
+                'add': list(self.add[type]),
+                'remove': list(self.remove[type]),
+            }
+            for type in self.priority
+        }
+        rtn['final'] = self.resolve()
+        return rtn
+
 
 class Article(object):
     def __init__(self, doc=None):
@@ -31,7 +76,7 @@ class Article(object):
    
     @classmethod 
     def get_by_id(klass, article_id):
-        doc = db_articles.find_one({'_id': article_id})
+        doc = db_articles.find_one({'_id': ObjectId(article_id)})
         return klass(doc)
  
     def get_page(self):
@@ -46,14 +91,12 @@ class Article(object):
         texts = [page.text, page.title,]
 
         self.analysis['matches'], self.analysis['possible'] = add_matches(texts)
-
-        print self.analysis['matches']
-
         self.output['quotes'], self.output['tags'] = add_quotes(self.analysis['matches'], texts)
         
         self.analysis['machine'] = get_machine(self)
 
-        resolve_matches(texts, self.as_dict())
+        resolve_matches(texts, self.analysis)
+        resolve_quotes(texts, self.analysis, self.output)
 
         self.update_stream()
 
@@ -75,18 +118,13 @@ class Article(object):
     def update_stream(self):
         stream_item = db_stream.find_one({'data.article_id': self.id})
     
-        if stream_item:
+        if stream_item is not None:
             stream_item_id = stream_item['_id']
         else:
             stream_item_id = None
         
         stream_item = StreamItem.from_article(self)
+        stream_item.id = stream_item_id
         stream_item.render()
         stream_item.save()
-
-        if stream_item:
-            if stream_item_id is not None:
-                stream_item['_id'] = stream_item_id
-        
-            db_stream.save(stream_item)
 

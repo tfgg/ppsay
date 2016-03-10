@@ -435,8 +435,8 @@ def resolve_constituencies(doc_user, doc_possible):
     return resolved_constituencies
 
 
-def resolve_quotes(texts, doc, verbose=False):
-    final = doc['analysis']['final']
+def resolve_quotes(texts, analysis, output, verbose=False):
+    final = analysis['final']
 
     candidates = {
         candidate['id']: candidate
@@ -450,7 +450,7 @@ def resolve_quotes(texts, doc, verbose=False):
         if constituency['state'] != 'removed'
     }
 
-    for quote_doc in doc['output']['quotes']:
+    for quote_doc in output['quotes']:
         # Grab info, only include if they're in the final resolved constituencies/candidates 
         quote_doc['candidates'] = [candidates[candidate_id[0]] for candidate_id in quote_doc['candidate_ids'] if candidate_id[0] in candidates]
         quote_doc['constituencies'] = [constituencies[constituency_id[0]] for constituency_id in quote_doc['constituency_ids'] if constituency_id[0] in constituencies]
@@ -474,9 +474,9 @@ def resolve_quotes(texts, doc, verbose=False):
     
     tags = []
 
-    doc['output']['tags'] = [MatchTag(*tag) for tag in doc['output']['tags']]
+    output['tags'] = [MatchTag(*tag) for tag in output['tags']]
 
-    for tag in doc['output']['tags']:
+    for tag in output['tags']:
         if tag.source == 0:
             if tag.type == "constituency" and tag.id in constituencies:
                 tags.append(((tag[0], tag[1]), "<a href='/constituency/{0}' class='quote-constituency-highlight quote-constituency-{0}-highlight'>".format(tag[3]), "</a>"))
@@ -484,7 +484,7 @@ def resolve_quotes(texts, doc, verbose=False):
                 tags.append(((tag[0], tag[1]), "<a href='/person/{0}' class='quote-candidate-highlight quote-candidate-{0}-highlight'>".format(tag[3]), "</a>"))
 
     clash = False
-    for tag1, tag2 in combinations(doc['output']['tags'], 2):
+    for tag1, tag2 in combinations(output['tags'], 2):
         if tag1.source == tag2.source and tag1.id != tag2.id and (tag1[0], tag1[1]) == (tag2[0], tag2[1]):
             if tag1.type == "constituency" and tag1.id in constituencies:
                 tag1_ok = True
@@ -506,17 +506,15 @@ def resolve_quotes(texts, doc, verbose=False):
                 if verbose:
                     print "Clash", tag1, tag2
 
-    doc['output']['tagged_html'] = add_tags(texts[0], tags)
-    doc['output']['tag_clash'] = clash
+    output['tagged_html'] = add_tags(texts[0], tags)
+    output['tag_clash'] = clash
         
 
-def resolve_matches(texts, doc, verbose=False):
+def resolve_matches(texts, analysis, verbose=False):
     """
         Generate the final description of the tags by combining the machine matched
         tags and the user contributed tags.
     """
-
-    analysis = doc['analysis']
 
     if 'user' not in analysis:
         analysis['user'] = {}
@@ -540,9 +538,6 @@ def resolve_matches(texts, doc, verbose=False):
             analysis['user'],
             analysis['possible'],
         )
-
-    if 'quotes' in doc['output']:
-        resolve_quotes(texts, doc, verbose)
 
     return
 
@@ -582,7 +577,8 @@ if __name__ == "__main__":
             
             doc['machine'] = get_machine(doc)
 
-        resolve_matches(doc, a.verbose)
+        resolve_matches(doc['analysis'], a.verbose)
+        resolve_quotes(texts, doc['analysis'], doc['output'], verbose)
 
         db.save(doc)
 

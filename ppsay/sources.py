@@ -4,6 +4,7 @@ from datetime import datetime
 from db import db_articles
 from webcache import WebPage
 from page import Page
+from article import Article
 
 def get_or_create_doc(pages):
     doc = db_articles.find_one({'keys': pages[0].url,})

@@ -15,8 +15,8 @@ def is_sublist(a, b):
 
         i = i + 1
 
-sep_re = re.compile(u'[ ,‘’“”.!;:\'`"?\-=+_\r\n\t()\xa0><@]+')
-token_re = re.compile(u'([^ ,‘’“”.!;:\'`"?\-=+_\r\n\t()\xa0><@]+)')
+sep_re = re.compile(u'[ ,‘’“”.!;:\'`"?\-=+_\r\n\t()\xa0><@\[\]]+')
+token_re = re.compile(u"([^ ,‘’“”.!;:\'`\"?\-=+_\r\n\t()\xa0><@\[\]]+)")
 
 TextTokens = namedtuple("TextTokens", ['tokens', 'spans'])
 

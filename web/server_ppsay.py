@@ -27,6 +27,7 @@ from ppsay.domains import domain_whitelist, get_domain
 from ppsay.matches import resolve_matches
 from ppsay.sources import get_source
 from ppsay.page import Page
+from ppsay.article import Article
 
 from ppsay.constituency import (
     constituency_get_candidates,
@@ -35,6 +36,7 @@ from ppsay.constituency import (
 
 from ppsay.data import (
     get_constituencies,
+    get_constituency,
     get_candidate,
     get_candidates,
     elections
@@ -289,75 +291,74 @@ def _resolve_matches(doc):
 @login_required
 def article_person_confirm(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = db_articles.find_one({'_id': doc_id})
+    article = Article.get_by_id(doc_id)
 
     person_id = request.form.get('person_id', None)
 
-    doc['analysis']['user']['candidates']['confirm'].append(person_id)
+    article.analysis['user']['candidates']['confirm'].append(person_id)
 
-    if person_id in doc['analysis']['user']['candidates']['remove']:
-        doc['analysis']['user']['candidates']['remove'].remove(person_id)
+    if person_id in article.analysis['user']['candidates']['remove']:
+        article.analysis['user']['candidates']['remove'].remove(person_id)
     
-    doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
-    doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
-   
-    _resolve_matches(doc)
- 
-    db_articles.save(doc)
+    article.analysis['user']['candidates']['confirm'] = list(set(article.analysis['user']['candidates']['confirm']))
+    article.analysis['user']['candidates']['remove'] = list(set(article.analysis['user']['candidates']['remove']))
+  
+    article.process()
+    article.save() 
 
     log('person_confirm', url_for('.article', doc_id=str(doc_id)), {'person_id': person_id,
                                                                    'person_name': get_candidate(person_id)['name']})
  
-    return render_template('article_people_tagged.html',
-                           article=doc)
+    return render_template(
+        'article_people_tagged.html',
+        article=article,
+    )
  
 
 @app.route('/article/<doc_id>/people', methods=['DELETE'])
 @login_required
 def article_person_remove(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = db_articles.find_one({'_id': doc_id})
+    article = Article.get_by_id(doc_id)
     
     person_id = request.form.get('person_id', None)
 
-    doc['analysis']['user']['candidates']['remove'].append(person_id)
+    article.analysis['user']['candidates']['remove'].append(person_id)
     
-    if person_id in doc['analysis']['user']['candidates']['confirm']:
-        doc['analysis']['user']['candidates']['confirm'].remove(person_id)
+    if person_id in article.analysis['user']['candidates']['confirm']:
+        article.analysis['user']['candidates']['confirm'].remove(person_id)
     
-    doc['analysis']['user']['candidates']['confirm'] = list(set(doc['analysis']['user']['candidates']['confirm']))
-    doc['analysis']['user']['candidates']['remove'] = list(set(doc['analysis']['user']['candidates']['remove']))
+    article.analysis['user']['candidates']['confirm'] = list(set(article.analysis['user']['candidates']['confirm']))
+    article.analysis['user']['candidates']['remove'] = list(set(article.analysis['user']['candidates']['remove']))
 
-    _resolve_matches(doc)
-
-    db_articles.save(doc)
+    article.process()
+    article.save() 
     
     log('person_remove', url_for('.article', doc_id=str(doc_id)), {'person_id': person_id, 
                                                                   'person_name': get_candidate(person_id)['name']})
  
     return render_template('article_people_tagged.html',
-                           article=doc)
+                           article=article)
 
 
 @app.route('/article/<doc_id>/constituencies', methods=['PUT'])
 @login_required
 def article_constituency_confirm(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = db_articles.find_one({'_id': doc_id})
+    article = Article.get_by_id(doc_id)
 
     constituency_id = request.form.get('constituency_id', None)
 
-    doc['analysis']['user']['constituencies']['confirm'].append(constituency_id)
+    article.analysis['user']['constituencies']['confirm'].append(constituency_id)
 
-    if constituency_id in doc['analysis']['user']['constituencies']['remove']:
-        doc['analysis']['user']['constituencies']['remove'].remove(constituency_id)
+    if constituency_id in article.analysis['user']['constituencies']['remove']:
+        article.analysis['user']['constituencies']['remove'].remove(constituency_id)
     
-    doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
-    doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
+    article.analysis['user']['constituencies']['confirm'] = list(set(article.analysis['user']['constituencies']['confirm']))
+    article.analysis['user']['constituencies']['remove'] = list(set(article.analysis['user']['constituencies']['remove']))
     
-    _resolve_matches(doc)
-
-    db_articles.save(doc)
+    article.process()
+    article.save()
     
     log(
         'constituency_confirm',
@@ -369,40 +370,39 @@ def article_constituency_confirm(doc_id):
     )
  
     return render_template('article_constituencies_tagged.html',
-                           article=doc)
+                           article=article)
 
 
 @app.route('/article/<doc_id>/constituencies', methods=['DELETE'])
 @login_required
 def article_constituency_remove(doc_id):
     doc_id = ObjectId(doc_id)
-    doc = db_articles.find_one({'_id': doc_id})
+    article = Article.get_by_id(doc_id)
 
     constituency_id = request.form.get('constituency_id', None)
 
-    doc['analysis']['user']['constituencies']['remove'].append(constituency_id)
+    article.analysis['user']['constituencies']['remove'].append(constituency_id)
 
-    if constituency_id in doc['user']['constituencies']['confirm']:
-        doc['analysis']['user']['constituencies']['confirm'].remove(constituency_id)
+    if constituency_id in article.analysis['user']['constituencies']['confirm']:
+        article.analysis['user']['constituencies']['confirm'].remove(constituency_id)
     
-    doc['analysis']['user']['constituencies']['confirm'] = list(set(doc['analysis']['user']['constituencies']['confirm']))
-    doc['analysis']['user']['constituencies']['remove'] = list(set(doc['analysis']['user']['constituencies']['remove']))
+    article.analysis['user']['constituencies']['confirm'] = list(set(article.analysis['user']['constituencies']['confirm']))
+    article.analysis['user']['constituencies']['remove'] = list(set(article.analysis['user']['constituencies']['remove']))
     
-    _resolve_matches(doc)
-
-    db_articles.save(doc)
+    article.process()
+    article.save()
     
     log(
         'constituency_remove', 
         url_for('.article', doc_id=str(doc_id)), 
         {
             'constituency_id': constituency_id,
-            'constituency_name': constituencies_index[constituency_id]['name'],
+            'constituency_name': get_constituency(constituency_id)['name'],
         }
     )
  
     return render_template('article_constituencies_tagged.html',
-                           article=doc)
+                           article=article)
 
 
 @app.route('/autocomplete/person', methods=['GET'])
