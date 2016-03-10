@@ -16,8 +16,8 @@ for eos in t.end_of_sentences:
 
 titles = {'mr', 'mrs', 'dr', 'doctor', 'prof', 'professor', 'sir', 'mp', 'mbe', 'miss', 'master', 'ms', 'lord'}
 
-first_names = {name.strip().lower() for name in open('first_names.txt')}
-surnames = {name.strip().lower() for name in open('surnames.txt')}
+first_names = {name.strip().lower() for name in open('data/first_names.txt')}
+surnames = {name.strip().lower() for name in open('data/surnames.txt')}
 
 
 def is_capitalized(token):

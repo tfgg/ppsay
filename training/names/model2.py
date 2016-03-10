@@ -7,11 +7,11 @@ roles = {'doctor', 'professor', 'president', 'prime', 'minister', 'secretary', '
 months = {'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',}
 parties = {'labour', 'conservative', 'green', 'liberal', 'democrat', 'libdem', 'tory', 'bnp', 'ukip', 'plaid', 'cymru', 'tories', 'kippers', 'party','conservatives','snp','con','lab','lib'}
 
-top100 = {word.strip().lower() for word in open('top100.txt')}
-first_names = {name.strip().lower() for name in open('first_names.txt')}
-surnames = {name.strip().lower() for name in open('surnames.txt')}
-countries = {word.strip().lower() for name in open('countries.txt') for word in name.decode('utf-8').strip().split() if word.strip().lower() not in top100}
-surrounding = {word.strip().lower() for word in open('surround.txt')} - top100 - roles - titles
+top100 = {word.strip().lower() for word in open('data/top100.txt')}
+first_names = {name.strip().lower() for name in open('data/first_names.txt')}
+surnames = {name.strip().lower() for name in open('data/surnames.txt')}
+countries = {word.strip().lower() for name in open('data/countries.txt') for word in name.decode('utf-8').strip().split() if word.strip().lower() not in top100}
+surrounding = {word.strip().lower() for word in open('data/surround.txt')} - top100 - roles - titles
 
 def is_capitalized(token):
     if ord('A') <= ord(token[0]) <= ord('Z'):
