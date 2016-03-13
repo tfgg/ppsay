@@ -91,7 +91,7 @@ def vecs(article, return_all=False):
             if candidate_id in vecs:
                 vecs[candidate_id]['y'] = 1.0
 
-        for candidate in article['analysis']['user']['candidates']['remove']:
+        for candidate_id in article['analysis']['user']['candidates']['remove']:
             if candidate_id in vecs:
                 vecs[candidate_id]['y'] = 0.0
     else:
