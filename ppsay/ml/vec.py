@@ -12,13 +12,13 @@ two_weeks_ago = datetime.now() - timedelta(days=14)
 client = MongoClient()
 db_articles = client.news.articles
 
-def person_article_count_week(person_id):
+def person_article_count_week(person_id, time_now):
     article_count = db_articles.find({
         'state': 'approved',
         'time_added': {
-            '$gte': two_weeks_ago,
+            '$gte': time_now - timedelta(days=14),
         },
-        'candidates': {
+        'analysis.final.candidates': {
             '$elemMatch': {
                 'id': person_id,
                 'state': {'$nin': ['removed','removed_ml'],},
@@ -46,26 +46,26 @@ def vecs(article, return_all=False):
     for possible_candidate in article['analysis']['possible']['candidates']:
         person = get_candidate(possible_candidate['id'])
 
-        if '2015' in person['candidacies']:
-            current_party_id = person['candidacies']['2015']['party']['id']
-            current_constituency_id = person['candidacies']['2015']['constituency']['id']
+        if 'ge2015' in person['candidacies']:
+            current_party_id = person['candidacies']['ge2015']['party']['id']
+            current_constituency_id = person['candidacies']['ge2015']['constituency']['id']
 
-        elif '2010' in person['candidacies']:
-            current_party_id = person['candidacies']['2010']['party']['id']
-            current_constituency_id = person['candidacies']['2010']['constituency']['id']
+        elif 'ge2010' in person['candidacies']:
+            current_party_id = person['candidacies']['ge2010']['party']['id']
+            current_constituency_id = person['candidacies']['ge2010']['constituency']['id']
 
         else:
             current_party_id = None
             current_constituency_id = None
 
-        person['past_week_count'] = person_article_count_week(person['id'])
+        person['past_week_count'] = person_article_count_week(person['id'], article['time_added'])
         person['current_party_id'] = current_party_id
         person['current_constituency_id'] = current_constituency_id
 
         people[person['id']] = person
         people_party[current_party_id].append(person['id'])
         people_constituency[current_constituency_id].append(person['id'])
-
+    
     vecs = {}
 
     for person in people.values():
@@ -86,15 +86,14 @@ def vecs(article, return_all=False):
                 'person_name': person['name'],
             })
 
-    if 'candidates' in article['analysis']:
-        for candidate in article['analysis']['candidates']:
-            if candidate['id'] in vecs:
-                if candidate['state'] == 'confirmed':
-                   vecs[candidate['id']]['y'] = 1.0
-                elif candidate['state'] == 'removed':
-                   vecs[candidate['id']]['y'] = 0.0
-            else:
-                print "Unknown candidate added"
+    if 'user' in article['analysis']:
+        for candidate_id in article['analysis']['user']['candidates']['confirm']:
+            if candidate_id in vecs:
+                vecs[candidate_id]['y'] = 1.0
+
+        for candidate in article['analysis']['user']['candidates']['remove']:
+            if candidate_id in vecs:
+                vecs[candidate_id]['y'] = 0.0
     else:
         print "No resolved candidate data"
 
@@ -113,15 +112,15 @@ if __name__ == "__main__":
 
     out_vecs = []
     for article in articles:
-        if 'possible' in article:
+        if 'analysis' in article:
             out_vecs += vecs(article)
 
     print len(out_vecs)
     print "Positive", len([x for x in out_vecs if x['y'] == 1.0])
     print "Negative", len([x for x in out_vecs if x['y'] == 0.0])
 
-    #for out_vec in out_vecs:
-    #    print out_vec
+    for out_vec in out_vecs:
+        print out_vec
 
     json.dump(out_vecs, open('data.json', 'w+'))
 

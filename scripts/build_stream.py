@@ -5,7 +5,8 @@ docs = db_articles.find()
 
 for doc in docs:
     if 'pages' not in doc:
-        print doc
+        print "MISSING PAGES"
+        continue
 
     article = Article(doc)
     print article.id

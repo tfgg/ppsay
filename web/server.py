@@ -35,6 +35,10 @@ app.config.update(
   MAIL_PASSWORD = config.get('mail_password'),
 )
 
+app.config.update(
+    PROPAGATE_EXCEPTIONS=True,
+)
+
 mail = Mail(app)
 
 try:

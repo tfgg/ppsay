@@ -28,6 +28,8 @@ def get_machine(article):
     return machine
 
 if __name__ == '__main__':
+    from ppsay.article import Article
+
     client = MongoClient()
 
     db_articles = client.news.articles
@@ -38,12 +40,13 @@ if __name__ == '__main__':
     else:
         articles = db_articles.find()
 
-    for article in articles:
-        if 'possible' not in article:
+    for doc in articles:
+        if 'analysis' not in doc:
             continue
 
-        print article['_id']
+        article = Article(doc)
+        print article.id
 
-        article['machine'] = get_machine(article)    
-        db_articles.save(article)
+        article.process()
+        article.save()
 

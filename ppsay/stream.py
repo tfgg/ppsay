@@ -18,8 +18,7 @@ class StreamItem(object):
         self.html_cached = doc['html_cached']
 
     def as_dict(self):
-        return {
-            '_id': self.id,
+        doc = {
             'type': self.type,
             'data': self.data,
             'streams': self.streams,
@@ -27,15 +26,16 @@ class StreamItem(object):
             'html_cached': self.html_cached,
         }
 
+        if self.id is not None:
+            doc['_id'] = self.id
+
+        return doc
+
     def save(self):
         self.id = db_stream.save(self.as_dict())
         return self.id
 
     def render(self):
-        #self.html_cached = render_template(
-        #    self.templates_types[self.type],
-        #    data=self.data,
-        #)
         pass
 
     @classmethod
@@ -109,6 +109,7 @@ class StreamItem(object):
                     }
                     for candidate
                     in article.analysis['final']['candidates']
+                    if candidate['state'] in ['confirmed_ml', 'confirmed',]
                 ],
                 'constituencies': [
                     {
@@ -117,14 +118,19 @@ class StreamItem(object):
                     }
                     for constituency
                     in article.analysis['final']['constituencies']
+                    if constituency['state'] in ['confirmed','unknown']
                 ],
             },
             'streams': {
                 'people': [
-                    candidate['id'] for candidate in article.analysis['final']['candidates']
+                    candidate['id']
+                    for candidate in article.analysis['final']['candidates']
+                    if candidate['state'] in ['confirmed_ml', 'confirmed',]
                 ],
                 'constituencies': [
-                    constituency['id'] for constituency in article.analysis['final']['constituencies']
+                    constituency['id']
+                    for constituency in article.analysis['final']['constituencies']
+                    if constituency['state'] in ['confirmed','unknown']
                 ],
             },
             'html_cached': None,

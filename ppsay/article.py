@@ -98,11 +98,8 @@ class Article(object):
         resolve_matches(texts, self.analysis)
         resolve_quotes(texts, self.analysis, self.output)
 
-        self.update_stream()
-
     def as_dict(self):
-        return {
-            '_id': self.id,
+        doc = {
             'pages': self.pages,
             'time_added': self.time_added,
             'keys': self.keys,
@@ -110,10 +107,17 @@ class Article(object):
             'output': self.output,
             'state': self.state,
         }
+        
+        if self.id is not None:
+            doc['_id'] = self.id
+
+        return doc
 
     def save(self):
         doc = self.as_dict()
         self.id = db_articles.save(doc)
+        
+        self.update_stream()
 
     def update_stream(self):
         stream_item = db_stream.find_one({'data.article_id': self.id})
@@ -124,7 +128,8 @@ class Article(object):
             stream_item_id = None
         
         stream_item = StreamItem.from_article(self)
-        stream_item.id = stream_item_id
+        if stream_item_id:
+            stream_item.id = stream_item_id
         stream_item.render()
         stream_item.save()
 
