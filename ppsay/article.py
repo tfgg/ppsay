@@ -126,10 +126,18 @@ class Article(object):
             stream_item_id = stream_item['_id']
         else:
             stream_item_id = None
-        
-        stream_item = StreamItem.from_article(self)
-        if stream_item_id:
-            stream_item.id = stream_item_id
-        stream_item.render()
-        stream_item.save()
+
+        num_final_candidates = len([x for x in self.analysis['final']['candidates'] if x['state'] not in ['removed', 'removed_ml']])
+        num_final_constituencies = len([x for x in self.analysis['final']['constituencies'] if x['state'] not in ['removed', 'removed_ml']])
+       
+        if num_final_candidates > 0 or num_final_constituencies > 0:
+            stream_item = StreamItem.from_article(self)
+
+            if stream_item_id:
+                stream_item.id = stream_item_id
+
+            stream_item.render()
+            stream_item.save()
+        elif stream_item is not None:
+            db_stream.remove({'_id': stream_item['_id']})
 
