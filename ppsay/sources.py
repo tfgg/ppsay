@@ -117,25 +117,22 @@ def get_source(source_url, source, state):
         Get a source and save it, no matter what.
     """
     
-    page = WebPage(source_url)
+    web_page = WebPage(source_url)
 
     try:
-        page.fetch()
+        web_page.fetch()
     except WebPage.FailedToFetch, e:
         print "FAILED", e
         return None
 
-    try:
-        new, article = get_or_create_doc(page, source)
-    except Article.FetchError, e:
-        print "FAILED", e
-        return None
+    page = Page.from_web_page(web_page, source)
+    page.save()
 
-    if new and article.pages is not None:
-        article.process() 
+    new, article = get_or_create_doc([page])
 
-        article.state = state
-        article.save()
+    article.process() 
 
-    return doc
+    article.state = state
+    article.save()
 
+    return article

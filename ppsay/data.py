@@ -1,4 +1,8 @@
+import pytz
 import json
+import iso8601
+import re
+
 from datetime import datetime
 from os.path import realpath, join, dirname
 from db import db_candidates, db_areas
@@ -44,13 +48,25 @@ def get_candidates():
 
         yield candidate
 
+elections_data = json.load(open(x('data/elections.json')))
+
+def get_election_id(x):
+    if x == '2010':
+        return 'parl.2010-05-06'
+    elif x == '2015':
+        return 'parl.2015-05-07'
+    else:
+        return x
+
+def escape_election_id(x):
+    return x.replace('.', '_')
+
 elections = {
-    'ge2010': {
-        'date': datetime(2010, 5, 6),
-        'type': 'ge'
-    },
-    'ge2015': {
-        'date': datetime(2015, 5, 7),
-        'type': 'ge'
-    },
+    escape_election_id(get_election_id(election['id'])): {
+        'id': get_election_id(election['id']),
+        'name': re.sub('([0-9]+)', '', election['name']).strip(),
+        'date': iso8601.parse_date(election['election_date'],default_timezone=pytz.UTC),
+    }
+    for election in elections_data['results'] 
 }
+

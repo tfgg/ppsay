@@ -1,3 +1,5 @@
+import pytz
+
 from bson import ObjectId
 from ppsay.db import db_articles, db_pages, db_stream
 from ppsay.page import Page
@@ -14,7 +16,7 @@ class StreamItem(object):
         self.type = doc['type']
         self.data = doc['data']
         self.streams = doc['streams']
-        self.date_order = doc['date_order']
+        self.date_order = doc['date_order'].replace(tzinfo=pytz.UTC)
         self.html_cached = doc['html_cached']
 
     def as_dict(self):
@@ -84,6 +86,8 @@ class StreamItem(object):
             order_date = page.date_published
         else:
             order_date = article.time_added
+
+        order_date = order_date.replace(tzinfo=pytz.UTC)
 
         if len(article.output['quotes']) > 0:
             quote = {

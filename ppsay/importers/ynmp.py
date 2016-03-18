@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from ppsay.db import db_candidates
 
 def transform_person(person):
@@ -5,44 +7,75 @@ def transform_person(person):
         Transform a popit person result into the internal format.
     """
 
-    if 'party_memberships' not in person:
-        print person
+    if 'party_memberships' not in person['versions'][0]['data']:
         return
 
-    id_schemes = {
-        ident['scheme'] for ident in person['identifiers']
+    ids = {
+        ident['scheme'].replace('.', '_'): ident['identifier'] for ident in person['identifiers']
     }
 
     # Not entirely true, might have been in parliament previously but been turfed out?
-    incumbent = 'uk.org.publicwhip' in id_schemes
+    incumbent = 'uk.org.publicwhip' in ids
 
-    if person['party_memberships']:
+    def election_id(x):
+        if x == '2010':
+            return 'parl_2010-05-06'
+        elif x == '2015':
+            return 'parl_2015-05-07'
+        else:
+            return x.replace('.', '_')
+
+    data = person['versions'][0]['data']
+
+    if data['party_memberships']:
         candidacies = {
-            "ge{}".format(year): {
+            election_id(elect): {
                 'party': {
-                    'name': person['party_memberships'][year]['name'],
-                    'id': person['party_memberships'][year]['id'].split(':')[1],
+                    'name': data['party_memberships'][elect]['name'],
+                    'id': data['party_memberships'][elect]['id'].split(':')[1],
                 },
                 'constituency': {
-                    'name': person['standing_in'][year]['name'], 
-                    'id': person['standing_in'][year]['post_id'],
+                    'name': data['standing_in'][elect]['name'], 
+                    'id': data['standing_in'][elect]['post_id'],
                 },
-                'year': year,
+                'election_id': election_id(elect).replace('_', '.'),
             } 
-            for year in person['party_memberships']
-            if person['party_memberships'][year] is not None
-               and person['standing_in'][year] is not None
+            for elect in data['party_memberships']
+            if data['party_memberships'][elect] is not None
+               and data['standing_in'][elect] is not None
         }
     else:
         candidacies = {}
+
+    links = defaultdict(list)
+
+    if data.get('email'):
+        links['email'].append({'note': 'E-mail', 'link': data['email']})
+    
+    if data.get('party_ppc_page_url'):
+        links['website'].append({'note': 'Party PPC page', 'link': data['party_ppc_page_url']})
+    
+    if data.get('facebook_personal_url'):
+        links['facebook_profile'].append({'note': 'Personal Facebook profile', 'link': data['facebook_personal_url']})
+    
+    if data.get('facebook_page_url'):
+        links['facebook_page'].append({'note': 'Campaign Facebook page', 'link': data['facebook_page_url']})
+
+    if data.get('homepage_url'):
+        links['website'].append({'note': 'Homepage', 'link': data['homepage_url']})
+
+    if data.get('wikipedia_url'):
+        links['wikipedia_url'].append({'note': 'Wikipedia page', 'link': data['wikipedia_url']})
 
     candidate = {
         'name': person['name'].strip(),
         'name_prefix': person.get('honorific_prefix', None),
         'name_suffix': person.get('honorific_suffix', None),
-        'other_names': [x['name'] for x in person['other_names']],
+        'other_names': [x['name'] for x in person.get('other_names', [])],
         'url': person['url'],
-        'id': person['id'],
+        'id': str(person['id']),
+        'identifiers': ids,
+        'links': links,
         'image': person.get('image', None),
         'proxy_image': person.get('proxy_image', None),
         'candidacies': candidacies,
@@ -52,15 +85,43 @@ def transform_person(person):
 
     return candidate
 
+
+def save_person(person):
+
+    candidate = {
+        'name': person['name'].strip(),
+        'name_prefix': person.get('honorific_prefix', None),
+        'name_suffix': person.get('honorific_suffix', None),
+        'other_names': [x['name'] for x in person.get('other_names', [])],
+        'url': person['url'],
+        'id': str(person['id']),
+        'identifiers': ids,
+        'image': person.get('image', None),
+        'proxy_image': person.get('proxy_image', None),
+        'candidacies': candidacies,
+        'gender': person['gender'],
+        'incumbent': incumbent,
+    }
+
+    return candidate
+
+
 def save_person(person):
     candidate = transform_person(person)
 
-    candidate_doc = db_candidates.find_one({'id': person['id']})
+    if candidate:
+        candidate_doc = db_candidates.find_one({'id': candidate['id']})
 
-    if candidate_doc is not None:
-        candidate_doc.update(candidate)
+        if candidate_doc is not None:
+            candidate_doc.update(candidate)
+        else:
+            candidate_doc = candidate
+
+        print candidate_doc['id']
+        db_candidates.save(candidate_doc)
+
+        return candidate_doc
+
     else:
-        candidate_doc = candidate
-
-    db_candidates.save(candidate_doc)
+        return
 

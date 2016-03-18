@@ -3,6 +3,7 @@ import requests
 import json
 import math
 import iso8601
+import pytz
 
 from datetime import timedelta, datetime
 
@@ -156,17 +157,20 @@ def person_quotes(person_id):
 
 
 def get_person_stats(stream):
+    if len(stream) == 0:
+        return [], []
+
     weekly_buckets = sorted(list(Counter(
         item.date_order.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=item.date_order.weekday())
         for item in stream
     ).items()))
 
-    date_now = datetime.now()
+    date_now = datetime.now(pytz.UTC)
     months = [
-        datetime(year,month,1)
+        datetime(year,month,1,tzinfo=pytz.UTC)
         for year in range(2015,date_now.year+1)
         for month in range(1,13)
-        if datetime(year,month,1) <= stream[0].date_order
+        if datetime(year,month,1,tzinfo=pytz.UTC) <= stream[0].date_order
     ]
 
     return weekly_buckets, months
@@ -188,6 +192,11 @@ def person(person_id):
     person_id = str(person_id)
     person_doc = db_candidates.find_one({'id': person_id})
 
+    now = datetime.now(pytz.UTC)
+    for election_id in person_doc['candidacies']:
+        if elections[election_id]['date'] > now:
+            person_doc['current_election'] = election_id
+
     stream = StreamItem.get_by_entities(None, [person_id], None) 
 
     weekly_buckets, months = get_person_stats(stream)
@@ -200,12 +209,12 @@ def person(person_id):
                            elections=elections,
                            domains=domains,
                            weekly_buckets=weekly_buckets,
-                           year_2015=datetime(2015,1,1),
-                           today=datetime.now(),
+                           year_2015=datetime(2015,1,1,tzinfo=pytz.UTC),
+                           today=datetime.now(pytz.UTC),
                            months=months)
 
 
-@app.route('/constituency/<int:constituency_id>.xml')
+@app.route('/constituency/<constituency_id>.xml')
 def constituency_rss(constituency_id):
     resp =  make_response(constituency(constituency_id, rss=True))
     resp.headers['Content-Type'] = 'application/atom+xml; charset=utf-8'
@@ -213,7 +222,7 @@ def constituency_rss(constituency_id):
     return resp
 
 
-@app.route('/constituency/<int:constituency_id>')
+@app.route('/constituency/<constituency_id>')
 def constituency(constituency_id, rss=False):
     constituency_id = str(constituency_id)
 
