@@ -64,6 +64,9 @@ div.top-banner div.party-and-constituency {
     div.top-banner div.party-and-constituency h2 a:link, div.top-banner div.party-and-constituency h2 a:visited {
       color: #6e707c;
       text-decoration: underline; }
+    div.top-banner div.party-and-constituency h2 small {
+      font-size: 80%;
+      color: #aaa; }
 
 a.link-back {
   padding: 10px;
@@ -227,6 +230,9 @@ p.person-candidacy {
   p.person-candidacy .constituency {
     display: block;
     color: #333; }
+
+p.person-candidacy-current {
+  border-bottom: 0.5rem solid #C5C5C5; }
 
 img.person-image {
   margin-bottom: 20px; }

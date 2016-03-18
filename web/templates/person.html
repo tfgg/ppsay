@@ -9,6 +9,10 @@
 {% set person_party=person.candidacies[person.current_election].party.name %}
 {% set person_constituency=person.candidacies[person.current_election].constituency.name %}
 {% set person_constituency_id=person.candidacies[person.current_election].constituency.id %}
+{% elif person.last_election %}
+{% set person_party=person.candidacies[person.last_election].party.name %}
+{% set person_constituency=person.candidacies[person.last_election].constituency.name %}
+{% set person_constituency_id=person.candidacies[person.last_election].constituency.id %}
 {% else %}
 {% set person_party="" %}
 {% endif %}
@@ -52,10 +56,15 @@
   <div class='container'>
     <div class='row'>
       <div class='col-md-12 top-banner'>
-      {% if person_party %}
+      {% if person.current_election %}
       <div class='party-and-constituency'>
           <h2>{{ person_party }} <small>candidate for</small> <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a>
           <small>({{ elections[person.current_election].date.year }})</small></h2>
+      </div>
+      {% elif person.last_election %}
+      <div class='party-and-constituency'>
+          <h2><small>was the</small> {{ person_party }} <small>candidate for</small> <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a>
+          <small>({{ elections[person.last_election].date.year }})</small></h2>
       </div>
       {% else %}
       <div class='party-and-constituency'>
@@ -110,9 +119,9 @@
       {% if person.image %}
         <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
       {% endif %}
-      {% for election_id, candidacy in person.candidacies.items() %}
-      <p class='person-candidacy'>
-          <span class='year'>{{ elections[election_id].name|upper }} {{ elections[election_id].date.year }}</span>
+      {% for election_id, candidacy in person.candidacies_sorted %}
+      <p class='person-candidacy{% if elections[election_id].current %} person-candidacy-current{% endif %}'>
+          <span class='year'>{{ elections[election_id].name }} {{ elections[election_id].date.year }}</span>
           {% if candidacy.party %}
           <span class='party'>{{ candidacy.party.name }}</span>
           {% endif %}

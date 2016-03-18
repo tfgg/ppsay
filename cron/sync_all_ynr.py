@@ -19,7 +19,7 @@ else:
 def get_cache(url):
     if url not in cache:
         print "Not in cache", url
-        cache[url] = requests.get(url).json()
+        cache[url] = requests.get(url,verify=False).json()
         pickle.dump(cache, open('cache.pickle', 'w+'))
         
     return cache[url]

@@ -193,14 +193,27 @@ def person(person_id):
     person_doc = db_candidates.find_one({'id': person_id})
 
     now = datetime.now(pytz.UTC)
+    person_doc['current_election'] = None
+
     for election_id in person_doc['candidacies']:
         if elections[election_id]['date'] > now:
+            elections[election_id]['current'] = True
             person_doc['current_election'] = election_id
+        else:
+            elections[election_id]['current'] = False
+
+    past_elections = sorted([elections[election_id] for election_id in person_doc['candidacies'] if not elections[election_id]['current']], key=lambda x: x['date'], reverse=True)
+    if len(past_elections) > 0:
+        person_doc['last_election'] = past_elections[0]['id'].replace('.', '_')
+    else:
+        person_doc['last_election'] = None
 
     stream = StreamItem.get_by_entities(None, [person_id], None) 
 
     weekly_buckets, months = get_person_stats(stream)
     domains = get_person_domains(stream)
+
+    person_doc['candidacies_sorted'] = sorted(person_doc['candidacies'].items(), key=lambda x: elections[x[1]['election_id'].replace('.','_')]['date'],reverse=True)
 
     return render_template('person.html',
                            person=person_doc,

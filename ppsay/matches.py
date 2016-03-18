@@ -543,6 +543,7 @@ def resolve_matches(texts, analysis, verbose=False):
 
 if __name__ == "__main__":
     from db import db_articles
+    from article import Article
     import argparse
 
     parser = argparse.ArgumentParser(description='Perform matching engine against set of documents')
@@ -567,18 +568,7 @@ if __name__ == "__main__":
                  .sort([('time_added', -1)])
 
     for doc in docs:
-        print >>sys.stderr, doc['keys'], doc['_id']
-        print >>sys.stdout, doc['keys'], doc['_id']
-
-        if doc['page'] is not None and doc['page']['text'] is not None:
-            doc['matches'], doc['possible'] = add_matches([doc['page']['text'], doc['page']['title']], a.verbose)
-
-            doc['quotes'], doc['tags'] = add_quotes(doc['matches'], [doc['page']['text'], doc['page']['title']])
-            
-            doc['machine'] = get_machine(doc)
-
-        resolve_matches(doc['analysis'], a.verbose)
-        resolve_quotes(texts, doc['analysis'], doc['output'], verbose)
-
-        db.save(doc)
+        article = Article(doc)
+        article.process()
+        article.save()
 
