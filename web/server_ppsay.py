@@ -69,7 +69,7 @@ def get_mapit_area(area_id):
 def index():
     stream = StreamItem.get_all(100) 
 
-    last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(5)
+    last_week_candidate_mentions = db_candidates.find().sort([("mentions.last_week_count", -1)]).limit(6)
 
     return render_template('index.html',
                            constituencies=db_areas.find().sort([('name', 1)]),
@@ -173,7 +173,12 @@ def get_person_stats(stream):
         if datetime(year,month,1,tzinfo=pytz.UTC) <= stream[0].date_order
     ]
 
-    return weekly_buckets, months
+    years = [
+        datetime(year,1,1,tzinfo=pytz.UTC)
+        for year in range(2015,date_now.year+1)
+    ]
+
+    return weekly_buckets, months, years
 
 
 def get_person_domains(stream):
@@ -210,7 +215,7 @@ def person(person_id):
 
     stream = StreamItem.get_by_entities(None, [person_id], None) 
 
-    weekly_buckets, months = get_person_stats(stream)
+    weekly_buckets, months, years = get_person_stats(stream)
     domains = get_person_domains(stream)
 
     person_doc['candidacies_sorted'] = sorted(person_doc['candidacies'].items(), key=lambda x: elections[x[1]['election_id'].replace('.','_')]['date'],reverse=True)
@@ -224,7 +229,8 @@ def person(person_id):
                            weekly_buckets=weekly_buckets,
                            year_2015=datetime(2015,1,1,tzinfo=pytz.UTC),
                            today=datetime.now(pytz.UTC),
-                           months=months)
+                           months=months,
+                           years=years)
 
 
 @app.route('/constituency/<constituency_id>.xml')

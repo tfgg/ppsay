@@ -88,15 +88,10 @@
 
         var xtics = [
             {x1: "5%", y1: headspace, x2: "95%", y2: headspace, class: "axis"},
-            {x1: "5%", y1: headspace, x2: "5%", y2: headspace + 10, class: "marker"},
-            {x1: "95%", y1: headspace, x2: "95%", y2: headspace + 10, class: "marker"},
             {x1: "{{ election_frac*90 + 5 }}%", y1: headspace, x2: "{{ election_frac*90 + 5 }}%", y2: headspace + 20, class: "marker election-marker"}
         ];
 
         var xlabels = [
-            {text: '{{ start_time.date() }}', x: '5%', y: headspace + 40, class: 'date'},
-            {text: '{{ finish_time.date() }}', x: '95%', y: headspace + 40, class: 'date'},
-            {text: 'GE 2015', x: '{{ election_frac*90 + 5 }}%', y: headspace + 40, class: 'election-text'}
         ];
 
         var weekly_data = [
@@ -117,7 +112,7 @@
   <div class='row'>
     <div class='col-md-2 col-sm-3'>
       {% if person.image %}
-        <img width='100%' class='person-image' src='{{ person.proxy_image }}/0/165' alt='Photo of {{ person.name }}'/>
+        <img width='100%' class='person-image' src='{{ person.image }}' alt='Photo of {{ person.name }}'/>
       {% endif %}
       {% for election_id, candidacy in person.candidacies_sorted %}
       <p class='person-candidacy{% if elections[election_id].current %} person-candidacy-current{% endif %}'>
@@ -157,6 +152,12 @@
               {% set month_frac = (t - start_time).total_seconds() / interval.total_seconds() %}
               <line x1="{{ month_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ month_frac*90 + 5 }}%" y2="{{ headspace + 10 }}" class="marker month-marker"/>
           {% endfor %}
+          {% for t in years %}
+              {% set year_frac = (t - start_time).total_seconds() / interval.total_seconds() %}
+              <line x1="{{ year_frac*90 + 5 }}%" y1="{{ headspace }}" x2="{{ year_frac*90 + 5 }}%" y2="{{ headspace + 15 }}" class="marker year-marker"/>
+              <text x="{{ year_frac*90 + 5 }}%" y="120" class="xlabel date">{{ t.year }}</text>
+          {% endfor %}
+          <text x="{{ election_frac*90 + 5}}%" y="120" class="xlabel election-text">GE 2015</text>
           </g>
         </svg>
     </div>

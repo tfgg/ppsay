@@ -31,8 +31,8 @@ function make_timeline(element, headspace, xtics, xlabels, weekly_data) {
     var rectangle = svg_bars.selectAll("rect.bar").data(weekly_data);
     var rectangle_tex = svg_bars.selectAll("text.bar").data(weekly_data);
 
-    var max_x = d3.max(weekly_data, function(d) { return d.x2 })
-    var min_x = d3.min(weekly_data, function(d) { return d.x1 })
+    var max_x = 1.0; // d3.max(weekly_data, function(d) { return d.x2 })
+    var min_x = 0.0; // d3.min(weekly_data, function(d) { return d.x1 })
 
     function norm(x) {
         return (x - min_x) / (max_x - min_x)

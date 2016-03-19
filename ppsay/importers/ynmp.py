@@ -67,6 +67,10 @@ def transform_person(person):
     if data.get('wikipedia_url'):
         links['wikipedia_url'].append({'note': 'Wikipedia page', 'link': data['wikipedia_url']})
 
+    image = None
+    if len(person['images']) > 0:
+        image = "https://candidates.democracyclub.org.uk" + person['images'][0]['image_url']
+
     candidate = {
         'name': person['name'].strip(),
         'name_prefix': person.get('honorific_prefix', None),
@@ -76,8 +80,7 @@ def transform_person(person):
         'id': str(person['id']),
         'identifiers': ids,
         'links': links,
-        'image': person.get('image', None),
-        'proxy_image': person.get('proxy_image', None),
+        'image': image,
         'candidacies': candidacies,
         'gender': person['gender'],
         'incumbent': incumbent,

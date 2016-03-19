@@ -170,6 +170,8 @@ svg.timeline text {
   text-anchor: middle; }
 svg.timeline line.month-marker {
   opacity: 0.5; }
+svg.timeline line.year-marker {
+  opacity: 0.75; }
 svg.timeline text.election-text {
   fill: #999; }
 
