@@ -172,13 +172,14 @@ p.success {
     background: rgba(97, 153, 0, 0.06);
 }
 
-ul.constituencies {
-    list-style: none;
-    padding :0;
-
-    li {
-        padding: 5px;
-    }
+select.constituencies {
+    background: white;
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
 }
 
 table.table-domains {

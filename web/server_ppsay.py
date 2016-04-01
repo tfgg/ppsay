@@ -158,7 +158,7 @@ def person_quotes(person_id):
 
 def get_person_stats(stream):
     if len(stream) == 0:
-        return [], []
+        return [], [], []
 
     weekly_buckets = sorted(list(Counter(
         item.date_order.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=item.date_order.weekday())

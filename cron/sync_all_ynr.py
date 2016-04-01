@@ -11,16 +11,16 @@ from urlparse import urlparse
 from ppsay.importers import ynmp
 from ppsay.db import db_articles, db_candidates
 
-if os.path.isfile('cache.pickle'):
-    cache = pickle.load(open('cache.pickle'))
-else:
-    cache = {}
+#if os.path.isfile('cache.pickle'):
+#    cache = pickle.load(open('cache.pickle'))
+#else:
+cache = {}
 
 def get_cache(url):
     if url not in cache:
         print "Not in cache", url
         cache[url] = requests.get(url,verify=False).json()
-        pickle.dump(cache, open('cache.pickle', 'w+'))
+        #pickle.dump(cache, open('cache.pickle', 'w+'))
         
     return cache[url]
 

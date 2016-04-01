@@ -64,8 +64,8 @@
         {% include "stream.html" %}
     </div>
     <div class='col-md-3'>
-        <h2>Candidates</h2>
-        <input id="autocomplete-candidate" class='form-control' placeholder='Find candidate...'>
+        <h2>People</h2>
+        <input id="autocomplete-candidate" class='form-control' placeholder='Find person...'>
         <script>
         $(function() {
             $("#autocomplete-candidate").autocomplete({source: "{{ url_for('.autocomplete_person') }}",
@@ -83,11 +83,16 @@
         });
         </script>
         <h2>Constituencies</h2>
-        <ul class='constituencies'>
+        <script>
+        function go_area(area_id ) {
+            window.location = "/constituency/" + area_id;
+        }
+        </script>
+        <select class='constituencies' onchange="go_area($(this).val())">
         {% for constituency in constituencies %}
-            <li><a href='{{ url_for('.constituency', constituency_id=constituency.id) }}'>{{ constituency.name }}</a></li>
+            <option value="{{ constituency.id }}">{{ constituency.name }}</option>
         {% endfor %}
-        </ul>
+        </select>
     </div>
   </div>
 </div>

@@ -66,6 +66,7 @@ elections = {
         'id': get_election_id(election['id']),
         'name': re.sub('([0-9]+)', '', election['name']).strip(),
         'date': iso8601.parse_date(election['election_date'],default_timezone=pytz.UTC),
+        'assembly': election['organization']['name'],
     }
     for election in elections_data['results'] 
 }
