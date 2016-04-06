@@ -28,6 +28,8 @@ class StreamItem(object):
             'html_cached': self.html_cached,
         }
 
+        print doc
+
         if self.id is not None:
             doc['_id'] = self.id
 
@@ -46,6 +48,12 @@ class StreamItem(object):
 
         if num is not None:
             stream = stream.limit(num)
+
+        return [StreamItem(item) for item in stream]
+
+    @classmethod
+    def get_since(klass, datetime_since):
+        stream = db_stream.find({'date_order': {'$gt': datetime_since}})
 
         return [StreamItem(item) for item in stream]
 

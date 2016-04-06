@@ -9,6 +9,7 @@ from server_ppsay import app as ppsay_app
 from server_postcode import app as postcode_app
 from server_users import users as users_app
 from server_dashboard import app as dashboard_app
+from server_api import app as api_app
 
 from flask import (
     Flask,
@@ -26,6 +27,7 @@ app.register_blueprint(ppsay_app)
 app.register_blueprint(postcode_app)
 app.register_blueprint(users_app)
 app.register_blueprint(dashboard_app)
+app.register_blueprint(api_app)
 
 app.config.update(
   MAIL_SERVER = config.get('mail_server'),
