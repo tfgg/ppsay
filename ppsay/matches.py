@@ -557,18 +557,31 @@ if __name__ == "__main__":
 
     db = db_articles
 
-    if a.doc is not None:
-        docs = db.find({'_id': ObjectId(a.doc)})
-    elif a.person is not None:
-        pass
-    elif a.constituency is not None:
-        docs = db.find({'constituencies.id': a.constituency})
-    else:
-        docs = db.find() \
-                 .sort([('time_added', -1)])
+    def get_cursor():
+        if a.doc is not None:
+            docs = db.find({'_id': ObjectId(a.doc)})
+        elif a.person is not None:
+            pass
+        elif a.constituency is not None:
+            docs = db.find({'constituencies.id': a.constituency})
+        else:
+            docs = db.find() \
+                     .sort([('time_added', -1)])
 
-    for doc in docs:
-        article = Article(doc)
-        article.process()
-        article.save()
+        return docs
+
+    page = 0
+
+    docs = get_cursor().skip(100 * page).limit(100)
+
+    while docs:
+        print "PAGE", page
+
+        for doc in docs:
+            article = Article(doc)
+            article.process()
+            article.save()
+    
+        page += 1
+        docs = get_cursor().skip(100 * page).limit(100)
 

@@ -56,21 +56,23 @@
   <div class='container'>
     <div class='row'>
       <div class='col-md-12 top-banner'>
-      {% if person.current_election %}
+{% if person.current_election %}
       <div class='party-and-constituency'>
           <h2>{{ person_party }} <small>candidate for</small> <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a>
+          ({{ elections[person.current_election].assembly }})
           <small>({{ elections[person.current_election].date.year }})</small></h2>
       </div>
-      {% elif person.last_election %}
+{% elif person.last_election %}
       <div class='party-and-constituency'>
           <h2><small>was the</small> {{ person_party }} <small>candidate for</small> <a href='{{ url_for('.constituency', constituency_id=person_constituency_id) }}'>{{ person_constituency }}</a>
+          ({{ elections[person.last_election].assembly }})
           <small>({{ elections[person.last_election].date.year }})</small></h2>
       </div>
-      {% else %}
+{% else %}
       <div class='party-and-constituency'>
           <h2>No known candidacies</h2>
       </div>
-      {% endif %}
+{% endif %}
 
       {% if person.deleted %}
         <p class='text-danger'>This person has been deleted</p>

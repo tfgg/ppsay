@@ -61,12 +61,34 @@ def get_election_id(x):
 def escape_election_id(x):
     return x.replace('.', '_')
 
+def get_assembly(x):
+    name = re.sub('([0-9]+)', '', x['name']).strip()
+
+    if x['organization']:
+        return x['organization']['name']
+    elif 'sp' in x['id']:
+        return "Scottish Parliament"
+    elif 'nia' in x['id']:
+        return "Northern Irish Assembly"
+    elif 'naw' in x['id']:
+        return "National Assembly of Wales"
+    elif 'gla' in x['id']:
+        return "Greater London Assembly"
+    elif 'pcc' in x['id']:
+        return "Police and Crime Commissioner"
+    elif 'mayor' in x['id']:
+        return "Mayor"
+    elif 'local' in x['id']:
+        return name.replace('local election', '').strip() + ' Council'
+    else:
+        return None
+
 elections = {
     escape_election_id(get_election_id(election['id'])): {
         'id': get_election_id(election['id']),
         'name': re.sub('([0-9]+)', '', election['name']).strip(),
         'date': iso8601.parse_date(election['election_date'],default_timezone=pytz.UTC),
-        'assembly': election['organization']['name'],
+        'assembly': get_assembly(election),
     }
     for election in elections_data['results'] 
 }
