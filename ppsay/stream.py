@@ -28,8 +28,6 @@ class StreamItem(object):
             'html_cached': self.html_cached,
         }
 
-        print doc
-
         if self.id is not None:
             doc['_id'] = self.id
 
