@@ -15,6 +15,8 @@ def get_or_create_doc(pages):
         article = Article.from_pages(pages) 
        
         new = True
+    else:
+        article = Article(doc)
 
     return new, article
 

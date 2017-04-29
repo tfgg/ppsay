@@ -555,13 +555,15 @@ if __name__ == "__main__":
 
     a = parser.parse_args(sys.argv[1:])
 
+    print a
+
     db = db_articles
 
     def get_cursor():
         if a.doc is not None:
             docs = db.find({'_id': ObjectId(a.doc)})
         elif a.person is not None:
-            pass
+            docs = db.find({'analysis.final.candidates.id': a.person})
         elif a.constituency is not None:
             docs = db.find({'constituencies.id': a.constituency})
         else:

@@ -3,7 +3,7 @@
 {% for item in stream %}
     <li class='article-item'>
       <div class='article-right-float'>
-          {% if current_user.is_authenticated() %}
+          {% if current_user.is_authenticated %}
             <small style='float: right;'><a href='{{ url_for('ppsay.article', doc_id=item.data.article_id) }}'>edit</a></small>
           {% endif %}
 

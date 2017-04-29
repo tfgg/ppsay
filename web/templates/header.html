@@ -1,7 +1,7 @@
 <div class='row header'>
     <div class='col-md-12'>
         <div class='header-title' style='padding-left:80px; margin-bottom: 20px; font-family: "Droid Serif", serif; text-rendering: optimizeLegibility;'>
-            {% if current_user.is_authenticated() %}
+            {% if current_user.is_authenticated %}
                 <div style='float:right; font-family: "Droid Sans", sans;'>
                     Logged in as <strong>{{ current_user.user_name }}</strong>
                 </div>

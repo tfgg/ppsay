@@ -23,8 +23,8 @@ server {
     listen 443 default_server;
 
     ssl on;
-    ssl_certificate_key /home/ppsay/keys/electionmentions.key;
-    ssl_certificate /home/ppsay/keys/electionmentions.cert;
+ssl_certificate_key /etc/letsencrypt/live/electionmentions.com/privkey.pem; # managed by Certbot
+ssl_certificate /etc/letsencrypt/live/electionmentions.com/fullchain.pem; # managed by Certbot
 
     ssl_ciphers 'AES128+EECDH:AES128+EDH:!aNULL';
 
@@ -37,7 +37,7 @@ server {
     resolver_timeout 10s;
 
     ssl_prefer_server_ciphers on;
-    ssl_dhparam /home/ppsay/keys/dhparam.pem;
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
     add_header Strict-Transport-Security max-age=63072000;
     add_header X-Frame-Options DENY;
@@ -58,6 +58,7 @@ server {
         include uwsgi_params;
         uwsgi_pass unix:/tmp/ppsay/server.sock;
     }
+
 }
 
 server {
@@ -98,6 +99,19 @@ server {
     add_header Expires "0";
 
     return 301 $scheme://www.electionmentions.com$request_uri;
+
+    listen 443 ssl; # managed by Certbot
+ssl_certificate /etc/letsencrypt/live/electionmentions.com/fullchain.pem; # managed by Certbot
+ssl_certificate_key /etc/letsencrypt/live/electionmentions.com/privkey.pem; # managed by Certbot
+ssl_session_cache shared:le_nginx_SSL:1m; # managed by Certbot
+ssl_session_timeout 1440m; # managed by Certbot
+
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # managed by Certbot
+ssl_prefer_server_ciphers on; # managed by Certbot
+
+ssl_ciphers "ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS"; # managed by Certbot
+
+
 }
 
 server {

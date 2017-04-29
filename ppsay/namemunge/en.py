@@ -11,7 +11,14 @@ def primary_generate_names(names, person):
     prefix = person['name_prefix'] 
 
     for name in names:
+        # Screw you Leon of Britain
+        name = name.replace(" of ", " ")
+
         name_tokens = name.split()
+
+        if name == "Test":
+            continue
+        
 
         # If we have more than forename-surname, try middlename + surname
         # Catches, e.g. Máirtín Ó Muilleoir

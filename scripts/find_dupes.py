@@ -39,7 +39,11 @@ for title, pages in titles.items():
             print "Already merged"
             continue
 
-        for page in pages:
+        if len(docs_group) == 0:
+            print "No articles"
+            continue
+
+        for page in pages[:0]:
             print u"  ", page['_id'], page['url'], [page['text'] == page2['text'] for page2 in pages]
 
         # Group together title matches by text matches
@@ -48,7 +52,7 @@ for title, pages in titles.items():
         for page in pages:
             same_text[page['text']].append(page)
 
-        for text, pages in same_text.items():
+        for text, pages in same_text.items()[:0]:
             print u"  \"{} ...\": {}".format(repr(text[:100]), ", ".join([str(page['_id']) for page in pages]))
 
         for text, pages_group in same_text.items():
@@ -61,6 +65,10 @@ for title, pages in titles.items():
             
             if len(docs_group) == 1:
                 print "Already merged"
+                continue
+
+            if len(docs_group) == 0:
+                print "No articles"
                 continue
 
             print u"  Merging", " ".join([str(doc['_id']) for doc in docs_group])
@@ -99,10 +107,10 @@ for title, pages in titles.items():
             docs_group[0]['pages'] = list(new_pages)
             docs_group[0]['analysis']['user'] = new_user
 
-            #db_articles.save(docs_group[0])
+            db_articles.save(docs_group[0])
             print "  SAVING", docs_group[0]['_id']
 
             for doc in docs_group[1:]:
-            #    db_articles.remove({'_id': doc['_id']}, True)
+                db_articles.remove({'_id': doc['_id']}, True)
                 print "  DELETING", doc['_id']
 
