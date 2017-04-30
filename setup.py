@@ -13,7 +13,7 @@ def find_scripts():
     if f.endswith(".py"):
       yield os.path.join("scripts", f)
 
-setup(name='#ge2015 mentions',
+setup(name='ElectionMentions',
       version='0.1',
       description='Mentions',
       author='Timothy Green',
