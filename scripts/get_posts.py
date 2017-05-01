@@ -1,34 +1,24 @@
-import requests
+from __future__ import print_function
+
 import json
+import requests
 
-resp = requests.get("http://yournextmp.popit.mysociety.org/api/v0.1/posts?embed=membership.person").json()
+url = "https://candidates.democracyclub.org.uk/api/v0.9/posts/?format=json"
 
-constituencies = {}
-candidates = {}
+records = []
 
-while resp:
-  print "{} / {}".format(resp['page'], (resp['total'] / resp['per_page'] + 1))
+while True:
+  print(url)
+  response = requests.get(url)
+  response_json = response.json()
 
-  for post in resp['result']:
-    post['area']['id'] = post['area']['id'].split(':')[-1]
-    constituencies[post['area']['name']] = post['area']
+  for result in response_json["results"]:
+    records.append(result)
 
-    for membership in post['memberships']:
-      candidacies = {year: {'party': {'name': x['name'],
-                                      'id': x['id'].split(':')[1],},
-                            'constituency': {'name': membership['person_id']['standing_in'][year]['name'], 
-                                             'id': membership['person_id']['standing_in'][year]['post_id'],}
-                           } 
-                     for year, x in membership['person_id']['party_memberships'].items() if x is not None}
+  url = response_json["next"]
+  if url is None:
+    break
 
-      candidates[membership['person_id']['id']] = {'name': membership['person_id']['name'].strip(),
-                    'other_names': [x['name'] for x in membership['person_id']['other_names']],
-                    'url': membership['person_id']['url'],
-                    'id': membership['person_id']['id'],
-                    'candidacies': candidacies,}
+print("Found {} posts".format(len(records)))
 
-  json.dump(candidates.values(), open('parse_data/candidates.json', 'w+'), indent=4, sort_keys=True)
-  json.dump(constituencies.values(), open('parse_data/constituencies.json', 'w+'), indent=4, sort_keys=True)
-
-  resp = requests.get(resp['next_url'] + "&embed=membership.person").json()
-
+json.dump({"results": records}, open("posts.json", "w+"))

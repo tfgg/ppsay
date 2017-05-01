@@ -60,7 +60,18 @@ app = Blueprint('ppsay',
 
 
 def get_mapit_area(area_id):
-    req = requests.get("http://mapit.mysociety.org/area/{}".format(area_id))
+    """Requests mapit data for given area identifier.
+
+    Args:
+      area_id: string, area identifier. Must be prefixed by "gss:".
+    
+    Returns:
+      Response from MapIt instance.
+    """
+    assert area_id.startswith("gss:")
+    area_id = area_id[4:]
+    print("Looking up {}".format(area_id))
+    req = requests.get("https://mapit.democracyclub.org.uk/area/{}".format(area_id))
 
     return req.json()
 
@@ -246,9 +257,21 @@ def constituency(constituency_id, rss=False):
     constituency_id = str(constituency_id)
 
     candidate_docs = constituency_get_candidates(constituency_id)
+
+    print("{} candidates found for {}".format(len(candidate_docs), constituency_id))
+
+    for candidate in candidate_docs:
+      candidacies = sorted(candidate["candidacies"].values(), key=lambda x: elections[x["election_id"].replace(".", "_")]["date"], reverse=True)
+      candidate["latest_candidacy"] = candidacies[0]
+      candidate["latest_candidacy"]["election_key"] = candidate["latest_candidacy"]["election_id"].replace(".", "_")
+
     person_ids = filter_candidate_or_incumbent(candidate_docs, constituency_id)
+    
+    print("{} people found for {}".format(len(person_ids), constituency_id))
 
     stream = StreamItem.get_by_entities(100, person_ids, [constituency_id]) 
+
+    print("{} stream items found for {}".format(len(stream), constituency_id))
 
     area_doc = get_mapit_area(constituency_id)
     area_doc['id'] = str(area_doc['id'])
@@ -262,7 +285,8 @@ def constituency(constituency_id, rss=False):
         return render_template('constituency.html',
                                stream=stream,
                                candidates=candidate_docs,
-                               area=area_doc)
+                               area=area_doc,
+                               elections=elections)
 
 
 @app.route('/article', methods=['POST'])

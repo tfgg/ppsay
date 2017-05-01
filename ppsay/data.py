@@ -86,9 +86,15 @@ def get_assembly(x):
 elections = {
     escape_election_id(get_election_id(election['id'])): {
         'id': get_election_id(election['id']),
+        'key': escape_election_id(get_election_id(election['id'])),
         'name': re.sub('([0-9]+)', '', election['name']).strip(),
         'date': iso8601.parse_date(election['election_date'],default_timezone=pytz.UTC),
         'assembly': get_assembly(election),
     }
     for election in elections_data['results'] 
+}
+
+posts_data = json.load(open(x("data/posts.json")))
+posts = {
+  post["id"]: post for post in posts_data["results"]
 }
