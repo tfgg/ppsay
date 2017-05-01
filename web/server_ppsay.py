@@ -260,10 +260,17 @@ def constituency(constituency_id, rss=False):
 
     print("{} candidates found for {}".format(len(candidate_docs), constituency_id))
 
+    area_elections = {}
     for candidate in candidate_docs:
-      candidacies = sorted(candidate["candidacies"].values(), key=lambda x: elections[x["election_id"].replace(".", "_")]["date"], reverse=True)
-      candidate["latest_candidacy"] = candidacies[0]
-      candidate["latest_candidacy"]["election_key"] = candidate["latest_candidacy"]["election_id"].replace(".", "_")
+        for election_id in candidate["candidacies"].keys():
+            area_elections[election_id] = elections[election_id]
+
+    area_elections = sorted(area_elections.values(), key=lambda election: election["date"])
+    latest_election = area_elections[-1]
+
+    candidate_docs = [
+        candidate for candidate in candidate_docs
+        if latest_election["id"].replace(".", "_") in candidate["candidacies"]]
 
     person_ids = filter_candidate_or_incumbent(candidate_docs, constituency_id)
     
@@ -286,7 +293,7 @@ def constituency(constituency_id, rss=False):
                                stream=stream,
                                candidates=candidate_docs,
                                area=area_doc,
-                               elections=elections)
+                               latest_election=latest_election)
 
 
 @app.route('/article', methods=['POST'])
